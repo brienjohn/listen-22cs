@@ -85,7 +85,17 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .side{position:sticky;top:0;align-self:start;height:100vh;height:100dvh;display:flex;flex-direction:column;padding:24px 0 0}
 .side-top,.side-tools,.side-h{flex-shrink:0;padding-right:6px}
 .navscroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 6px 48px 0;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
-.side-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:16px;min-height:34px}
+.side-top{display:grid;grid-template-rows:0fr;opacity:0;visibility:hidden;transform:translateY(-6px);transition:grid-template-rows .28s ease,opacity .2s ease,transform .28s ease,visibility 0s linear .28s}
+.side.stuck .side-top{grid-template-rows:1fr;opacity:1;visibility:visible;transform:none;transition:grid-template-rows .28s ease,opacity .25s ease .05s,transform .28s ease,visibility 0s}
+.st-in{min-height:0;overflow:hidden}
+.st-row{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:34px}
+.side-ctx{display:flex;align-items:baseline;gap:7px;margin:14px 0 16px;padding:9px 11px;border-radius:8px;background:var(--surface-2);font-size:13px;line-height:1.35;color:var(--muted)}
+.side-ctx a{color:var(--ink);font-weight:800;text-decoration:none}.side-ctx a:hover{color:var(--accent)}
+.side-ctx b{color:var(--accent);font-weight:800}
+.st-in>.st-row:last-child{margin-bottom:16px}
+[hidden]{display:none!important}
+mark.hit{background:rgba(255,122,122,.34);color:inherit;border-radius:3px;box-shadow:0 0 0 1.5px rgba(255,122,122,.34)}
+@media (prefers-reduced-motion:reduce){.side-top{transition:none!important}}
 .brandmark.sm{gap:9px}.brandmark.sm .ico{width:34px;height:34px;flex-basis:34px}.brandmark.sm b{font-size:18px}.brandmark.sm .bm-by{margin-top:4px;font-size:10px}.brandmark.sm .bm-by img{width:42px}
 .totop{display:inline-grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid var(--line);background:var(--surface);border-radius:50%;color:var(--muted);cursor:pointer;flex-shrink:0}
 .totop:hover{color:var(--ink);border-color:var(--ink)}
@@ -295,7 +305,7 @@ footer a{color:var(--accent)}
 
 <div class="shell">
   <aside class="side" aria-label="獎項分類與工具">
-    <div class="side-top"><a class="brandmark sm lockup reload" href="/gma/37/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 52 48" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="54" height="15"></span></span></a><button type="button" class="totop" title="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div>
+    <div class="side-top"><div class="st-in"><div class="st-row"><a class="brandmark sm lockup reload" href="/gma/37/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 52 48" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="54" height="15"></span></span></a><button type="button" class="totop" title="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div><p class="side-ctx"><a href="/#gma">金曲獎</a><b>第 37 屆</b></p></div></div>
     <div class="side-tools">
       <label class="find"><svg fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-find"/></svg>
         <input class="q" type="search" placeholder="搜尋歌手、歌名或專輯" autocomplete="off" aria-label="搜尋入圍作品"></label>
@@ -374,8 +384,41 @@ footer a{color:var(--accent)}
     navC.forEach(a=>a.classList.toggle('gone',document.getElementById(a.dataset.c).hidden));
     navF.forEach(li=>li.querySelector('.nf').classList.toggle('gone',document.getElementById(li.querySelector('.nf').dataset.f).hidden));
     idxLinks.forEach(a=>a.classList.toggle('gone',document.getElementById(a.dataset.f).hidden));
+    paint(raw.trim());
     count.hidden=!v;count.textContent=`符合「${raw.trim()}」的入圍：${n} 組`;
     empty.hidden=!v||n>0;
+  }
+
+  /* highlight matches inside visible cards (accent-insensitive, same rule as the filter) */
+  let painted=[];
+  function paint(q){
+    painted.forEach(m=>{const p=m.parentNode;if(!p)return;p.replaceChild(document.createTextNode(m.textContent),m);p.normalize()});
+    painted=[];
+    const v=norm(q);if(!v)return;
+    cards.forEach(c=>{
+      if(c.hidden)return;
+      const w=document.createTreeWalker(c,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest('.lks,.wb,.wt,svg,.mono')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+      const nodes=[];while(w.nextNode())nodes.push(w.currentNode);
+      nodes.forEach(n=>{
+        const src=n.nodeValue;let ns='';const map=[];
+        for(let i=0;i<src.length;){const cp=src.codePointAt(i),ch=String.fromCodePoint(cp),k=norm(ch);for(let j=0;j<k.length;j++)map.push([i,i+ch.length]);ns+=k;i+=ch.length}
+        const hits=[];let at=ns.indexOf(v);
+        while(at>=0){hits.push([map[at][0],map[at+v.length-1][1]]);at=ns.indexOf(v,at+v.length)}
+        if(!hits.length)return;
+        const frag=document.createDocumentFragment();let last=0;
+        hits.forEach(([a,b])=>{if(a<last)return;frag.append(src.slice(last,a));const m=document.createElement('mark');m.className='hit';m.textContent=src.slice(a,b);frag.append(m);painted.push(m);last=b});
+        frag.append(src.slice(last));n.parentNode.replaceChild(frag,n);
+      });
+    });
+  }
+
+  /* desktop sidebar: logo, back-to-top and award/edition appear once the sidebar sticks */
+  const sideEl=document.querySelector('.side');
+  if(sideEl){
+    let raf=0;
+    const upd=()=>{raf=0;sideEl.classList.toggle('stuck',sideEl.getBoundingClientRect().top<=1&&window.scrollY>40)};
+    window.addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(upd)},{passive:true});
+    window.addEventListener('resize',upd);upd();
   }
 
   /* scroll spy */
