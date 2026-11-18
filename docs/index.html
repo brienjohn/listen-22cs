@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>音樂獎入圍聆聽清單｜listen.22cs</title>
+<title>音樂獎入圍聆聽清單｜22CS</title>
 <meta name="description" content="把音樂獎的入圍作品整理成可以直接聆聽的清單，每一組都連到 Spotify、YouTube 與 Apple Music。">
 <link rel="canonical" href="https://listen.22cs.xyz/">
-<meta property="og:type" content="website"><meta property="og:title" content="音樂獎入圍聆聽清單｜listen.22cs"><meta property="og:description" content="把音樂獎的入圍作品整理成可以直接聆聽的清單，每一組都連到 Spotify、YouTube 與 Apple Music。"><meta property="og:url" content="https://listen.22cs.xyz/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="22 世紀衛星"><meta property="og:title" content="音樂獎入圍聆聽清單｜22CS"><meta property="og:description" content="把音樂獎的入圍作品整理成可以直接聆聽的清單，每一組都連到 Spotify、YouTube 與 Apple Music。"><meta property="og:url" content="https://listen.22cs.xyz/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%230b0a09%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%229%22 fill=%22none%22 stroke=%22%23d8b96f%22 stroke-width=%223%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%222.5%22 fill=%22%23d8b96f%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
@@ -17,8 +17,14 @@
 @media (prefers-color-scheme:dark){:root{--bg:#0f0e0c;--surface:#1b1916;--ink:#f2eee6;--muted:#a49d90;--line:#2d2a25;--gold:#d6b46c;--mast:#050504;color-scheme:dark}}
 *{box-sizing:border-box}html{overflow-x:clip}body{margin:0;overflow-x:clip;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
 a{color:inherit}.in{max-width:var(--maxw);margin:0 auto;padding-left:var(--padL);padding-right:var(--padR)}
-.sitebar{background:var(--mast);border-bottom:1px solid #2a2620}.sitebar .in{min-height:48px;display:flex;align-items:center}
-.brand{font-family:var(--f-display);font-stretch:118%;font-weight:800;font-size:15px;color:var(--mast-ink);text-decoration:none}.brand span{color:var(--mast-gold)}
+.sitebar{background:var(--mast);border-bottom:1px solid #2a2620}.sitebar .in{min-height:48px;display:flex;align-items:center;gap:14px}
+.brand-t{font-family:var(--f-zh);font-weight:900;font-size:15px;color:var(--mast-ink);text-decoration:none}
+.by22{display:inline-flex;align-items:center;gap:6px;color:var(--mast-muted);text-decoration:none;font-size:12px;font-weight:600}
+.by22 img{display:block;height:22px;width:auto;border-radius:4px;transition:transform .15s}.by22:hover img{transform:translateY(-1px)}
+.mk-site{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:center;padding-bottom:24px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.mk-site img{display:block;height:40px;width:auto;border-radius:6px}.mk-site p{margin:0;font-size:14px;color:var(--muted)}
+.cta{display:inline-flex;padding:9px 18px;border-radius:999px;background:var(--ink);color:var(--bg);text-decoration:none;font-size:14px;font-weight:700;white-space:nowrap}.cta:hover{opacity:.88}
+@media (max-width:640px){.mk-site{grid-template-columns:auto minmax(0,1fr)}.mk-site .cta{grid-column:1/-1;justify-self:start}}
 .mast{background:var(--mast);color:var(--mast-ink)}.mast .in{padding-top:56px;padding-bottom:56px}
 .eyebrow{margin:0 0 18px;font-family:var(--f-display);font-stretch:118%;font-weight:700;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--mast-gold)}
 h1{margin:0;font-family:var(--f-zh);font-weight:900;font-size:clamp(34px,6vw,68px);line-height:1.08;text-wrap:balance}h1 em{font-style:normal;color:var(--mast-gold)}
@@ -42,8 +48,8 @@ footer{margin-top:72px;border-top:1px solid var(--line)}footer .in{padding-top:2
 </style>
 </head>
 <body>
-<div class="sitebar"><div class="in"><a class="brand" href="/">listen<span>.22cs</span></a></div></div>
-<header class="mast"><div class="in"><p class="eyebrow">listen.22cs.xyz</p><h1>音樂獎<em>入圍作品</em><br>聆聽清單</h1><p class="lede">把音樂獎的入圍作品整理成可以直接聆聽的清單：每一組入圍都連到 Spotify、YouTube 與 Apple Music 上的作品。</p></div></header><main class="in"><section class="award" id="grammy"><div class="ah"><h2>葛萊美獎</h2><p>Grammy Awards</p></div><ul class="eds"><li class="ed"><a href="/grammy/69/"><span class="yr">2027</span><div><h3>第 69 屆</h3><p class="en">69th Annual Grammy Awards</p></div><div class="st"><div><b>100</b><span>個獎項</span></div><div><b>526</b><span>組入圍</span></div></div><p class="note">資格期 2025/8/31–2026/8/28 · 頒獎典禮 2027 年 2 月</p><span class="go">開始聆聽</span></a></li></ul></section></main>
-<footer><div class="in"><p>入圍名單取自各音樂獎官方網站；連結經逐筆比對平台上的作品資料。本站與各音樂獎主辦單位無關。</p></div></footer>
+<div class="sitebar"><div class="in"><a class="brand-t" href="/">聆聽清單</a><a class="by22" href="https://www.22cs.xyz/" target="_blank" rel="noopener" aria-label="22 世紀衛星（開啟主站）"><span>by</span><img src="/img/22cs.png" alt="22CS" width="72" height="22"></a></div></div>
+<header class="mast"><div class="in"><p class="eyebrow">22 世紀衛星 · listen.22cs.xyz</p><h1>音樂獎<em>入圍作品</em><br>聆聽清單</h1><p class="lede">把音樂獎的入圍作品整理成可以直接聆聽的清單：每一組入圍都連到 Spotify、YouTube 與 Apple Music 上的作品。</p></div></header><main class="in"><section class="award" id="grammy"><div class="ah"><h2>葛萊美獎</h2><p>Grammy Awards</p></div><ul class="eds"><li class="ed"><a href="/grammy/69/"><span class="yr">2027</span><div><h3>第 69 屆</h3><p class="en">69th Annual Grammy Awards</p></div><div class="st"><div><b>100</b><span>個獎項</span></div><div><b>526</b><span>組入圍</span></div></div><p class="note">資格期 2025/8/31–2026/8/28 · 頒獎典禮 2027 年 2 月</p><span class="go">開始聆聽</span></a></li></ul></section></main>
+<footer><div class="in"><div class="mk-site"><a href="https://www.22cs.xyz/" target="_blank" rel="noopener" aria-label="22 世紀衛星"><img src="/img/22cs.png" alt="22 世紀衛星" width="131" height="40"></a><p>音樂獎入圍聆聽清單是 22 世紀衛星的資料專題。</p><a class="cta" href="https://www.22cs.xyz/" target="_blank" rel="noopener">回到 22 世紀衛星主站 →</a></div><p>入圍名單取自各音樂獎官方網站；連結經逐筆比對平台上的作品資料。本站與各音樂獎主辦單位無關。</p></div></footer>
 </body>
 </html>

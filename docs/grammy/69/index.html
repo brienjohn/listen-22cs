@@ -3,13 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>第 69 屆葛萊美獎入圍聆聽清單｜listen.22cs</title>
+<title>第 69 屆葛萊美獎入圍聆聽清單｜22CS</title>
 <meta name="description" content="69th Annual Grammy Awards：100 個獎項、526 組入圍作品，每一組都直接連到 Spotify、YouTube 與 Apple Music。">
 <link rel="canonical" href="https://listen.22cs.xyz/grammy/69/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="第 69 屆葛萊美獎入圍聆聽清單｜listen.22cs">
+<meta property="og:title" content="第 69 屆葛萊美獎入圍聆聽清單｜22CS">
 <meta property="og:description" content="69th Annual Grammy Awards：100 個獎項、526 組入圍作品，每一組都直接連到 Spotify、YouTube 與 Apple Music。">
 <meta property="og:url" content="https://listen.22cs.xyz/grammy/69/">
+<meta property="og:site_name" content="22 世紀衛星">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%230b0a09%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%229%22 fill=%22none%22 stroke=%22%23d8b96f%22 stroke-width=%223%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%222.5%22 fill=%22%23d8b96f%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,7 +69,19 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .edsw select{background:transparent;color:var(--mast-ink);border:1px solid #3a352c;border-radius:6px;padding:4px 8px;font:inherit;font-size:13px}
 .sitebar .hub{margin-left:auto;color:var(--mast-muted);text-decoration:none;white-space:nowrap}
 .sitebar+.mast .in{padding-top:44px}
-@media (max-width:520px){.sitebar .hub{display:none}.sitebar .in{gap:12px}}
+.by22{display:inline-flex;align-items:center;gap:6px;color:var(--mast-muted);text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap}
+.by22 img{display:block;height:22px;width:auto;border-radius:4px;transition:transform .15s}
+.by22:hover img{transform:translateY(-1px)}
+.brand-t{font-family:var(--f-zh);font-weight:900;font-size:15px;color:var(--mast-ink);text-decoration:none;white-space:nowrap}
+.sitebar .sep{width:1px;height:18px;background:#3a352c;flex-shrink:0}
+.mk-site{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:center;padding:0 0 24px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.mk-site img{display:block;height:40px;width:auto;border-radius:6px}
+.mk-site p{margin:0;font-size:14px;color:var(--muted)}
+.cta{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:999px;background:var(--ink);color:var(--bg)!important;text-decoration:none;font-size:14px;font-weight:700;white-space:nowrap}
+.cta:hover{opacity:.88}
+@media (max-width:640px){.mk-site{grid-template-columns:auto minmax(0,1fr)}.mk-site .cta{grid-column:1/-1;justify-self:start}}
+
+@media (max-width:640px){.sitebar .hub{display:none}.sitebar .in{gap:10px}.by22 span{display:none}.sitebar .sep{display:none}}
 
 /* shell: sidebar + content */
 .shell{max-width:var(--maxw);margin:0 auto;padding:0 var(--padR) 0 var(--padL);display:grid;grid-template-columns:var(--side) minmax(0,1fr);gap:clamp(36px,4vw,64px)}
@@ -226,7 +239,7 @@ footer a{color:var(--gold)}
   <symbol id="i-list" viewBox="0 0 24 24"><rect x="4" y="5" width="4" height="4" rx=".8"/><rect x="4" y="15" width="4" height="4" rx=".8"/><path d="M11 7h9M11 17h9"/></symbol>
   <symbol id="i-find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
 </svg>
-<div class="sitebar"><div class="in"><a class="brand" href="/">listen<span>.22cs</span></a><nav class="crumbs" aria-label="目前位置"><a href="/#grammy">葛萊美獎</a><span aria-hidden="true">/</span><span aria-current="page">第 69 屆</span></nav><a class="hub" href="/">所有音樂獎</a></div></div>
+<div class="sitebar"><div class="in"><a class="brand-t" href="/">聆聽清單</a><a class="by22" href="https://www.22cs.xyz/" target="_blank" rel="noopener" aria-label="22 世紀衛星（開啟主站）"><span>by</span><img src="/img/22cs.png" alt="22CS" width="72" height="22"></a><i class="sep" aria-hidden="true"></i><nav class="crumbs" aria-label="目前位置"><a href="/#grammy">葛萊美獎</a><span aria-hidden="true">/</span><span aria-current="page">第 69 屆</span></nav><a class="hub" href="/">所有音樂獎</a></div></div>
 <header class="mast">
   <div class="in">
     <div>
@@ -283,6 +296,7 @@ footer a{color:var(--gold)}
 
 <footer>
   <div class="in">
+<div class="mk-site"><a href="https://www.22cs.xyz/" target="_blank" rel="noopener" aria-label="22 世紀衛星"><img src="/img/22cs.png" alt="22 世紀衛星" width="131" height="40"></a><p>第 69 屆葛萊美獎入圍聆聽清單是 22 世紀衛星的資料專題。資料整理至 2026 年 11 月。</p><a class="cta" href="https://www.22cs.xyz/" target="_blank" rel="noopener">回到 22 世紀衛星主站 →</a></div>
     <p>入圍名單來源：<a href="https://www.grammy.com/awards/69th-annual-grammy-awards-2027/" target="_blank" rel="noopener">grammy.com · 69th Annual Grammy Awards</a>（2026 年 11 月 16 日更新版）。中文獎項名稱為本頁翻譯。</p>
     <p>連結以比對歌名、專輯名與演出者產生，並逐一核對平台上的作品資料。灰色圖示代表沒有找到該平台上的作品頁（可能未上架，或尚未建立對應）：Spotify 17 組、YouTube 13 組、Apple Music 22 組。</p>
   </div>
