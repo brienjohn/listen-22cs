@@ -75,14 +75,16 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .stats div{display:flex;align-items:baseline;gap:7px;min-width:160px;padding:15px 17px;background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow)}
 .stats b{font-size:25px;font-weight:800;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
 .stats span{font-size:12px;font-weight:600;color:var(--muted)}
-.legend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin-top:20px;color:var(--muted);font-size:12px}
+.legend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin-top:22px;color:var(--muted);font-size:12px}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .lg{width:16px;height:16px;flex-shrink:0}
 
 /* shell: sidebar + content */
 .shell{max-width:var(--maxw);margin:44px auto 0;padding:0 var(--padR) 0 var(--padL);display:grid;grid-template-columns:var(--side) minmax(0,1fr);gap:clamp(32px,3.6vw,56px);border-top:1px solid var(--line)}
 .shell::before{content:none}
-.side{position:sticky;top:0;align-self:start;height:100vh;height:100dvh;overflow-y:auto;overscroll-behavior:contain;padding:24px 6px 48px 0;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.side{position:sticky;top:0;align-self:start;height:100vh;height:100dvh;display:flex;flex-direction:column;padding:24px 0 0}
+.side-top,.side-tools,.side-h{flex-shrink:0;padding-right:6px}
+.navscroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 6px 48px 0;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
 .side-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:16px;min-height:34px}
 .brandmark.sm{gap:9px}.brandmark.sm .ico{width:34px;height:34px;flex-basis:34px}.brandmark.sm b{font-size:18px}.brandmark.sm .bm-by{margin-top:4px;font-size:10px}.brandmark.sm .bm-by img{width:42px}
 .totop{display:inline-grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid var(--line);background:var(--surface);border-radius:50%;color:var(--muted);cursor:pointer;flex-shrink:0}
@@ -282,12 +284,6 @@ footer a{color:var(--accent)}
     <nav class="crumb" aria-label="目前位置"><a href="/">聆聽清單</a><span class="sl" aria-hidden="true">/</span><a href="/#gma">金曲獎</a><span class="sl" aria-hidden="true">/</span><span aria-current="page">第 37 屆</span></nav>
     <p class="eyebrow">The 37th Golden Melody Awards · 2026</p>
     <h1>第 <span class="hn">37</span> 屆金曲獎<br>入圍作品聆聽清單</h1>
-    <p class="lede">依文化部影視及流行音樂產業局公告的流行音樂類入圍與得獎名單整理，每一組入圍都直接連到 Spotify、YouTube 與 Apple Music 上的作品，並標出得獎者。</p>
-    <div class="stats">
-      <div><b>29</b><span>個獎項</span></div>
-      <div><b>170</b><span>組入圍</span></div>
-      <div><b>30</b><span>組得獎</span></div>
-    </div>
     <p class="legend">
       <span><svg class="lg" aria-hidden="true"><use href="#i-sp"/></svg>Spotify</span>
       <span><svg class="lg" aria-hidden="true"><use href="#i-yt"/></svg>YouTube</span>
@@ -309,7 +305,7 @@ footer a{color:var(--accent)}
       </div>
     </div>
     <p class="side-h">Categories · 獎項分類</p>
-    <nav aria-label="獎項分類"><ol class="nav"><li><a class="nf" href="#f1" data-f="f1"><span>01</span>演唱類【出版獎】</a><ol class="nc"><li><a href="#c1" data-c="c1">年度專輯獎</a></li><li><a href="#c2" data-c="c2">年度歌曲獎</a></li><li><a href="#c3" data-c="c3">最佳華語專輯獎</a></li><li><a href="#c4" data-c="c4">最佳台語專輯獎</a></li><li><a href="#c5" data-c="c5">最佳客語專輯獎</a></li><li><a href="#c6" data-c="c6">最佳原住民語專輯獎</a></li></ol></li><li><a class="nf" href="#f2" data-f="f2"><span>02</span>演唱類【個人獎】</a><ol class="nc"><li><a href="#c7" data-c="c7">最佳作曲人獎</a></li><li><a href="#c8" data-c="c8">最佳作詞人獎</a></li><li><a href="#c9" data-c="c9">最佳編曲人獎</a></li><li><a href="#c10" data-c="c10">最佳專輯製作人獎</a></li><li><a href="#c11" data-c="c11">最佳單曲製作人獎</a></li><li><a href="#c12" data-c="c12">最佳華語男歌手獎</a></li><li><a href="#c13" data-c="c13">最佳華語女歌手獎</a></li><li><a href="#c14" data-c="c14">最佳台語男歌手獎</a></li><li><a href="#c15" data-c="c15">最佳台語女歌手獎</a></li><li><a href="#c16" data-c="c16">最佳客語歌手獎</a></li><li><a href="#c17" data-c="c17">最佳原住民語歌手獎</a></li><li><a href="#c18" data-c="c18">最佳樂團獎</a></li><li><a href="#c19" data-c="c19">最佳演唱組合獎</a></li><li><a href="#c20" data-c="c20">最佳新人獎</a></li></ol></li><li><a class="nf" href="#f3" data-f="f3"><span>03</span>演奏類【出版獎】</a><ol class="nc"><li><a href="#c21" data-c="c21">演奏類最佳專輯獎</a></li></ol></li><li><a class="nf" href="#f4" data-f="f4"><span>04</span>演奏類【個人獎】</a><ol class="nc"><li><a href="#c22" data-c="c22">演奏類最佳專輯製作人獎</a></li><li><a href="#c23" data-c="c23">演奏類最佳作曲人獎</a></li></ol></li><li><a class="nf" href="#f5" data-f="f5"><span>05</span>技術類【出版獎】</a><ol class="nc"><li><a href="#c24" data-c="c24">最佳MV獎</a></li><li><a href="#c25" data-c="c25">最佳演唱錄音專輯獎</a></li><li><a href="#c26" data-c="c26">最佳演奏錄音專輯獎</a></li></ol></li><li><a class="nf" href="#f6" data-f="f6"><span>06</span>技術類【個人獎】</a><ol class="nc"><li><a href="#c27" data-c="c27">最佳裝幀設計獎</a></li></ol></li><li><a class="nf" href="#f7" data-f="f7"><span>07</span>評審團獎</a><ol class="nc"><li><a href="#c28" data-c="c28">評審團獎</a></li></ol></li><li><a class="nf" href="#f8" data-f="f8"><span>08</span>特別貢獻獎</a><ol class="nc"><li><a href="#c29" data-c="c29">特別貢獻獎</a></li></ol></li></ol></nav>
+    <nav class="navscroll" aria-label="獎項分類"><ol class="nav"><li><a class="nf" href="#f1" data-f="f1"><span>01</span>演唱類【出版獎】</a><ol class="nc"><li><a href="#c1" data-c="c1">年度專輯獎</a></li><li><a href="#c2" data-c="c2">年度歌曲獎</a></li><li><a href="#c3" data-c="c3">最佳華語專輯獎</a></li><li><a href="#c4" data-c="c4">最佳台語專輯獎</a></li><li><a href="#c5" data-c="c5">最佳客語專輯獎</a></li><li><a href="#c6" data-c="c6">最佳原住民語專輯獎</a></li></ol></li><li><a class="nf" href="#f2" data-f="f2"><span>02</span>演唱類【個人獎】</a><ol class="nc"><li><a href="#c7" data-c="c7">最佳作曲人獎</a></li><li><a href="#c8" data-c="c8">最佳作詞人獎</a></li><li><a href="#c9" data-c="c9">最佳編曲人獎</a></li><li><a href="#c10" data-c="c10">最佳專輯製作人獎</a></li><li><a href="#c11" data-c="c11">最佳單曲製作人獎</a></li><li><a href="#c12" data-c="c12">最佳華語男歌手獎</a></li><li><a href="#c13" data-c="c13">最佳華語女歌手獎</a></li><li><a href="#c14" data-c="c14">最佳台語男歌手獎</a></li><li><a href="#c15" data-c="c15">最佳台語女歌手獎</a></li><li><a href="#c16" data-c="c16">最佳客語歌手獎</a></li><li><a href="#c17" data-c="c17">最佳原住民語歌手獎</a></li><li><a href="#c18" data-c="c18">最佳樂團獎</a></li><li><a href="#c19" data-c="c19">最佳演唱組合獎</a></li><li><a href="#c20" data-c="c20">最佳新人獎</a></li></ol></li><li><a class="nf" href="#f3" data-f="f3"><span>03</span>演奏類【出版獎】</a><ol class="nc"><li><a href="#c21" data-c="c21">演奏類最佳專輯獎</a></li></ol></li><li><a class="nf" href="#f4" data-f="f4"><span>04</span>演奏類【個人獎】</a><ol class="nc"><li><a href="#c22" data-c="c22">演奏類最佳專輯製作人獎</a></li><li><a href="#c23" data-c="c23">演奏類最佳作曲人獎</a></li></ol></li><li><a class="nf" href="#f5" data-f="f5"><span>05</span>技術類【出版獎】</a><ol class="nc"><li><a href="#c24" data-c="c24">最佳MV獎</a></li><li><a href="#c25" data-c="c25">最佳演唱錄音專輯獎</a></li><li><a href="#c26" data-c="c26">最佳演奏錄音專輯獎</a></li></ol></li><li><a class="nf" href="#f6" data-f="f6"><span>06</span>技術類【個人獎】</a><ol class="nc"><li><a href="#c27" data-c="c27">最佳裝幀設計獎</a></li></ol></li><li><a class="nf" href="#f7" data-f="f7"><span>07</span>評審團獎</a><ol class="nc"><li><a href="#c28" data-c="c28">評審團獎</a></li></ol></li><li><a class="nf" href="#f8" data-f="f8"><span>08</span>特別貢獻獎</a><ol class="nc"><li><a href="#c29" data-c="c29">特別貢獻獎</a></li></ol></li></ol></nav>
   </aside>
 
   <main>
@@ -347,7 +343,7 @@ footer a{color:var(--accent)}
   const count=document.getElementById('count'), empty=document.getElementById('empty');
   const cards=$('.nm'), cats=$('.cat'), fields=$('.field'), inputs=$('.q');
   const navF=$('.nav>li'), navC=$('.nc a'), idxLinks=$('.idx-panel a');
-  const side=document.querySelector('.side');
+  const side=document.querySelector('.navscroll');
 
   /* density toggle */
   function setDensity(d,save){
