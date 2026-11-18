@@ -21,17 +21,17 @@
 /* Layout (22CS visual handoff v4): light editorial header with the listen-list icon + 聆聽清單 + by 22CS wordmark; text-first hero (crumb, eyebrow, big title with coral underline, intro, bordered stats);
    then the two-column shell — sticky category sidebar on desktop, sticky search bar + auto-hiding right-edge category scrubber on phones — with bordered nominee cards (or condensed rows) ending in three platform logos. */
 :root{
-  --brand:#FF7A7A; --accent:#B4404B; --bg:#FAFAF9; --surface:#FFFFFF; --surface-2:#F7F6F5; --ink:#202025; --muted:#6A6870; --line:#E5E3E1;
+  --brand:#FF7A7A; --accent:#B4404B; --bg:#FAFAF9; --surface:#FFFFFF; --surface-2:#F7F6F5; --ink:#202025; --muted:#6A6870; --line:#E5E3E1; --gold:#D4A017;
   --tint:rgba(255,122,122,.13); --on-brand:#1B1B1F; --shadow:0 4px 18px rgba(0,0,0,.025); --pop:0 12px 40px rgba(20,20,28,.16);
   --f:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
   --maxw:1240px; --pad:28px; --side:236px;
   --padL:max(var(--pad),env(safe-area-inset-left,0px)); --padR:max(var(--pad),env(safe-area-inset-right,0px));
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#111216; --surface:#1B1C21; --surface-2:#25262C; --ink:#F4F3F1; --muted:#B6B6BC; --line:#37383F; --accent:#FF7A7A;
+  --bg:#111216; --surface:#1B1C21; --surface-2:#25262C; --ink:#F4F3F1; --muted:#B6B6BC; --line:#37383F; --accent:#FF7A7A; --gold:#E0B43B;
   --tint:rgba(255,122,122,.14); --shadow:none; --pop:0 12px 40px rgba(0,0,0,.55); color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#111216; --surface:#1B1C21; --surface-2:#25262C; --ink:#F4F3F1; --muted:#B6B6BC; --line:#37383F; --accent:#FF7A7A;
+  --bg:#111216; --surface:#1B1C21; --surface-2:#25262C; --ink:#F4F3F1; --muted:#B6B6BC; --line:#37383F; --accent:#FF7A7A; --gold:#E0B43B;
   --tint:rgba(255,122,122,.14); --shadow:none; --pop:0 12px 40px rgba(0,0,0,.55); color-scheme:dark}
 
 *{box-sizing:border-box}
@@ -172,11 +172,10 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
 
 /* winners */
 .nm.win{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand),var(--shadow)}
-.wb{position:absolute;top:8px;left:8px;z-index:1;display:inline-flex;align-items:center;gap:4px;padding:3px 9px 3px 7px;border-radius:999px;background:var(--brand);color:var(--on-brand);font-size:12px;font-weight:800;letter-spacing:.04em;line-height:1.4}
-.wb svg,.wt svg{width:12px;height:12px;fill:currentColor}
-.wt{display:none}
-[data-density="dense"] .wb{display:none}
-[data-density="dense"] .wt{display:inline-flex;align-items:center;gap:3px;margin-right:6px;padding:1px 7px 1px 5px;border-radius:999px;background:var(--brand);color:var(--on-brand);font-size:11px;font-weight:800;vertical-align:2px}
+.nm{position:relative}
+.tro{position:absolute;z-index:2;top:3px;left:3px;width:20px;height:20px;transform:rotate(-10deg);fill:var(--gold);stroke:var(--surface);stroke-width:1.4px;paint-order:stroke;stroke-linejoin:round;pointer-events:none}
+[data-density="dense"] .tro{top:0;left:2px;width:17px;height:17px}
+@media (max-width:960px){.tro{top:2px;left:2px;width:18px;height:18px}[data-density="dense"] .tro{top:0;left:2px;width:16px;height:16px}}
 .who{margin:4px 0 0;font-size:12.5px;color:var(--accent);font-weight:600;line-height:1.4;overflow-wrap:anywhere}
 [data-density="dense"] .who{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;margin-top:1px}
 
@@ -291,7 +290,7 @@ footer a{color:var(--accent)}
   <symbol id="i-am" viewBox="0 0 24 24"><defs><linearGradient id="amg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fb5c74"/><stop offset="1" stop-color="#fa233b"/></linearGradient></defs><rect width="24" height="24" rx="5.6" fill="url(#amg)"/><path d="M16.6 5.2v9.7a2.3 2.3 0 1 1-1.4-2.1V8.4l-5.6 1.3v6.9a2.3 2.3 0 1 1-1.4-2.1V7.2z" fill="#fff"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></symbol>
   <symbol id="i-list" viewBox="0 0 24 24"><rect x="4" y="5" width="4" height="4" rx=".8"/><rect x="4" y="15" width="4" height="4" rx=".8"/><path d="M11 7h9M11 17h9"/></symbol>
-  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6.6 2.5h10.8v5.6a5.4 5.4 0 0 1-10.8 0z"/><path d="M6.6 3.8H3.2v2.1a4.3 4.3 0 0 0 4.1 4.3l.3-1.8a2.5 2.5 0 0 1-2.6-2.5v-.3h1.6zM17.4 3.8h3.4v2.1a4.3 4.3 0 0 1-4.1 4.3l-.3-1.8a2.5 2.5 0 0 0 2.6-2.5v-.3h-1.6z"/><path d="M10.7 13.2h2.6v3.6h-2.6z"/><path d="M7.9 16.6h8.2a1.2 1.2 0 0 1 1.2 1.2v2.7H6.7v-2.7a1.2 1.2 0 0 1 1.2-1.2z"/></symbol>
   <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></symbol>
   <symbol id="i-find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
@@ -405,7 +404,7 @@ footer a{color:var(--accent)}
     const v=norm(q);if(!v)return;
     cards.forEach(c=>{
       if(c.hidden)return;
-      const w=document.createTreeWalker(c,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest('.lks,.wb,.wt,svg,.mono')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+      const w=document.createTreeWalker(c,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest('.lks,.vh,svg,.mono')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
       const nodes=[];while(w.nextNode())nodes.push(w.currentNode);
       nodes.forEach(n=>{
         const src=n.nodeValue;let ns='';const map=[];
