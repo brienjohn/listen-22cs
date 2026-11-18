@@ -489,7 +489,7 @@ footer a{color:var(--accent)}
   }
   function startDrag(e){
     e.preventDefault();
-    drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,hot:null,src:e.currentTarget};
+    drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,hot:null,src:e.currentTarget,was:open};
     try{e.currentTarget.setPointerCapture(e.pointerId)}catch(_){}
     if(!open)setOpen(true);
     drag.hot=hotAt(e.clientX,e.clientY);
@@ -503,7 +503,8 @@ footer a{color:var(--accent)}
     if(!drag||e.pointerId!==drag.id)return;
     const d=drag;drag=null;
     const a=hotAt(e.clientX,e.clientY);
-    if(a&&!a.classList.contains('gone')&&(d.moved||d.src===panel))jump(a.dataset.f);
+    if(d.src===tab&&d.was&&!d.moved)setOpen(false);
+    else if(a&&!a.classList.contains('gone')&&(d.moved||d.src===panel))jump(a.dataset.f);
     else if(d.src===panel&&!a)setOpen(false);
     else idxLinks.forEach(l=>l.classList.remove('hot'));
   }
