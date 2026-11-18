@@ -55,9 +55,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .toplinks{display:flex;align-items:center;gap:22px;color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap}
 .toplinks a{text-decoration:none}
 .toplinks a:hover,.toplinks [aria-current]{color:var(--ink)}
-.themebtn{display:inline-flex;align-items:center;gap:6px;min-width:72px;justify-content:center;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);color:var(--ink);padding:8px 12px;font-size:12px;font-weight:650;cursor:pointer;white-space:nowrap}
-.themebtn:hover{border-color:var(--muted)}
-.themebtn svg{width:14px;height:14px}
+.themebtn{display:inline-grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--ink);cursor:pointer;flex-shrink:0}.themebtn:hover{background:var(--surface-2)}.themebtn svg{width:20px;height:20px;display:block}.themebtn .sun{display:none}:root[data-theme="dark"] .themebtn .sun{display:block}:root[data-theme="dark"] .themebtn .moon{display:none}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .themebtn .sun{display:block}:root:not([data-theme="light"]) .themebtn .moon{display:none}}@media (max-width:720px){.themebtn{width:44px;height:44px}}
 .edsw select{background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font:inherit;font-size:12px}
 
 /* hero */
@@ -173,9 +171,9 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
 /* winners */
 .nm.win{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand),var(--shadow)}
 .nm{position:relative}
-.tro{position:absolute;z-index:2;top:3px;left:3px;width:20px;height:20px;transform:rotate(-10deg);fill:var(--gold);stroke:var(--surface);stroke-width:1.4px;paint-order:stroke;stroke-linejoin:round;pointer-events:none}
-[data-density="dense"] .tro{top:0;left:2px;width:17px;height:17px}
-@media (max-width:960px){.tro{top:2px;left:2px;width:18px;height:18px}[data-density="dense"] .tro{top:0;left:2px;width:16px;height:16px}}
+.tro{position:absolute;z-index:2;top:1px;left:1px;width:24px;height:24px;transform:rotate(-10deg);fill:var(--gold);stroke:var(--surface);stroke-width:1.4px;paint-order:stroke;stroke-linejoin:round;pointer-events:none}
+[data-density="dense"] .tro{top:-1px;left:1px;width:19px;height:19px}
+@media (max-width:960px){.tro{top:0;left:0;width:21px;height:21px}[data-density="dense"] .tro{top:-1px;left:1px;width:18px;height:18px}}
 .who{margin:4px 0 0;font-size:12.5px;color:var(--accent);font-weight:600;line-height:1.4;overflow-wrap:anywhere}
 [data-density="dense"] .who{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;margin-top:1px}
 
@@ -291,22 +289,17 @@ footer a{color:var(--accent)}
   <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></symbol>
   <symbol id="i-list" viewBox="0 0 24 24"><rect x="4" y="5" width="4" height="4" rx=".8"/><rect x="4" y="15" width="4" height="4" rx=".8"/><path d="M11 7h9M11 17h9"/></symbol>
   <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6.6 2.5h10.8v5.6a5.4 5.4 0 0 1-10.8 0z"/><path d="M6.6 3.8H3.2v2.1a4.3 4.3 0 0 0 4.1 4.3l.3-1.8a2.5 2.5 0 0 1-2.6-2.5v-.3h1.6zM17.4 3.8h3.4v2.1a4.3 4.3 0 0 1-4.1 4.3l-.3-1.8a2.5 2.5 0 0 0 2.6-2.5v-.3h-1.6z"/><path d="M10.7 13.2h2.6v3.6h-2.6z"/><path d="M7.9 16.6h8.2a1.2 1.2 0 0 1 1.2 1.2v2.7H6.7v-2.7a1.2 1.2 0 0 1 1.2-1.2z"/></symbol>
-  <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></symbol>
   <symbol id="i-find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
 </svg>
-<header class="top"><div class="in"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><svg class="ico" viewBox="0 0 52 48" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="54" height="15"></span></span></a><nav class="toplinks" aria-label="網站導覽"><a class="hub" href="/">所有音樂獎</a><a class="cur" href="/#gma" aria-current="true">金曲獎</a><button type="button" class="themebtn" aria-label="切換主題"><svg aria-hidden="true"><use href="#i-theme"/></svg>主題</button></nav></div></header>
+<header class="top"><div class="in"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><svg class="ico" viewBox="0 0 52 48" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="54" height="15"></span></span></a><nav class="toplinks" aria-label="網站導覽"><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></nav></div></header>
 <header class="hero">
   <div class="in">
     <nav class="crumb" aria-label="目前位置"><a href="/">聆聽清單</a><span class="sl" aria-hidden="true">/</span><a href="/#gma">金曲獎</a><span class="sl" aria-hidden="true">/</span><span aria-current="page">第 37 屆</span></nav>
     <p class="eyebrow">The 37th Golden Melody Awards · 2026</p>
     <h1>第 <span class="hn">37</span> 屆金曲獎<br>入圍作品聆聽清單</h1>
-    <p class="legend">
-      <span><svg class="lg" aria-hidden="true"><use href="#i-sp"/></svg>Spotify</span>
-      <span><svg class="lg" aria-hidden="true"><use href="#i-yt"/></svg>YouTube</span>
-      <span><svg class="lg" aria-hidden="true"><use href="#i-am"/></svg>Apple Music</span>
-      <span>評選範圍：2025 年發行的作品・頒獎典禮 2026 年 6 月 27 日（台北小巨蛋）</span>
-    </p>
+    <p class="legend"><span>評選範圍：2025 年發行的作品・頒獎典禮 2026 年 6 月 27 日（台北小巨蛋）</span></p>
   </div>
 </header>
 
@@ -456,7 +449,7 @@ footer a{color:var(--accent)}
   /* theme toggle: flips the effective theme and remembers it (shared by all listen.22cs pages) */
   const mq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
   function effTheme(){return root.dataset.theme || (mq && mq.matches ? 'dark' : 'light')}
-  function syncTheme(){$('.themebtn').forEach(b=>{const d=effTheme()==='dark';b.setAttribute('aria-pressed',String(d));b.setAttribute('aria-label',d?'切換為淺色主題':'切換為深色主題')})}
+  function syncTheme(){$('.themebtn').forEach(b=>{const d=effTheme()==='dark';const l=d?'切換為淺色主題':'切換為深色主題';b.setAttribute('aria-label',l);b.title=l})}
   $('.themebtn').forEach(b=>b.addEventListener('click',()=>{const nx=effTheme()==='dark'?'light':'dark';root.dataset.theme=nx;try{localStorage.setItem('l22-theme',nx)}catch(e){}syncTheme()}));
   if(mq&&mq.addEventListener)mq.addEventListener('change',syncTheme);
   syncTheme();
