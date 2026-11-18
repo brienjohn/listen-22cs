@@ -57,6 +57,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .legend span{display:inline-flex;align-items:center;gap:8px}
 .lg{width:20px;height:20px;flex-shrink:0}
 
+/* title + 22CS lockup logo (site builds) */
+.lockup{display:inline-flex;align-items:stretch;height:28px;border-radius:6px;overflow:hidden;text-decoration:none;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,.06);transition:transform .15s}
+.lockup:hover{transform:translateY(-1px)}
+.lockup img{display:block;height:100%;width:auto}
+.lockup span{display:flex;align-items:center;padding:0 11px 0 10px;font-family:var(--f-zh);font-weight:900;font-size:14.5px;letter-spacing:.08em;line-height:1;white-space:nowrap;background:var(--mast-ink);color:var(--mast)}
+.side .lockup span{background:var(--ink);color:var(--bg)}
+.lockup:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 /* site bar (only on listen.22cs.xyz builds) */
 .sitebar{background:var(--mast);color:var(--mast-muted);border-bottom:1px solid #2a2620;font-size:13px}
 .sitebar .in{max-width:var(--maxw);margin:0 auto;padding:0 var(--padR) 0 var(--padL);min-height:48px;display:flex;align-items:center;gap:18px}
@@ -88,7 +95,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 /* shell: sidebar + content */
 .shell{max-width:var(--maxw);margin:0 auto;padding:0 var(--padR) 0 var(--padL);display:grid;grid-template-columns:var(--side) minmax(0,1fr);gap:clamp(36px,4vw,64px)}
 .side{position:sticky;top:0;align-self:start;height:100vh;height:100dvh;overflow-y:auto;overscroll-behavior:contain;padding:28px 6px 48px 0;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
-.side-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:16px}
+.side-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:16px}
+.side-top .totop{width:34px;height:34px;padding:0;justify-content:center;border-radius:50%;flex-shrink:0}
+.side-top .totop span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .sb22{display:block;flex-shrink:0}.sb22 img{display:block;height:30px;width:auto;border-radius:5px;transition:transform .15s}.sb22:hover img{transform:translateY(-1px)}
 .totop{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
 .totop:hover{color:var(--ink);border-color:var(--ink)}
@@ -250,7 +259,7 @@ footer a{color:var(--gold)}
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></symbol>
   <symbol id="i-find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
 </svg>
-<div class="sitebar"><div class="in"><a class="brand-t" href="/">聆聽清單</a><a class="by22" href="https://www.22cs.xyz/" target="_blank" rel="noopener" aria-label="22 世紀衛星（開啟主站）"><span>by</span><img src="/img/22cs.png" alt="22CS" width="72" height="22"></a><i class="sep" aria-hidden="true"></i><nav class="crumbs" aria-label="目前位置"><a href="/#grammy">葛萊美獎</a><span aria-hidden="true">/</span><span aria-current="page">第 69 屆</span></nav><a class="hub" href="/">所有音樂獎</a></div></div>
+<div class="sitebar"><div class="in"><a class="lockup" href="/" aria-label="22CS 聆聽清單（回到首頁）"><img src="/img/22cs.png" alt="" width="92" height="28"><span>聆聽清單</span></a><i class="sep" aria-hidden="true"></i><nav class="crumbs" aria-label="目前位置"><a href="/#grammy">葛萊美獎</a><span aria-hidden="true">/</span><span aria-current="page">第 69 屆</span></nav><a class="hub" href="/">所有音樂獎</a></div></div>
 <header class="mast">
   <div class="in">
     <div>
@@ -274,7 +283,7 @@ footer a{color:var(--gold)}
 
 <div class="shell">
   <aside class="side" aria-label="獎項分類與工具">
-    <div class="side-top"><a class="sb22" href="https://www.22cs.xyz/" target="_blank" rel="noopener" aria-label="22 世紀衛星（開啟主站）"><img src="/img/22cs.png" alt="22CS" width="98" height="30"></a><button type="button" class="totop"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div>
+    <div class="side-top"><a class="lockup reload" href="/grammy/69/" title="重新載入這一頁" aria-label="22CS 聆聽清單（重新載入這一頁）"><img src="/img/22cs.png" alt="" width="92" height="28"><span>聆聽清單</span></a><button type="button" class="totop" title="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div>
     <div class="side-tools">
       <label class="find"><svg fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-find"/></svg>
         <input class="q" type="search" placeholder="搜尋歌手、歌名或專輯" autocomplete="off" aria-label="搜尋入圍作品"></label>
@@ -379,7 +388,8 @@ footer a{color:var(--gold)}
   },{rootMargin:'-12% 0px -80% 0px'});
   cats.forEach(c=>io.observe(c));
 
-  /* back to top */
+  /* back to top; sidebar logo reloads the page at the top */
+  $('.lockup.reload').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();try{history.scrollRestoration='manual'}catch(_){}window.scrollTo(0,0);location.replace(location.pathname)}));
   $('.totop').forEach(b=>b.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'})));
 
   /* phone category scrubber */
