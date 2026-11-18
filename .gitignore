@@ -1,0 +1,5 @@
+# Build inputs stay local; only the built site in docs/ is published.
+editions.json
+build_hub.py
+__pycache__/
+.DS_Store
