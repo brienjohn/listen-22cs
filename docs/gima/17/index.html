@@ -13,6 +13,7 @@
 <meta property="og:site_name" content="22 世紀衛星">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("l22-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
@@ -54,6 +55,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .toplinks{display:flex;align-items:center;gap:22px;color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap}
 .toplinks a{text-decoration:none}
 .toplinks a:hover,.toplinks [aria-current]{color:var(--ink)}
+.themebtn{display:inline-flex;align-items:center;gap:6px;min-width:72px;justify-content:center;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);color:var(--ink);padding:8px 12px;font-size:12px;font-weight:650;cursor:pointer;white-space:nowrap}
+.themebtn:hover{border-color:var(--muted)}
+.themebtn svg{width:14px;height:14px}
 .edsw select{background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font:inherit;font-size:12px}
 
 /* hero */
@@ -268,10 +272,11 @@ footer a{color:var(--accent)}
   <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></symbol>
   <symbol id="i-list" viewBox="0 0 24 24"><rect x="4" y="5" width="4" height="4" rx=".8"/><rect x="4" y="15" width="4" height="4" rx=".8"/><path d="M11 7h9M11 17h9"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z"/></symbol>
+  <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></symbol>
   <symbol id="i-find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
 </svg>
-<header class="top"><div class="in"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><svg class="ico" viewBox="0 0 52 48" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="54" height="15"></span></span></a><nav class="toplinks" aria-label="網站導覽"><a class="hub" href="/">所有音樂獎</a><a class="cur" href="/#gima" aria-current="true">金音創作獎</a></nav></div></header>
+<header class="top"><div class="in"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><svg class="ico" viewBox="0 0 52 48" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="54" height="15"></span></span></a><nav class="toplinks" aria-label="網站導覽"><a class="hub" href="/">所有音樂獎</a><a class="cur" href="/#gima" aria-current="true">金音創作獎</a><button type="button" class="themebtn" aria-label="切換主題"><svg aria-hidden="true"><use href="#i-theme"/></svg>主題</button></nav></div></header>
 <header class="hero">
   <div class="in">
     <nav class="crumb" aria-label="目前位置"><a href="/">聆聽清單</a><span class="sl" aria-hidden="true">/</span><a href="/#gima">金音創作獎</a><span class="sl" aria-hidden="true">/</span><span aria-current="page">第 17 屆</span></nav>
@@ -398,6 +403,14 @@ footer a{color:var(--accent)}
     if(vis.length) mark(vis[0].target);
   },{rootMargin:'-12% 0px -80% 0px'});
   cats.forEach(c=>io.observe(c));
+
+  /* theme toggle: flips the effective theme and remembers it (shared by all listen.22cs pages) */
+  const mq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+  function effTheme(){return root.dataset.theme || (mq && mq.matches ? 'dark' : 'light')}
+  function syncTheme(){$('.themebtn').forEach(b=>{const d=effTheme()==='dark';b.setAttribute('aria-pressed',String(d));b.setAttribute('aria-label',d?'切換為淺色主題':'切換為深色主題')})}
+  $('.themebtn').forEach(b=>b.addEventListener('click',()=>{const nx=effTheme()==='dark'?'light':'dark';root.dataset.theme=nx;try{localStorage.setItem('l22-theme',nx)}catch(e){}syncTheme()}));
+  if(mq&&mq.addEventListener)mq.addEventListener('change',syncTheme);
+  syncTheme();
 
   /* back to top; sidebar logo reloads the page at the top */
   $('.lockup.reload').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();try{history.scrollRestoration='manual'}catch(_){}window.scrollTo(0,0);location.replace(location.pathname)}));
