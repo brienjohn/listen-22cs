@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 268" role="img" aria-label="好奇寶寶，微側面戴著珊瑚粉耳機">
+<title>好奇寶寶 · 戴耳機的微側面 Logo</title>
+<g stroke-linejoin="round" stroke-linecap="round">
+<!-- Small rays outside upper right, not needed for favicon. -->
+
+<!-- Bib behind chin -->
+<path d="M98 181 C100 177 106 178 110 183 C120 192 138 195 158 188 C168 184 172 182 178 187 C193 197 198 217 192 232 C188 239 182 242 175 243 C173 250 164 252 156 251 C151 258 141 260 133 256 C125 262 117 258 110 255 C101 258 92 253 91 245 C81 242 74 234 75 224 C74 205 82 192 98 181 Z" fill="#FFF8F0" stroke="#25252C" stroke-width="9"/>
+<path d="M119 208 L119 237 Q119 242 124 239 L153 223 Q157 220 152 216 L125 201 Q119 199 119 208 Z" fill="#FF7A7A"/>
+<!-- Rear ear cup -->
+<path d="M194 105 C211 104 226 115 227 134 C227 150 215 164 199 164 L190 152 Z" fill="#FF7A7A" stroke="#25252C" stroke-width="9"/>
+<!-- Headband; strong arc is kept from original headphones motif -->
+<path d="M54 120 C55 73 86 39 132 37 C173 36 200 58 207 105 L190 111 C185 78 161 62 130 64 C98 66 80 85 76 119 Z" fill="#FF7A7A" stroke="#25252C" stroke-width="9"/>
+<!-- Cream face with a visibly protruding right cheek/nose: 3/4 side profile -->
+<path d="M71 101 C86 72 119 58 148 65 C180 72 198 92 199 119 C217 119 221 138 207 149 C190 177 163 194 129 195 C97 195 74 180 63 155 C56 140 61 116 71 101 Z" fill="#FFF3E5" stroke="#25252C" stroke-width="9"/>
+<!-- Near ear cup: larger, in foreground -->
+<path d="M45 115 C22 114 10 133 10 153 C10 178 23 196 46 196 C66 197 77 179 77 156 C77 133 64 116 45 115 Z" fill="#FF7A7A" stroke="#25252C" stroke-width="9"/>
+<path d="M53 139 C62 148 63 162 56 174" fill="none" stroke="#25252C" stroke-width="5"/>
+<!-- face features; two eyes intentionally different in size -->
+<ellipse cx="143" cy="126" rx="8" ry="11" fill="#25252C"/>
+<ellipse cx="186" cy="121" rx="5.3" ry="7.2" fill="#25252C"/>
+<ellipse cx="181" cy="151" rx="7.2" ry="9.0" fill="#25252C"/>
+<ellipse cx="181" cy="152.7" rx="3.1" ry="4.7" fill="#FF7A7A"/>
+<!-- nose profile marker -->
+<path d="M203 134 q5 3 0 6" fill="none" stroke="#25252C" stroke-width="3.2"/>
+
+</g>
+</svg>

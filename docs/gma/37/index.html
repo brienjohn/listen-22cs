@@ -21,20 +21,20 @@
 /* Layout (22CS visual handoff v10): light editorial header with the listen-list icon + 聆聽清單 + by 22CS wordmark; text-first hero (crumb, eyebrow, big title with coral underline, intro, bordered stats);
    then the two-column shell — sticky category sidebar on desktop, sticky search bar + auto-hiding right-edge category scrubber on phones — with bordered nominee cards (or condensed rows) ending in three platform logos. */
 /* listen.22cs.xyz shared shell — one source for tokens, the layout container, header, hero heading, breadcrumb and footer.
-   Inlined by listen-22cs/build_hub.py (home, 404) and grammy-69/scripts/build.py (every list page). Visual handoff V10. */
+   Inlined by listen-22cs/build_hub.py (home, 404) and grammy-69/scripts/build.py (every list page). Visual handoff V11. */
 :root{
-  --brand:#FF7A7A;--accent:#B4404B;--bg:#FFF9F2;--surface:#FFFFFF;--surface-2:#F8F2EC;--ink:#24252B;--muted:#6B6870;--line:#E6E0DD;
+  --brand:#FF7A7A;--accent:#B4404B;--bg:#FFF9F2;--surface:#FFFFFF;--surface-2:#F8F2EC;--ink:#24252B;--muted:#68666E;--line:#E6E0DC;
   --yellow:#FFD766;--mint:#BFEADB;--lilac:#E8E2F8;--tag-y:#24252B;--tag-m:#24252B;--tag-l:#24252B;
   --tint:rgba(255,122,122,.13);--on-brand:#1B1B1F;--shadow:0 6px 22px rgba(60,40,30,.05);--shadow-hi:0 10px 30px rgba(60,40,30,.09);
   --f:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
   --maxw:1200px;--pad:24px;--padL:max(var(--pad),env(safe-area-inset-left,0px));--padR:max(var(--pad),env(safe-area-inset-right,0px));
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#111216;--surface:#1C1D22;--surface-2:#26272D;--ink:#F6F3EF;--muted:#B7B5BE;--line:#3C3D44;--accent:#FF7A7A;
+  --bg:#111216;--surface:#1D1E24;--surface-2:#27282F;--ink:#F6F3EF;--muted:#B7B5BE;--line:#3B3C46;--accent:#FF7A7A;
   --yellow:#D3AB4A;--mint:#397B70;--lilac:#65558B;--tag-y:#111216;--tag-m:#FFFFFF;--tag-l:#FFFFFF;
   --tint:rgba(255,122,122,.14);--shadow:none;--shadow-hi:0 10px 30px rgba(0,0,0,.35);color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#111216;--surface:#1C1D22;--surface-2:#26272D;--ink:#F6F3EF;--muted:#B7B5BE;--line:#3C3D44;--accent:#FF7A7A;
+  --bg:#111216;--surface:#1D1E24;--surface-2:#27282F;--ink:#F6F3EF;--muted:#B7B5BE;--line:#3B3C46;--accent:#FF7A7A;
   --yellow:#D3AB4A;--mint:#397B70;--lilac:#65558B;--tag-y:#111216;--tag-m:#FFFFFF;--tag-l:#FFFFFF;
   --tint:rgba(255,122,122,.14);--shadow:none;--shadow-hi:0 10px 30px rgba(0,0,0,.35);color-scheme:dark}
 @media (max-width:720px){:root{--pad:16px}}
@@ -50,21 +50,21 @@ button{font:inherit;color:inherit}
 /* the one layout container: 1200px content box, 24px gutters (16px on phones) */
 .in{width:100%;max-width:calc(var(--maxw) + var(--padL) + var(--padR));margin:0 auto;padding-left:var(--padL);padding-right:var(--padR)}
 
-/* header: a floating rounded bar whose outer edges sit on the container edges */
-.top{padding-top:16px}
-.top .bar{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:10px 14px 10px 18px;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
-.brandmark{display:flex;align-items:center;gap:11px;min-width:0;text-decoration:none;color:var(--ink)}
+/* header: a floating pill bar whose outer edges sit on the container edges (V11) */
+.top{padding-top:14px}
+.top .bar{min-height:62px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:6px 12px 6px 18px;background:color-mix(in srgb,var(--surface) 94%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:31px;box-shadow:0 8px 25px rgba(30,15,20,.05)}
+.brandmark{display:flex;align-items:center;gap:9px;min-width:0;text-decoration:none;color:var(--ink)}
 .top .brandmark{flex-shrink:0}
-.brandmark .ico{width:44px;height:44px;flex:0 0 44px;display:block}
+.brandmark .ico{width:40px;height:41px;flex:0 0 40px;display:block;object-fit:contain}
 .bm-t{display:flex;flex-direction:column;min-width:0}
-.bm-t b{font-size:24px;font-weight:900;line-height:1.13;letter-spacing:-.03em;white-space:nowrap}
-.bm-by{margin-top:5px;display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px;line-height:1}
-.bm-by img{width:48px;height:auto;display:block}
+.bm-t b{font-size:20px;font-weight:900;line-height:1.13;letter-spacing:-.03em;white-space:nowrap}
+.bm-by{margin-top:4px;display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px;line-height:1}
+.bm-by img{width:42px;height:auto;display:block}
 .toplinks{display:flex;align-items:center;gap:14px;min-width:0;color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap}
 .toplinks a{text-decoration:none}.toplinks a:hover,.toplinks [aria-current]{color:var(--ink)}
 .edsw{min-width:0;display:flex}
 .edsw select{max-width:min(46vw,280px);height:36px;text-overflow:ellipsis;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:0 12px;font:inherit;font-size:12.5px;font-weight:650}
-.themebtn{display:inline-grid;place-items:center;width:40px;height:40px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface-2);color:var(--ink);cursor:pointer;flex-shrink:0}
+.themebtn{display:inline-grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface-2);color:var(--ink);cursor:pointer;flex-shrink:0}
 .themebtn:hover{border-color:var(--brand)}
 .themebtn svg{width:19px;height:19px;display:block}
 .themebtn .sun{display:none}
@@ -92,15 +92,15 @@ footer a{color:var(--accent)}
 .cta:hover{filter:brightness(.96)}
 
 @media (max-width:720px){
-  .top{padding-top:10px}
-  .top .bar{min-height:60px;gap:10px;padding:8px 8px 8px 12px;border-radius:16px}
-  .brandmark{gap:9px}
-  .brandmark .ico{width:38px;height:38px;flex-basis:38px}
-  .bm-t b{font-size:21px}
-  .bm-by{margin-top:4px;font-size:10px}.bm-by img{width:42px}
+  .top{padding-top:8px}
+  .top .bar{min-height:54px;gap:10px;padding:5px 7px 5px 12px;border-radius:27px}
+  .brandmark{gap:7px}
+  .brandmark .ico{width:35px;height:36px;flex-basis:35px}
+  .bm-t b{font-size:17px}
+  .bm-by{margin-top:3px;font-size:10px}.bm-by img{width:37px}
   .toplinks{gap:8px}
   .edsw select{max-width:calc(100vw - 236px);height:40px}
-  .themebtn{width:42px;height:42px}
+  .themebtn{width:40px;height:40px}
   .hero .in{padding-top:28px}
   .crumb{margin-bottom:20px}
   .mk-site{grid-template-columns:auto minmax(0,1fr)}.mk-site .cta{grid-column:1/-1;justify-self:start}
@@ -149,7 +149,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 [hidden]{display:none!important}
 mark.hit{background:rgba(255,122,122,.34);color:inherit;border-radius:3px;box-shadow:0 0 0 1.5px rgba(255,122,122,.34)}
 @media (prefers-reduced-motion:reduce){.side-top{transition:none!important}}
-.brandmark.sm{gap:9px}.brandmark.sm .ico{width:34px;height:34px;flex-basis:34px}.brandmark.sm b{font-size:18px}.brandmark.sm .bm-by{margin-top:4px;font-size:10px}.brandmark.sm .bm-by img{width:42px}
+.brandmark.sm{gap:9px}.brandmark.sm .ico{width:34px;height:35px;flex-basis:34px}.brandmark.sm b{font-size:18px}.brandmark.sm .bm-by{margin-top:4px;font-size:10px}.brandmark.sm .bm-by img{width:42px}
 .totop{display:inline-grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid var(--line);background:var(--surface);border-radius:50%;color:var(--muted);cursor:pointer;flex-shrink:0}
 .totop:hover{color:var(--ink);border-color:var(--ink)}
 .totop svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
@@ -274,7 +274,7 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
   .mtop::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:env(safe-area-inset-top,0px);background:var(--bg)}
   .mtop:empty{display:none}
   .mbar.stuck .mtop{opacity:1;visibility:visible;transition:opacity .2s}
-  .mtop .brandmark.sm{gap:8px}.mtop .brandmark.sm .ico{width:30px;height:30px;flex-basis:30px}.mtop .brandmark.sm b{font-size:16px}.mtop .brandmark.sm .bm-by{margin-top:2px}
+  .mtop .brandmark.sm{gap:8px}.mtop .brandmark.sm .ico{width:30px;height:31px;flex-basis:30px}.mtop .brandmark.sm b{font-size:16px}.mtop .brandmark.sm .bm-by{margin-top:2px}
   .mtop .side-ctx{margin:0;padding:0;background:none;gap:6px;white-space:nowrap;font-size:13.5px}
   .mbar .find{flex:1;min-width:0}
   .mbar .find input{height:42px}
@@ -324,7 +324,6 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-listen" viewBox="0 0 64 64"><path d="M14 29 C14 9 23 5 32 5 C43 5 51 15 51 29" fill="none" stroke="#25252B" stroke-width="6" stroke-linecap="round"/><path d="M14 29 C14 9 23 5 32 5 C43 5 51 15 51 29" fill="none" stroke="#FF7A7A" stroke-width="3.8" stroke-linecap="round"/><path d="M20 42h24l3 10c1 5-2 8-7 8H24c-5 0-8-3-7-8z" fill="#FFF7EA" stroke="#25252B" stroke-width="2.8" stroke-linejoin="round"/><path d="M24 50l10 5-10 4z" fill="#F66774" transform="translate(0 -1)"/><ellipse cx="32" cy="30" rx="19" ry="19.5" fill="#FFF7EA" stroke="#25252B" stroke-width="2.8"/><rect x="8" y="23" width="9" height="19" rx="4.5" fill="#FF7A7A" stroke="#25252B" stroke-width="2.5"/><rect x="47" y="23" width="9" height="19" rx="4.5" fill="#FF7A7A" stroke="#25252B" stroke-width="2.5"/><ellipse cx="25" cy="31" rx="2.5" ry="3.2" fill="#25252B"/><ellipse cx="39" cy="31" rx="2.5" ry="3.2" fill="#25252B"/><ellipse cx="32" cy="39" rx="2.7" ry="3.2" fill="#F66774"/><path d="M45 7l2-4 M51 12l4-3 M54 18l5-1" stroke="#FF7A7A" stroke-width="3" stroke-linecap="round"/></symbol>
   <symbol id="i-sp" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1ed760"/><path d="M6.2 9.1c3.9-1.2 8.4-.8 11.7 1.1M6.9 12.5c3.2-.9 6.8-.6 9.6 1M7.6 15.7c2.5-.7 5.2-.5 7.4.7" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round"/></symbol>
   <symbol id="i-yt" viewBox="0 0 24 24"><rect x="0.5" y="4.2" width="23" height="15.6" rx="4.6" fill="#ff0033"/><path d="M9.8 8.6v6.8l5.9-3.4z" fill="#fff"/></symbol>
   <symbol id="i-am" viewBox="0 0 24 24"><defs><linearGradient id="amg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fb5c74"/><stop offset="1" stop-color="#fa233b"/></linearGradient></defs><rect width="24" height="24" rx="5.6" fill="url(#amg)"/><path d="M16.6 5.2v9.7a2.3 2.3 0 1 1-1.4-2.1V8.4l-5.6 1.3v6.9a2.3 2.3 0 1 1-1.4-2.1V7.2z" fill="#fff"/></symbol>
@@ -335,7 +334,7 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></symbol>
   <symbol id="i-find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
 </svg>
-<header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="48" height="13"></span></span></a><nav class="toplinks" aria-label="網站導覽"><label class="edsw"><span class="vh">選擇屆次</span><select onchange="location.href=this.value"><option value="/gma/37/" selected>第 37 屆</option><option value="/gma/36/">第 36 屆</option></select></label><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></nav></div></div></header>
+<header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><img class="ico" src="/img/baby-compact.svg" alt="" width="40" height="41"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><nav class="toplinks" aria-label="網站導覽"><label class="edsw"><span class="vh">選擇屆次</span><select onchange="location.href=this.value"><option value="/gma/37/" selected>第 37 屆</option><option value="/gma/36/">第 36 屆</option></select></label><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></nav></div></div></header>
 <header class="hero">
   <div class="in">
     <nav class="crumb" aria-label="目前位置"><a href="/">聆聽清單</a><span class="sl" aria-hidden="true">/</span><a href="/#gma">金曲獎</a><span class="sl" aria-hidden="true">/</span><span aria-current="page">第 37 屆</span></nav>
@@ -348,7 +347,7 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
 
 <div class="shell">
   <aside class="side" aria-label="獎項分類與工具">
-    <div class="side-top"><div class="st-in"><div class="st-row"><a class="brandmark sm lockup reload" href="/gma/37/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="48" height="13"></span></span></a><button type="button" class="totop" title="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div><p class="side-ctx"><a href="/#gma">金曲獎</a><b>第 37 屆</b></p></div></div>
+    <div class="side-top"><div class="st-in"><div class="st-row"><a class="brandmark sm lockup reload" href="/gma/37/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><img class="ico" src="/img/baby-compact.svg" alt="" width="40" height="41"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><button type="button" class="totop" title="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div><p class="side-ctx"><a href="/#gma">金曲獎</a><b>第 37 屆</b></p></div></div>
     <div class="side-tools">
       <label class="find"><svg fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-find"/></svg>
         <input class="q" type="search" placeholder="搜尋歌手、歌名或專輯" autocomplete="off" aria-label="搜尋作品"></label>
@@ -362,7 +361,7 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
   </aside>
 
   <main>
-    <div class="mbar"><div class="mtop"><a class="brandmark sm lockup reload" href="/gma/37/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="48" height="13"></span></span></a><p class="side-ctx"><a href="/#gma">金曲獎</a><b>第 37 屆</b></p></div>
+    <div class="mbar"><div class="mtop"><a class="brandmark sm lockup reload" href="/gma/37/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><img class="ico" src="/img/baby-compact.svg" alt="" width="40" height="41"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><p class="side-ctx"><a href="/#gma">金曲獎</a><b>第 37 屆</b></p></div>
       <label class="find"><svg fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-find"/></svg>
         <input class="q" type="search" placeholder="搜尋歌手或作品" autocomplete="off" aria-label="搜尋作品"></label>
       <div class="dens" role="group" aria-label="版面配置">

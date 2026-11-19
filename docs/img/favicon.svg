@@ -1,14 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 52" role="img" aria-labelledby="babyTitle">
-<title id="babyTitle">戴耳機的好奇寶寶</title>
-<!-- minimal mascot: headphone arc, face, three features, bib with play symbol -->
-<path d="M14 29 C14 9 23 5 32 5 C43 5 51 15 51 29" fill="none" stroke="#25252B" stroke-width="6" stroke-linecap="round"/>
-<path d="M14 29 C14 9 23 5 32 5 C43 5 51 15 51 29" fill="none" stroke="#FF7A7A" stroke-width="3.8" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 35 229 168" role="img" aria-label="好奇寶寶，微側面戴著珊瑚粉耳機">
+<title>好奇寶寶 · favicon</title>
+<g stroke-linejoin="round" stroke-linecap="round">
+<!-- Small rays outside upper right, not needed for favicon. -->
 
-<ellipse cx="32" cy="30" rx="19" ry="19.5" fill="#FFF7EA" stroke="#25252B" stroke-width="2.8"/>
-<rect x="8" y="23" width="9" height="19" rx="4.5" fill="#FF7A7A" stroke="#25252B" stroke-width="2.5"/>
-<rect x="47" y="23" width="9" height="19" rx="4.5" fill="#FF7A7A" stroke="#25252B" stroke-width="2.5"/>
-<ellipse cx="25" cy="31" rx="2.5" ry="3.2" fill="#25252B"/>
-<ellipse cx="39" cy="31" rx="2.5" ry="3.2" fill="#25252B"/>
-<ellipse cx="32" cy="39" rx="2.7" ry="3.2" fill="#F66774"/>
+<!-- Bib behind chin -->
 
+<!-- Rear ear cup -->
+<path d="M194 105 C211 104 226 115 227 134 C227 150 215 164 199 164 L190 152 Z" fill="#FF7A7A" stroke="#25252C" stroke-width="9"/>
+<!-- Headband; strong arc is kept from original headphones motif -->
+<path d="M54 120 C55 73 86 39 132 37 C173 36 200 58 207 105 L190 111 C185 78 161 62 130 64 C98 66 80 85 76 119 Z" fill="#FF7A7A" stroke="#25252C" stroke-width="9"/>
+<!-- Cream face with a visibly protruding right cheek/nose: 3/4 side profile -->
+<path d="M71 101 C86 72 119 58 148 65 C180 72 198 92 199 119 C217 119 221 138 207 149 C190 177 163 194 129 195 C97 195 74 180 63 155 C56 140 61 116 71 101 Z" fill="#FFF3E5" stroke="#25252C" stroke-width="9"/>
+<!-- Near ear cup: larger, in foreground -->
+<path d="M45 115 C22 114 10 133 10 153 C10 178 23 196 46 196 C66 197 77 179 77 156 C77 133 64 116 45 115 Z" fill="#FF7A7A" stroke="#25252C" stroke-width="9"/>
+<path d="M53 139 C62 148 63 162 56 174" fill="none" stroke="#25252C" stroke-width="5"/>
+<!-- face features; two eyes intentionally different in size -->
+<ellipse cx="143" cy="126" rx="8" ry="11" fill="#25252C"/>
+<ellipse cx="186" cy="121" rx="5.3" ry="7.2" fill="#25252C"/>
+<ellipse cx="181" cy="151" rx="7.2" ry="9.0" fill="#25252C"/>
+<ellipse cx="181" cy="152.7" rx="3.1" ry="4.7" fill="#FF7A7A"/>
+<!-- nose profile marker -->
+<path d="M203 134 q5 3 0 6" fill="none" stroke="#25252C" stroke-width="3.2"/>
+
+</g>
 </svg>
