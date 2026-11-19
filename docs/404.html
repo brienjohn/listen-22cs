@@ -46,7 +46,7 @@ button{font:inherit;color:inherit}
 .top .bar{min-height:62px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:6px 12px 6px 18px;background:color-mix(in srgb,var(--surface) 94%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:31px;box-shadow:0 8px 25px rgba(30,15,20,.05)}
 .brandmark{display:flex;align-items:center;gap:9px;min-width:0;text-decoration:none;color:var(--ink)}
 .top .brandmark{flex-shrink:0}
-.brandmark .ico{width:40px;height:41px;flex:0 0 40px;display:block;object-fit:contain}
+.brandmark .ico{width:40px;height:auto;flex:0 0 40px;display:block;object-fit:contain}
 .bm-t{display:flex;flex-direction:column;min-width:0}
 .bm-t b{font-size:20px;font-weight:900;line-height:1.13;letter-spacing:-.03em;white-space:nowrap}
 .bm-by{margin-top:4px;display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px;line-height:1}
@@ -86,7 +86,7 @@ footer a{color:var(--accent)}
   .top{padding-top:8px}
   .top .bar{min-height:54px;gap:10px;padding:5px 7px 5px 12px;border-radius:27px}
   .brandmark{gap:7px}
-  .brandmark .ico{width:35px;height:36px;flex-basis:35px}
+  .brandmark .ico{width:35px;height:auto;flex-basis:35px}
   .bm-t b{font-size:17px}
   .bm-by{margin-top:3px;font-size:10px}.bm-by img{width:37px}
   .toplinks{gap:8px}
@@ -122,7 +122,7 @@ footer a{color:var(--accent)}
 .o-cc{left:-172px;top:1010px;width:195px;transform:rotate(-32deg);opacity:.32}
 :root[data-theme="dark"] .orn{opacity:.24;filter:saturate(.85)}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .orn{opacity:.24;filter:saturate(.85)}}
 .home-hero{display:flex;align-items:center;justify-content:center;gap:22px;min-height:240px;padding:44px 0 40px}
-.hero-baby{display:block;width:120px;height:124px;flex:none}
+.hero-baby{display:block;width:120px;height:auto;flex:none;object-fit:contain}
 .hero-type{position:relative}
 .home-hero h1{margin:0;font-size:clamp(40px,4.1vw,56px);font-weight:900;line-height:1.17;letter-spacing:-.05em;white-space:nowrap}
 .hero-mark{display:block;width:71%;height:9px;margin:12px 0 9px 6px;background:var(--brand);border-radius:100% 30% 70% 40%;transform:rotate(-1deg)}
@@ -156,14 +156,14 @@ footer a{color:var(--accent)}
 :root[data-theme="dark"] .eds .new{color:#1B1B1F}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .eds .new{color:#1B1B1F}}
 .eds .chev{width:16px;height:16px;flex:none;color:var(--muted)}
 .more{align-self:flex-start;margin:4px 0 6px;padding:6px 0;border:0;background:none;color:var(--accent);font-size:13px;font-weight:750;cursor:pointer}
-@media (max-width:1099px){.sgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.o-hy{left:-160px}.o-hm{right:-170px}.o-cy{right:-180px}.home-hero h1{font-size:44px}.hero-baby{width:108px;height:112px}}
+@media (max-width:1099px){.sgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.o-hy{left:-160px}.o-hm{right:-170px}.o-cy{right:-180px}.home-hero h1{font-size:44px}.hero-baby{width:108px}}
 @media (max-width:620px){
   .secnav{flex:1;justify-content:space-around;gap:0}.secnav a{padding:7px 8px;font-size:13px}
   .top.sticky.scrolled .secnav{display:none}
   .o-hy{left:-135px;top:0;width:190px}.o-hm{right:-152px;top:101px;width:205px}.o-hl{left:-150px;top:295px;width:180px}.o-hc{right:-170px;top:480px;width:185px}
   .o-cy{top:200px;right:-125px;width:165px}.o-cl{top:580px;left:-130px;width:160px}.o-cm{top:1220px;right:-140px;width:180px}.o-cc{top:1500px;left:-140px;width:170px}
   .home-hero{gap:8px;min-height:176px;padding:32px 0 26px}
-  .hero-baby{width:88px;height:91px}
+  .hero-baby{width:84px}
   .home-hero h1{font-size:29px;letter-spacing:-.045em}
   .hero-mark{height:6px;margin:8px 0 7px 4px}
   .hero-by{margin-left:4px;font-size:12px}.hero-by img{width:44px}
@@ -176,7 +176,7 @@ footer a{color:var(--accent)}
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol><symbol id="i-rays" viewBox="0 0 20 20"><path d="M4 9.5L2.5 2.5M9 10.5l5-6M10.5 15.5l7-2" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/></symbol><symbol id="i-ne" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol><symbol id="i-chev" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol></svg>
-<header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><img class="ico" src="/img/baby-compact.svg" alt="" width="40" height="41"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></div></div></header>
+<header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><img class="ico" src="/img/baby-coral-surprised.png" alt="" width="40" height="42"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></div></div></header>
 <header class="hero"><div class="in"><p class="eyebrow">404</p><h1>找不到這個頁面</h1><p class="lede"><a href="/" style="color:var(--accent)">回到聆聽清單首頁</a></p></div></header>
 <footer><div class="in"><div class="mk-site"><a href="https://www.22cs.xyz/" target="_blank" rel="noopener" aria-label="22 世紀衛星"><img src="/img/22cs-wordmark-coral.svg" alt="22 世紀衛星" width="96" height="26"></a><p>聆聽清單是 22 世紀衛星的資料專題。</p><a class="cta" href="https://www.22cs.xyz/" target="_blank" rel="noopener">回到 22 世紀衛星主站 →</a></div></div></footer>
 <script>(function(){var r=document.documentElement,mq=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;

@@ -55,7 +55,7 @@ button{font:inherit;color:inherit}
 .top .bar{min-height:62px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:6px 12px 6px 18px;background:color-mix(in srgb,var(--surface) 94%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:31px;box-shadow:0 8px 25px rgba(30,15,20,.05)}
 .brandmark{display:flex;align-items:center;gap:9px;min-width:0;text-decoration:none;color:var(--ink)}
 .top .brandmark{flex-shrink:0}
-.brandmark .ico{width:40px;height:41px;flex:0 0 40px;display:block;object-fit:contain}
+.brandmark .ico{width:40px;height:auto;flex:0 0 40px;display:block;object-fit:contain}
 .bm-t{display:flex;flex-direction:column;min-width:0}
 .bm-t b{font-size:20px;font-weight:900;line-height:1.13;letter-spacing:-.03em;white-space:nowrap}
 .bm-by{margin-top:4px;display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px;line-height:1}
@@ -95,7 +95,7 @@ footer a{color:var(--accent)}
   .top{padding-top:8px}
   .top .bar{min-height:54px;gap:10px;padding:5px 7px 5px 12px;border-radius:27px}
   .brandmark{gap:7px}
-  .brandmark .ico{width:35px;height:36px;flex-basis:35px}
+  .brandmark .ico{width:35px;height:auto;flex-basis:35px}
   .bm-t b{font-size:17px}
   .bm-by{margin-top:3px;font-size:10px}.bm-by img{width:37px}
   .toplinks{gap:8px}
@@ -149,7 +149,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 [hidden]{display:none!important}
 mark.hit{background:rgba(255,122,122,.34);color:inherit;border-radius:3px;box-shadow:0 0 0 1.5px rgba(255,122,122,.34)}
 @media (prefers-reduced-motion:reduce){.side-top{transition:none!important}}
-.brandmark.sm{gap:9px}.brandmark.sm .ico{width:34px;height:35px;flex-basis:34px}.brandmark.sm b{font-size:18px}.brandmark.sm .bm-by{margin-top:4px;font-size:10px}.brandmark.sm .bm-by img{width:42px}
+.brandmark.sm{gap:9px}.brandmark.sm .ico{width:34px;height:auto;flex-basis:34px}.brandmark.sm b{font-size:18px}.brandmark.sm .bm-by{margin-top:4px;font-size:10px}.brandmark.sm .bm-by img{width:42px}
 .totop{display:inline-grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid var(--line);background:var(--surface);border-radius:50%;color:var(--muted);cursor:pointer;flex-shrink:0}
 .totop:hover{color:var(--ink);border-color:var(--ink)}
 .totop svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
@@ -274,7 +274,7 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
   .mtop::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:env(safe-area-inset-top,0px);background:var(--bg)}
   .mtop:empty{display:none}
   .mbar.stuck .mtop{opacity:1;visibility:visible;transition:opacity .2s}
-  .mtop .brandmark.sm{gap:8px}.mtop .brandmark.sm .ico{width:30px;height:31px;flex-basis:30px}.mtop .brandmark.sm b{font-size:16px}.mtop .brandmark.sm .bm-by{margin-top:2px}
+  .mtop .brandmark.sm{gap:8px}.mtop .brandmark.sm .ico{width:30px;height:auto;flex-basis:30px}.mtop .brandmark.sm b{font-size:16px}.mtop .brandmark.sm .bm-by{margin-top:2px}
   .mtop .side-ctx{margin:0;padding:0;background:none;gap:6px;white-space:nowrap;font-size:13.5px}
   .mbar .find{flex:1;min-width:0}
   .mbar .find input{height:42px}
@@ -334,7 +334,7 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></symbol>
   <symbol id="i-find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
 </svg>
-<header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><img class="ico" src="/img/baby-compact.svg" alt="" width="40" height="41"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><nav class="toplinks" aria-label="網站導覽"><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></nav></div></div></header>
+<header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><img class="ico" src="/img/baby-coral-surprised.png" alt="" width="40" height="42"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><nav class="toplinks" aria-label="網站導覽"><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></nav></div></div></header>
 <header class="hero">
   <div class="in">
     <nav class="crumb" aria-label="目前位置"><a href="/">聆聽清單</a><span class="sl" aria-hidden="true">/</span><a href="/#emerge">浮現祭</a><span class="sl" aria-hidden="true">/</span><span aria-current="page">2027 演出名單</span></nav>
@@ -347,7 +347,7 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
 
 <div class="shell">
   <aside class="side" aria-label="獎項分類與工具">
-    <div class="side-top"><div class="st-in"><div class="st-row"><a class="brandmark sm lockup reload" href="/emerge/2027/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><img class="ico" src="/img/baby-compact.svg" alt="" width="40" height="41"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><button type="button" class="totop" title="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div><p class="side-ctx"><a href="/#emerge">浮現祭</a><b>2027 演出名單</b></p></div></div>
+    <div class="side-top"><div class="st-in"><div class="st-row"><a class="brandmark sm lockup reload" href="/emerge/2027/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><img class="ico" src="/img/baby-coral-surprised.png" alt="" width="40" height="42"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><button type="button" class="totop" title="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div><p class="side-ctx"><a href="/#emerge">浮現祭</a><b>2027 演出名單</b></p></div></div>
     <div class="side-tools">
       <label class="find"><svg fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-find"/></svg>
         <input class="q" type="search" placeholder="搜尋歌手、歌名或專輯" autocomplete="off" aria-label="搜尋作品"></label>
@@ -361,7 +361,7 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
   </aside>
 
   <main>
-    <div class="mbar"><div class="mtop"><a class="brandmark sm lockup reload" href="/emerge/2027/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><img class="ico" src="/img/baby-compact.svg" alt="" width="40" height="41"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><p class="side-ctx"><a href="/#emerge">浮現祭</a><b>2027 演出名單</b></p></div>
+    <div class="mbar"><div class="mtop"><a class="brandmark sm lockup reload" href="/emerge/2027/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><img class="ico" src="/img/baby-coral-surprised.png" alt="" width="40" height="42"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><p class="side-ctx"><a href="/#emerge">浮現祭</a><b>2027 演出名單</b></p></div>
       <label class="find"><svg fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-find"/></svg>
         <input class="q" type="search" placeholder="搜尋歌手或作品" autocomplete="off" aria-label="搜尋作品"></label>
       <div class="dens" role="group" aria-label="版面配置">
