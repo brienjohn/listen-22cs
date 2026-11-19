@@ -20,55 +20,104 @@
 <style>
 /* Layout (22CS visual handoff v10): light editorial header with the listen-list icon + 聆聽清單 + by 22CS wordmark; text-first hero (crumb, eyebrow, big title with coral underline, intro, bordered stats);
    then the two-column shell — sticky category sidebar on desktop, sticky search bar + auto-hiding right-edge category scrubber on phones — with bordered nominee cards (or condensed rows) ending in three platform logos. */
+/* listen.22cs.xyz shared shell — one source for tokens, the layout container, header, hero heading, breadcrumb and footer.
+   Inlined by listen-22cs/build_hub.py (home, 404) and grammy-69/scripts/build.py (every list page). Visual handoff V10. */
 :root{
-  --brand:#FF7A7A; --accent:#B4404B; --bg:#FFF9F2; --surface:#FFFFFF; --surface-2:#F8F2EC; --ink:#24252B; --muted:#6B6870; --line:#E6E0DD; --gold:#D4A017;
-  --tint:rgba(255,122,122,.13); --on-brand:#1B1B1F; --shadow:0 6px 22px rgba(60,40,30,.05); --pop:0 12px 40px rgba(20,20,28,.16);
+  --brand:#FF7A7A;--accent:#B4404B;--bg:#FFF9F2;--surface:#FFFFFF;--surface-2:#F8F2EC;--ink:#24252B;--muted:#6B6870;--line:#E6E0DD;
+  --yellow:#FFD766;--mint:#BFEADB;--lilac:#E8E2F8;--tag-y:#24252B;--tag-m:#24252B;--tag-l:#24252B;
+  --tint:rgba(255,122,122,.13);--on-brand:#1B1B1F;--shadow:0 6px 22px rgba(60,40,30,.05);--shadow-hi:0 10px 30px rgba(60,40,30,.09);
   --f:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-  --maxw:1240px; --pad:28px; --side:236px;
-  --padL:max(var(--pad),env(safe-area-inset-left,0px)); --padR:max(var(--pad),env(safe-area-inset-right,0px));
+  --maxw:1200px;--pad:24px;--padL:max(var(--pad),env(safe-area-inset-left,0px));--padR:max(var(--pad),env(safe-area-inset-right,0px));
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#111216; --surface:#1C1D22; --surface-2:#26272D; --ink:#F6F3EF; --muted:#B7B5BE; --line:#3C3D44; --accent:#FF7A7A; --gold:#E0B43B;
-  --tint:rgba(255,122,122,.14); --shadow:none; --pop:0 12px 40px rgba(0,0,0,.55); color-scheme:dark}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111216;--surface:#1C1D22;--surface-2:#26272D;--ink:#F6F3EF;--muted:#B7B5BE;--line:#3C3D44;--accent:#FF7A7A;
+  --yellow:#D3AB4A;--mint:#397B70;--lilac:#65558B;--tag-y:#111216;--tag-m:#FFFFFF;--tag-l:#FFFFFF;
+  --tint:rgba(255,122,122,.14);--shadow:none;--shadow-hi:0 10px 30px rgba(0,0,0,.35);color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#111216; --surface:#1C1D22; --surface-2:#26272D; --ink:#F6F3EF; --muted:#B7B5BE; --line:#3C3D44; --accent:#FF7A7A; --gold:#E0B43B;
-  --tint:rgba(255,122,122,.14); --shadow:none; --pop:0 12px 40px rgba(0,0,0,.55); color-scheme:dark}
+  --bg:#111216;--surface:#1C1D22;--surface-2:#26272D;--ink:#F6F3EF;--muted:#B7B5BE;--line:#3C3D44;--accent:#FF7A7A;
+  --yellow:#D3AB4A;--mint:#397B70;--lilac:#65558B;--tag-y:#111216;--tag-m:#FFFFFF;--tag-l:#FFFFFF;
+  --tint:rgba(255,122,122,.14);--shadow:none;--shadow-hi:0 10px 30px rgba(0,0,0,.35);color-scheme:dark}
+@media (max-width:720px){:root{--pad:16px}}
 
 *{box-sizing:border-box}
-html{overflow-x:clip;scroll-behavior:smooth}
+html{overflow-x:clip}
 body{margin:0;overflow-x:clip;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
 a{color:inherit}
 button{font:inherit;color:inherit}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--surface)}
-.in{max-width:var(--maxw);margin:0 auto;padding-left:var(--padL);padding-right:var(--padR)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-/* site header (listen.22cs.xyz builds) */
-.top{background:var(--surface);border-bottom:1px solid var(--line)}
-.top .in{min-height:90px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.brandmark{display:flex;align-items:center;gap:12px;min-width:0;text-decoration:none;color:var(--ink)}
+/* the one layout container: 1200px content box, 24px gutters (16px on phones) */
+.in{width:100%;max-width:calc(var(--maxw) + var(--padL) + var(--padR));margin:0 auto;padding-left:var(--padL);padding-right:var(--padR)}
+
+/* header: a floating rounded bar whose outer edges sit on the container edges */
+.top{padding-top:16px}
+.top .bar{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:10px 14px 10px 18px;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.brandmark{display:flex;align-items:center;gap:11px;min-width:0;text-decoration:none;color:var(--ink)}
+.top .brandmark{flex-shrink:0}
 .brandmark .ico{width:44px;height:44px;flex:0 0 44px;display:block}
 .bm-t{display:flex;flex-direction:column;min-width:0}
-.bm-t b{font-size:26px;font-weight:900;line-height:1.13;letter-spacing:-.04em;white-space:nowrap}
-.bm-by{margin-top:6px;display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px;line-height:1}
-.bm-by img{width:50px;height:auto;display:block}
-.toplinks{display:flex;align-items:center;gap:22px;color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap}
-.toplinks a{text-decoration:none}
-.toplinks a:hover,.toplinks [aria-current]{color:var(--ink)}
-.themebtn{display:inline-grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--ink);cursor:pointer;flex-shrink:0}.themebtn:hover{background:var(--surface-2)}.themebtn svg{width:20px;height:20px;display:block}.themebtn .sun{display:none}:root[data-theme="dark"] .themebtn .sun{display:block}:root[data-theme="dark"] .themebtn .moon{display:none}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .themebtn .sun{display:block}:root:not([data-theme="light"]) .themebtn .moon{display:none}}@media (max-width:720px){.themebtn{width:44px;height:44px}}
-.edsw{min-width:0;display:flex}.edsw select{max-width:min(46vw,280px);text-overflow:ellipsis;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font:inherit;font-size:12px}
-.top .brandmark{flex-shrink:0}.toplinks{min-width:0}
-@media (max-width:480px){.toplinks{gap:8px}.edsw select{max-width:calc(100vw - 262px)}}
+.bm-t b{font-size:24px;font-weight:900;line-height:1.13;letter-spacing:-.03em;white-space:nowrap}
+.bm-by{margin-top:5px;display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px;line-height:1}
+.bm-by img{width:48px;height:auto;display:block}
+.toplinks{display:flex;align-items:center;gap:14px;min-width:0;color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap}
+.toplinks a{text-decoration:none}.toplinks a:hover,.toplinks [aria-current]{color:var(--ink)}
+.edsw{min-width:0;display:flex}
+.edsw select{max-width:min(46vw,280px);height:36px;text-overflow:ellipsis;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:0 12px;font:inherit;font-size:12.5px;font-weight:650}
+.themebtn{display:inline-grid;place-items:center;width:40px;height:40px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface-2);color:var(--ink);cursor:pointer;flex-shrink:0}
+.themebtn:hover{border-color:var(--brand)}
+.themebtn svg{width:19px;height:19px;display:block}
+.themebtn .sun{display:none}
+:root[data-theme="dark"] .themebtn .sun{display:block}:root[data-theme="dark"] .themebtn .moon{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .themebtn .sun{display:block}:root:not([data-theme="light"]) .themebtn .moon{display:none}}
 
-/* hero */
-.hero .in{padding-top:52px;padding-bottom:0}
-.crumb{display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:var(--muted);font-size:12px;font-weight:600;margin:0 0 30px}
+/* hero: breadcrumb + H1 start on the container edge on every page */
+.hero .in{padding-top:44px;padding-bottom:0}
+.crumb{display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:var(--muted);font-size:12.5px;font-weight:650;margin:0 0 26px}
 .crumb a{text-decoration:none}.crumb a:hover{color:var(--ink)}
 .crumb .sl{opacity:.5}
-.eyebrow{color:var(--accent);font-size:12px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin:0 0 12px}
-.hero h1{margin:0;max-width:980px;font-size:clamp(34px,4.6vw,64px);font-weight:900;line-height:1.18;letter-spacing:-.05em;text-wrap:balance}
+.hero h1{margin:0;font-weight:900;letter-spacing:-.03em;text-wrap:balance}
 .hero h1 .hn{position:relative;z-index:0;white-space:nowrap}
-.hero h1 .hn::after{content:"";position:absolute;left:0;right:0;bottom:.03em;height:.14em;border-radius:10px;background:var(--brand);opacity:.8;z-index:-1}
+.hero h1 .hn::after{content:"";position:absolute;left:-.04em;right:-.04em;bottom:-.02em;height:.2em;border-radius:999px;background:var(--brand);opacity:.85;z-index:-1}
+.rays{display:inline-block;color:var(--brand);flex-shrink:0}
+
+/* footer */
+footer{margin-top:64px;border-top:1px solid var(--line);background:var(--surface)}
+footer .in{padding-top:28px;padding-bottom:48px;font-size:13px;color:var(--muted);display:grid;gap:8px}
+footer a{color:var(--accent)}
+.mk-site{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:center}
+.mk-site img{display:block;width:96px;height:auto}
+.mk-site p{margin:0;font-size:14px;color:var(--muted)}
+.cta{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:999px;background:var(--brand);color:var(--on-brand)!important;text-decoration:none;font-size:13px;font-weight:750;white-space:nowrap}
+.cta:hover{filter:brightness(.96)}
+
+@media (max-width:720px){
+  .top{padding-top:10px}
+  .top .bar{min-height:60px;gap:10px;padding:8px 8px 8px 12px;border-radius:16px}
+  .brandmark{gap:9px}
+  .brandmark .ico{width:38px;height:38px;flex-basis:38px}
+  .bm-t b{font-size:21px}
+  .bm-by{margin-top:4px;font-size:10px}.bm-by img{width:42px}
+  .toplinks{gap:8px}
+  .edsw select{max-width:calc(100vw - 236px);height:40px}
+  .themebtn{width:42px;height:42px}
+  .hero .in{padding-top:28px}
+  .crumb{margin-bottom:20px}
+  .mk-site{grid-template-columns:auto minmax(0,1fr)}.mk-site .cta{grid-column:1/-1;justify-self:start}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+:root{--gold:#D4A017;--pop:0 12px 40px rgba(20,20,28,.16);--side:236px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gold:#E0B43B;--pop:0 12px 40px rgba(0,0,0,.55)}}
+:root[data-theme="dark"]{--gold:#E0B43B;--pop:0 12px 40px rgba(0,0,0,.55)}
+
+html{scroll-behavior:smooth}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--surface)}
+
+
+/* hero */
+.eyebrow{color:var(--accent);font-size:12px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin:0 0 12px}
+.hero h1{max-width:1000px;font-size:clamp(32px,3.8vw,48px);line-height:1.22}
 .hero h1 em{font-style:normal}
 .lede{margin:25px 0 0;max-width:760px;color:var(--muted);font-size:16px}
 .stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:27px}
@@ -84,7 +133,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .lg{width:16px;height:16px;flex-shrink:0}
 
 /* shell: sidebar + content */
-.shell{max-width:var(--maxw);margin:44px auto 0;padding:0 var(--padR) 0 var(--padL);display:grid;grid-template-columns:var(--side) minmax(0,1fr);gap:clamp(32px,3.6vw,56px);border-top:1px solid var(--line)}
+.shell{max-width:calc(var(--maxw) + var(--padL) + var(--padR));margin:44px auto 0;padding:0 var(--padR) 0 var(--padL);display:grid;grid-template-columns:var(--side) minmax(0,1fr);gap:clamp(32px,3.6vw,56px);background:linear-gradient(var(--line),var(--line)) no-repeat var(--padL) 0/calc(100% - var(--padL) - var(--padR)) 1px}
 .shell::before{content:none}
 .side{position:sticky;top:0;align-self:start;height:100vh;height:100dvh;display:flex;flex-direction:column;padding:24px 0 0}
 .side-top,.side-tools,.side-h{flex-shrink:0;padding-right:6px}
@@ -204,28 +253,13 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
 /* phone index (hidden on desktop) */
 .idx-tab,.idx-panel,.idx-scrim{display:none}
 
-footer{margin-top:56px;border-top:1px solid var(--line);background:var(--surface)}
-footer .in{padding-top:28px;padding-bottom:48px;font-size:13px;color:var(--muted);display:grid;gap:8px}
-footer a{color:var(--accent)}
-.mk-site:last-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
-.mk-site{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:center;padding:0 0 22px;margin-bottom:10px;border-bottom:1px solid var(--line)}
-.mk-site img{display:block;width:96px;height:auto}
-.mk-site p{margin:0;font-size:14px;color:var(--muted)}
-.cta{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:7px;background:var(--brand);color:var(--on-brand)!important;text-decoration:none;font-size:13px;font-weight:750;white-space:nowrap}
-.cta:hover{filter:brightness(.96)}
 
 @media (max-width:1180px){:root{--side:214px}}
 @media (max-width:960px){
-  :root{--pad:20px}
   html,body{overscroll-behavior-x:none}
   body{touch-action:pan-y}
-  .top .in{min-height:76px}
-  .brandmark .ico{width:39px;height:39px;flex-basis:39px}
-  .bm-t b{font-size:23px}
   .toplinks .hub,.toplinks .cur{display:none}
-  .hero .in{padding-top:36px}
-  .crumb{margin-bottom:24px}
-  .hero h1{font-size:clamp(30px,8.2vw,44px)}
+  .hero h1{font-size:clamp(28px,8vw,34px)}
   .lede{font-size:14px}
   .stats{gap:8px}
   .stats div{min-width:0;flex:1 1 0;gap:4px;padding:12px 10px}
@@ -301,7 +335,7 @@ footer a{color:var(--accent)}
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></symbol>
   <symbol id="i-find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
 </svg>
-<header class="top"><div class="in"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="50" height="14"></span></span></a><nav class="toplinks" aria-label="網站導覽"><label class="edsw"><span class="vh">選擇屆次</span><select onchange="location.href=this.value"><option value="/gima/17/">第 17 屆</option><option value="/gima/16/" selected>第 16 屆</option></select></label><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></nav></div></header>
+<header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="48" height="13"></span></span></a><nav class="toplinks" aria-label="網站導覽"><label class="edsw"><span class="vh">選擇屆次</span><select onchange="location.href=this.value"><option value="/gima/17/">第 17 屆</option><option value="/gima/16/" selected>第 16 屆</option></select></label><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></nav></div></div></header>
 <header class="hero">
   <div class="in">
     <nav class="crumb" aria-label="目前位置"><a href="/">聆聽清單</a><span class="sl" aria-hidden="true">/</span><a href="/#gima">金音創作獎</a><span class="sl" aria-hidden="true">/</span><span aria-current="page">第 16 屆</span></nav>
@@ -314,7 +348,7 @@ footer a{color:var(--accent)}
 
 <div class="shell">
   <aside class="side" aria-label="獎項分類與工具">
-    <div class="side-top"><div class="st-in"><div class="st-row"><a class="brandmark sm lockup reload" href="/gima/16/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="50" height="14"></span></span></a><button type="button" class="totop" title="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div><p class="side-ctx"><a href="/#gima">金音創作獎</a><b>第 16 屆</b></p></div></div>
+    <div class="side-top"><div class="st-in"><div class="st-row"><a class="brandmark sm lockup reload" href="/gima/16/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="48" height="13"></span></span></a><button type="button" class="totop" title="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div><p class="side-ctx"><a href="/#gima">金音創作獎</a><b>第 16 屆</b></p></div></div>
     <div class="side-tools">
       <label class="find"><svg fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-find"/></svg>
         <input class="q" type="search" placeholder="搜尋歌手、歌名或專輯" autocomplete="off" aria-label="搜尋作品"></label>
@@ -328,7 +362,7 @@ footer a{color:var(--accent)}
   </aside>
 
   <main>
-    <div class="mbar"><div class="mtop"><a class="brandmark sm lockup reload" href="/gima/16/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="50" height="14"></span></span></a><p class="side-ctx"><a href="/#gima">金音創作獎</a><b>第 16 屆</b></p></div>
+    <div class="mbar"><div class="mtop"><a class="brandmark sm lockup reload" href="/gima/16/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="48" height="13"></span></span></a><p class="side-ctx"><a href="/#gima">金音創作獎</a><b>第 16 屆</b></p></div>
       <label class="find"><svg fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-find"/></svg>
         <input class="q" type="search" placeholder="搜尋歌手或作品" autocomplete="off" aria-label="搜尋作品"></label>
       <div class="dens" role="group" aria-label="版面配置">
