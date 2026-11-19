@@ -18,20 +18,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
 <style>
-/* Layout (22CS visual handoff v4): light editorial header with the listen-list icon + 聆聽清單 + by 22CS wordmark; text-first hero (crumb, eyebrow, big title with coral underline, intro, bordered stats);
+/* Layout (22CS visual handoff v10): light editorial header with the listen-list icon + 聆聽清單 + by 22CS wordmark; text-first hero (crumb, eyebrow, big title with coral underline, intro, bordered stats);
    then the two-column shell — sticky category sidebar on desktop, sticky search bar + auto-hiding right-edge category scrubber on phones — with bordered nominee cards (or condensed rows) ending in three platform logos. */
 :root{
-  --brand:#FF7A7A; --accent:#B4404B; --bg:#FAFAF9; --surface:#FFFFFF; --surface-2:#F7F6F5; --ink:#202025; --muted:#6A6870; --line:#E5E3E1; --gold:#D4A017;
-  --tint:rgba(255,122,122,.13); --on-brand:#1B1B1F; --shadow:0 4px 18px rgba(0,0,0,.025); --pop:0 12px 40px rgba(20,20,28,.16);
+  --brand:#FF7A7A; --accent:#B4404B; --bg:#FFF9F2; --surface:#FFFFFF; --surface-2:#F8F2EC; --ink:#24252B; --muted:#6B6870; --line:#E6E0DD; --gold:#D4A017;
+  --tint:rgba(255,122,122,.13); --on-brand:#1B1B1F; --shadow:0 6px 22px rgba(60,40,30,.05); --pop:0 12px 40px rgba(20,20,28,.16);
   --f:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
   --maxw:1240px; --pad:28px; --side:236px;
   --padL:max(var(--pad),env(safe-area-inset-left,0px)); --padR:max(var(--pad),env(safe-area-inset-right,0px));
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#111216; --surface:#1B1C21; --surface-2:#25262C; --ink:#F4F3F1; --muted:#B6B6BC; --line:#37383F; --accent:#FF7A7A; --gold:#E0B43B;
+  --bg:#111216; --surface:#1C1D22; --surface-2:#26272D; --ink:#F6F3EF; --muted:#B7B5BE; --line:#3C3D44; --accent:#FF7A7A; --gold:#E0B43B;
   --tint:rgba(255,122,122,.14); --shadow:none; --pop:0 12px 40px rgba(0,0,0,.55); color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#111216; --surface:#1B1C21; --surface-2:#25262C; --ink:#F4F3F1; --muted:#B6B6BC; --line:#37383F; --accent:#FF7A7A; --gold:#E0B43B;
+  --bg:#111216; --surface:#1C1D22; --surface-2:#26272D; --ink:#F6F3EF; --muted:#B7B5BE; --line:#3C3D44; --accent:#FF7A7A; --gold:#E0B43B;
   --tint:rgba(255,122,122,.14); --shadow:none; --pop:0 12px 40px rgba(0,0,0,.55); color-scheme:dark}
 
 *{box-sizing:border-box}
@@ -51,7 +51,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .bm-t{display:flex;flex-direction:column;min-width:0}
 .bm-t b{font-size:26px;font-weight:900;line-height:1.13;letter-spacing:-.04em;white-space:nowrap}
 .bm-by{margin-top:6px;display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px;line-height:1}
-.bm-by img{width:54px;height:auto;display:block}
+.bm-by img{width:50px;height:auto;display:block}
 .toplinks{display:flex;align-items:center;gap:22px;color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap}
 .toplinks a{text-decoration:none}
 .toplinks a:hover,.toplinks [aria-current]{color:var(--ink)}
@@ -72,7 +72,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .hero h1 em{font-style:normal}
 .lede{margin:25px 0 0;max-width:760px;color:var(--muted);font-size:16px}
 .stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:27px}
-.stats div{display:flex;align-items:baseline;gap:7px;min-width:160px;padding:15px 17px;background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow)}
+.stats div{display:flex;align-items:baseline;gap:7px;min-width:160px;padding:15px 17px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
 .stats b{font-size:25px;font-weight:800;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
 .stats span{font-size:12px;font-weight:600;color:var(--muted)}
 .legend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin-top:22px;color:var(--muted);font-size:12px}
@@ -155,7 +155,7 @@ main{min-width:0;padding-bottom:24px}
 
 /* cards (standard) */
 .grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:12px}
-.nm{display:flex;flex-direction:column;min-width:0;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow)}
+.nm{display:flex;flex-direction:column;min-width:0;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
 .art{aspect-ratio:1/1;max-width:100%;border-radius:6px;overflow:hidden;background:var(--surface-2);position:relative}
 .art img{width:100%;height:100%;object-fit:cover;display:block}
 .mono{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:42px;letter-spacing:-.02em;color:var(--accent);background:var(--tint)}
@@ -290,7 +290,7 @@ footer a{color:var(--accent)}
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-listen" viewBox="0 0 52 48"><path d="M7 26v-6C7 11 14.6 5 24 5s17 6 17 15v6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><rect x="3.4" y="21" width="6.6" height="13.5" rx="3.3" fill="currentColor"/><rect x="38" y="21" width="6.6" height="13.5" rx="3.3" fill="currentColor"/><rect x="12.6" y="14.2" width="22.8" height="28.6" rx="5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M21 18.6l8 4.8-8 4.8z" fill="#FF7A7A"/><circle cx="17.6" cy="32.2" r="1.35" fill="currentColor"/><path d="M21 32.2h9.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="17.6" cy="37.2" r="1.35" fill="currentColor"/><path d="M21 37.2h9.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M41.6 6.4l2-3.6M44.8 10l3.6-2M45.6 14.6h4" stroke="#FF7A7A" stroke-width="2.3" stroke-linecap="round"/></symbol>
+  <symbol id="i-listen" viewBox="0 0 64 64"><path d="M14 29 C14 9 23 5 32 5 C43 5 51 15 51 29" fill="none" stroke="#25252B" stroke-width="6" stroke-linecap="round"/><path d="M14 29 C14 9 23 5 32 5 C43 5 51 15 51 29" fill="none" stroke="#FF7A7A" stroke-width="3.8" stroke-linecap="round"/><path d="M20 42h24l3 10c1 5-2 8-7 8H24c-5 0-8-3-7-8z" fill="#FFF7EA" stroke="#25252B" stroke-width="2.8" stroke-linejoin="round"/><path d="M24 50l10 5-10 4z" fill="#F66774" transform="translate(0 -1)"/><ellipse cx="32" cy="30" rx="19" ry="19.5" fill="#FFF7EA" stroke="#25252B" stroke-width="2.8"/><rect x="8" y="23" width="9" height="19" rx="4.5" fill="#FF7A7A" stroke="#25252B" stroke-width="2.5"/><rect x="47" y="23" width="9" height="19" rx="4.5" fill="#FF7A7A" stroke="#25252B" stroke-width="2.5"/><ellipse cx="25" cy="31" rx="2.5" ry="3.2" fill="#25252B"/><ellipse cx="39" cy="31" rx="2.5" ry="3.2" fill="#25252B"/><ellipse cx="32" cy="39" rx="2.7" ry="3.2" fill="#F66774"/><path d="M45 7l2-4 M51 12l4-3 M54 18l5-1" stroke="#FF7A7A" stroke-width="3" stroke-linecap="round"/></symbol>
   <symbol id="i-sp" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1ed760"/><path d="M6.2 9.1c3.9-1.2 8.4-.8 11.7 1.1M6.9 12.5c3.2-.9 6.8-.6 9.6 1M7.6 15.7c2.5-.7 5.2-.5 7.4.7" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round"/></symbol>
   <symbol id="i-yt" viewBox="0 0 24 24"><rect x="0.5" y="4.2" width="23" height="15.6" rx="4.6" fill="#ff0033"/><path d="M9.8 8.6v6.8l5.9-3.4z" fill="#fff"/></symbol>
   <symbol id="i-am" viewBox="0 0 24 24"><defs><linearGradient id="amg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fb5c74"/><stop offset="1" stop-color="#fa233b"/></linearGradient></defs><rect width="24" height="24" rx="5.6" fill="url(#amg)"/><path d="M16.6 5.2v9.7a2.3 2.3 0 1 1-1.4-2.1V8.4l-5.6 1.3v6.9a2.3 2.3 0 1 1-1.4-2.1V7.2z" fill="#fff"/></symbol>
@@ -301,7 +301,7 @@ footer a{color:var(--accent)}
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></symbol>
   <symbol id="i-find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
 </svg>
-<header class="top"><div class="in"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><svg class="ico" viewBox="0 0 52 48" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="54" height="15"></span></span></a><nav class="toplinks" aria-label="網站導覽"><label class="edsw"><span class="vh">選擇屆次</span><select onchange="location.href=this.value"><option value="/pitchfork/indie-rock-100/">史上最佳 100 張獨立搖滾專輯</option><option value="/pitchfork/albums-2000s/" selected>2000 年代最佳 200 張專輯</option><option value="/pitchfork/songs-2000s/">2000 年代最佳 200 首歌</option></select></label><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></nav></div></header>
+<header class="top"><div class="in"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="50" height="14"></span></span></a><nav class="toplinks" aria-label="網站導覽"><label class="edsw"><span class="vh">選擇屆次</span><select onchange="location.href=this.value"><option value="/pitchfork/indie-rock-100/">史上最佳 100 張獨立搖滾專輯</option><option value="/pitchfork/albums-2000s/" selected>2000 年代最佳 200 張專輯</option><option value="/pitchfork/songs-2000s/">2000 年代最佳 200 首歌</option></select></label><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></nav></div></header>
 <header class="hero">
   <div class="in">
     <nav class="crumb" aria-label="目前位置"><a href="/">聆聽清單</a><span class="sl" aria-hidden="true">/</span><a href="/#pitchfork">Pitchfork</a><span class="sl" aria-hidden="true">/</span><span aria-current="page">2000 年代最佳 200 張專輯</span></nav>
@@ -314,7 +314,7 @@ footer a{color:var(--accent)}
 
 <div class="shell">
   <aside class="side" aria-label="獎項分類與工具">
-    <div class="side-top"><div class="st-in"><div class="st-row"><a class="brandmark sm lockup reload" href="/pitchfork/albums-2000s/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 52 48" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="54" height="15"></span></span></a><button type="button" class="totop" title="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div><p class="side-ctx"><a href="/#pitchfork">Pitchfork</a><b>2000 年代 200 大</b></p></div></div>
+    <div class="side-top"><div class="st-in"><div class="st-row"><a class="brandmark sm lockup reload" href="/pitchfork/albums-2000s/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="50" height="14"></span></span></a><button type="button" class="totop" title="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div><p class="side-ctx"><a href="/#pitchfork">Pitchfork</a><b>2000 年代 200 大</b></p></div></div>
     <div class="side-tools">
       <label class="find"><svg fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-find"/></svg>
         <input class="q" type="search" placeholder="搜尋歌手、歌名或專輯" autocomplete="off" aria-label="搜尋作品"></label>
@@ -328,7 +328,7 @@ footer a{color:var(--accent)}
   </aside>
 
   <main>
-    <div class="mbar"><div class="mtop"><a class="brandmark sm lockup reload" href="/pitchfork/albums-2000s/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 52 48" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="54" height="15"></span></span></a><p class="side-ctx"><a href="/#pitchfork">Pitchfork</a><b>2000 年代 200 大</b></p></div>
+    <div class="mbar"><div class="mtop"><a class="brandmark sm lockup reload" href="/pitchfork/albums-2000s/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="50" height="14"></span></span></a><p class="side-ctx"><a href="/#pitchfork">Pitchfork</a><b>2000 年代 200 大</b></p></div>
       <label class="find"><svg fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-find"/></svg>
         <input class="q" type="search" placeholder="搜尋歌手或作品" autocomplete="off" aria-label="搜尋作品"></label>
       <div class="dens" role="group" aria-label="版面配置">

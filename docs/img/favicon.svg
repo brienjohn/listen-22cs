@@ -1,1 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 48"><style>.c{color:#202025}@media (prefers-color-scheme:dark){.c{color:#F4F3F1}}</style><g class="c"><path d="M7 26v-6C7 11 14.6 5 24 5s17 6 17 15v6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><rect x="3.4" y="21" width="6.6" height="13.5" rx="3.3" fill="currentColor"/><rect x="38" y="21" width="6.6" height="13.5" rx="3.3" fill="currentColor"/><rect x="12.6" y="14.2" width="22.8" height="28.6" rx="5" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="17.6" cy="32.2" r="1.35" fill="currentColor"/><path d="M21 32.2h9.6M21 37.2h9.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="17.6" cy="37.2" r="1.35" fill="currentColor"/></g><path d="M21 18.6l8 4.8-8 4.8z" fill="#FF7A7A"/><path d="M41.6 6.4l2-3.6M44.8 10l3.6-2M45.6 14.6h4" stroke="#FF7A7A" stroke-width="2.3" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 52" role="img" aria-labelledby="babyTitle">
+<title id="babyTitle">戴耳機的好奇寶寶</title>
+<!-- minimal mascot: headphone arc, face, three features, bib with play symbol -->
+<path d="M14 29 C14 9 23 5 32 5 C43 5 51 15 51 29" fill="none" stroke="#25252B" stroke-width="6" stroke-linecap="round"/>
+<path d="M14 29 C14 9 23 5 32 5 C43 5 51 15 51 29" fill="none" stroke="#FF7A7A" stroke-width="3.8" stroke-linecap="round"/>
+
+<ellipse cx="32" cy="30" rx="19" ry="19.5" fill="#FFF7EA" stroke="#25252B" stroke-width="2.8"/>
+<rect x="8" y="23" width="9" height="19" rx="4.5" fill="#FF7A7A" stroke="#25252B" stroke-width="2.5"/>
+<rect x="47" y="23" width="9" height="19" rx="4.5" fill="#FF7A7A" stroke="#25252B" stroke-width="2.5"/>
+<ellipse cx="25" cy="31" rx="2.5" ry="3.2" fill="#25252B"/>
+<ellipse cx="39" cy="31" rx="2.5" ry="3.2" fill="#25252B"/>
+<ellipse cx="32" cy="39" rx="2.7" ry="3.2" fill="#F66774"/>
+
+</svg>
