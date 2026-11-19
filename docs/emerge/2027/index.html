@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>2027 浮現祭演出名單聆聽清單｜22CS</title>
+<meta name="description" content="浮現祭 Emerge Fest 2027 已公布的演出者，依公布梯次整理，每一組都直接連到 Spotify、YouTube 與 Apple Music 的藝人頁。">
+<link rel="canonical" href="https://listen.22cs.xyz/emerge/2027/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="2027 浮現祭演出名單聆聽清單｜22CS">
+<meta property="og:description" content="浮現祭 Emerge Fest 2027 已公布的演出者，依公布梯次整理，每一組都直接連到 Spotify、YouTube 與 Apple Music 的藝人頁。">
+<meta property="og:url" content="https://listen.22cs.xyz/emerge/2027/">
+<meta property="og:site_name" content="22 世紀衛星">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("l22-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<style>
+/* Layout (22CS visual handoff v4): light editorial header with the listen-list icon + 聆聽清單 + by 22CS wordmark; text-first hero (crumb, eyebrow, big title with coral underline, intro, bordered stats);
+   then the two-column shell — sticky category sidebar on desktop, sticky search bar + auto-hiding right-edge category scrubber on phones — with bordered nominee cards (or condensed rows) ending in three platform logos. */
+:root{
+  --brand:#FF7A7A; --accent:#B4404B; --bg:#FAFAF9; --surface:#FFFFFF; --surface-2:#F7F6F5; --ink:#202025; --muted:#6A6870; --line:#E5E3E1; --gold:#D4A017;
+  --tint:rgba(255,122,122,.13); --on-brand:#1B1B1F; --shadow:0 4px 18px rgba(0,0,0,.025); --pop:0 12px 40px rgba(20,20,28,.16);
+  --f:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --maxw:1240px; --pad:28px; --side:236px;
+  --padL:max(var(--pad),env(safe-area-inset-left,0px)); --padR:max(var(--pad),env(safe-area-inset-right,0px));
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111216; --surface:#1B1C21; --surface-2:#25262C; --ink:#F4F3F1; --muted:#B6B6BC; --line:#37383F; --accent:#FF7A7A; --gold:#E0B43B;
+  --tint:rgba(255,122,122,.14); --shadow:none; --pop:0 12px 40px rgba(0,0,0,.55); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111216; --surface:#1B1C21; --surface-2:#25262C; --ink:#F4F3F1; --muted:#B6B6BC; --line:#37383F; --accent:#FF7A7A; --gold:#E0B43B;
+  --tint:rgba(255,122,122,.14); --shadow:none; --pop:0 12px 40px rgba(0,0,0,.55); color-scheme:dark}
+
+*{box-sizing:border-box}
+html{overflow-x:clip;scroll-behavior:smooth}
+body{margin:0;overflow-x:clip;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+a{color:inherit}
+button{font:inherit;color:inherit}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--surface)}
+.in{max-width:var(--maxw);margin:0 auto;padding-left:var(--padL);padding-right:var(--padR)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* site header (listen.22cs.xyz builds) */
+.top{background:var(--surface);border-bottom:1px solid var(--line)}
+.top .in{min-height:90px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brandmark{display:flex;align-items:center;gap:12px;min-width:0;text-decoration:none;color:var(--ink)}
+.brandmark .ico{width:44px;height:44px;flex:0 0 44px;display:block}
+.bm-t{display:flex;flex-direction:column;min-width:0}
+.bm-t b{font-size:26px;font-weight:900;line-height:1.13;letter-spacing:-.04em;white-space:nowrap}
+.bm-by{margin-top:6px;display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px;line-height:1}
+.bm-by img{width:54px;height:auto;display:block}
+.toplinks{display:flex;align-items:center;gap:22px;color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap}
+.toplinks a{text-decoration:none}
+.toplinks a:hover,.toplinks [aria-current]{color:var(--ink)}
+.themebtn{display:inline-grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--ink);cursor:pointer;flex-shrink:0}.themebtn:hover{background:var(--surface-2)}.themebtn svg{width:20px;height:20px;display:block}.themebtn .sun{display:none}:root[data-theme="dark"] .themebtn .sun{display:block}:root[data-theme="dark"] .themebtn .moon{display:none}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .themebtn .sun{display:block}:root:not([data-theme="light"]) .themebtn .moon{display:none}}@media (max-width:720px){.themebtn{width:44px;height:44px}}
+.edsw{min-width:0;display:flex}.edsw select{max-width:min(46vw,280px);text-overflow:ellipsis;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font:inherit;font-size:12px}
+.top .brandmark{flex-shrink:0}.toplinks{min-width:0}
+@media (max-width:480px){.toplinks{gap:8px}.edsw select{max-width:calc(100vw - 262px)}}
+
+/* hero */
+.hero .in{padding-top:52px;padding-bottom:0}
+.crumb{display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:var(--muted);font-size:12px;font-weight:600;margin:0 0 30px}
+.crumb a{text-decoration:none}.crumb a:hover{color:var(--ink)}
+.crumb .sl{opacity:.5}
+.eyebrow{color:var(--accent);font-size:12px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin:0 0 12px}
+.hero h1{margin:0;max-width:980px;font-size:clamp(34px,4.6vw,64px);font-weight:900;line-height:1.18;letter-spacing:-.05em;text-wrap:balance}
+.hero h1 .hn{position:relative;z-index:0;white-space:nowrap}
+.hero h1 .hn::after{content:"";position:absolute;left:0;right:0;bottom:.03em;height:.14em;border-radius:10px;background:var(--brand);opacity:.8;z-index:-1}
+.hero h1 em{font-style:normal}
+.lede{margin:25px 0 0;max-width:760px;color:var(--muted);font-size:16px}
+.stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:27px}
+.stats div{display:flex;align-items:baseline;gap:7px;min-width:160px;padding:15px 17px;background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow)}
+.stats b{font-size:25px;font-weight:800;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;font-weight:600;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin-top:22px;color:var(--muted);font-size:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.srclink{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin:10px 0 0;font-size:12.5px;color:var(--muted)}
+.srclink a{color:var(--accent);font-weight:650;text-decoration:none;border-bottom:1px solid currentColor}
+.srclink a:hover{border-bottom-width:2px}
+.srclink b{font-weight:650}
+.lg{width:16px;height:16px;flex-shrink:0}
+
+/* shell: sidebar + content */
+.shell{max-width:var(--maxw);margin:44px auto 0;padding:0 var(--padR) 0 var(--padL);display:grid;grid-template-columns:var(--side) minmax(0,1fr);gap:clamp(32px,3.6vw,56px);border-top:1px solid var(--line)}
+.shell::before{content:none}
+.side{position:sticky;top:0;align-self:start;height:100vh;height:100dvh;display:flex;flex-direction:column;padding:24px 0 0}
+.side-top,.side-tools,.side-h{flex-shrink:0;padding-right:6px}
+.navscroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 6px 48px 0;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.side-top{display:grid;grid-template-rows:0fr;opacity:0;visibility:hidden;transform:translateY(-6px);transition:grid-template-rows .28s ease,opacity .2s ease,transform .28s ease,visibility 0s linear .28s}
+.side.stuck .side-top{grid-template-rows:1fr;opacity:1;visibility:visible;transform:none;transition:grid-template-rows .28s ease,opacity .25s ease .05s,transform .28s ease,visibility 0s}
+.st-in{min-height:0;overflow:hidden}
+.st-row{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:34px}
+.side-ctx{display:flex;align-items:baseline;gap:7px;margin:14px 0 16px;padding:9px 11px;border-radius:8px;background:var(--surface-2);font-size:13px;line-height:1.35;color:var(--muted)}
+.side-ctx a{color:var(--ink);font-weight:800;text-decoration:none}.side-ctx a:hover{color:var(--accent)}
+.side-ctx b{color:var(--accent);font-weight:800}
+.st-in>.st-row:last-child{margin-bottom:16px}
+[hidden]{display:none!important}
+mark.hit{background:rgba(255,122,122,.34);color:inherit;border-radius:3px;box-shadow:0 0 0 1.5px rgba(255,122,122,.34)}
+@media (prefers-reduced-motion:reduce){.side-top{transition:none!important}}
+.brandmark.sm{gap:9px}.brandmark.sm .ico{width:34px;height:34px;flex-basis:34px}.brandmark.sm b{font-size:18px}.brandmark.sm .bm-by{margin-top:4px;font-size:10px}.brandmark.sm .bm-by img{width:42px}
+.totop{display:inline-grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid var(--line);background:var(--surface);border-radius:50%;color:var(--muted);cursor:pointer;flex-shrink:0}
+.totop:hover{color:var(--ink);border-color:var(--ink)}
+.totop svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.totop span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.side-tools{display:grid;gap:10px;padding-bottom:20px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+.side-h{margin:0 0 10px;font-size:11px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.nav,.nc,.idx-panel ol{list-style:none;margin:0;padding:0}
+.nav>li{margin-bottom:6px}
+.nf{display:flex;gap:8px;align-items:baseline;padding:8px 11px;border:1px solid var(--line);border-radius:7px;background:var(--surface);text-decoration:none;color:var(--muted);font-weight:650;font-size:13.5px;line-height:1.35}
+.nf span{font-weight:800;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;flex-shrink:0}
+.nf:hover{color:var(--ink);border-color:var(--muted)}
+.nav>li.on>.nf{color:var(--ink);border-color:var(--brand);background:var(--tint)}
+.nav>li.on>.nf span{color:var(--accent)}
+.nc{display:none;margin:6px 0 10px 12px}
+.nav>li.on>.nc{display:block}
+.nc a{display:block;padding:5px 10px 5px 12px;border-left:2px solid var(--line);font-size:13px;line-height:1.35;color:var(--muted);text-decoration:none}
+.nc a:hover{color:var(--ink)}
+.nc a.on{color:var(--ink);border-left-color:var(--brand);font-weight:650}
+.gone{opacity:.32}
+main{min-width:0;padding-bottom:24px}
+
+/* search + density toggle */
+.find{position:relative;display:block}
+.find input{width:100%;height:44px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:0 14px 0 40px;font:inherit;font-size:16px;box-shadow:var(--shadow)}
+.side .find input{font-size:14px}
+.find input::placeholder{color:var(--muted)}
+.find input:focus{outline:2px solid var(--brand);outline-offset:0;border-color:var(--brand)}
+.find svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--muted)}
+.dens{display:inline-grid;grid-template-columns:1fr 1fr;padding:3px;border-radius:9px;background:var(--surface-2);border:1px solid var(--line)}
+.dens button{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;background:transparent;border-radius:7px;padding:6px 12px;font-size:13px;font-weight:650;color:var(--muted);cursor:pointer;white-space:nowrap}
+.dens button svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+.dens button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.mbar{display:none}
+.count{font-size:13px;color:var(--muted);margin:24px 0 0}
+
+/* fields + categories */
+.field{padding-top:40px}
+.fh{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;padding-bottom:12px;border-bottom:2px solid var(--ink)}
+.fh h2{margin:0;font-weight:900;font-size:clamp(24px,2.6vw,30px);line-height:1.2;letter-spacing:-.03em}
+.fh p{margin:0;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);flex:1;min-width:0}
+.fh span{font-size:13px;color:var(--muted)}
+.field,.cat{scroll-margin-top:16px}
+.cat{padding:22px 0 26px;border-bottom:1px solid var(--line)}
+.ch{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;position:sticky;top:var(--cht,0px);z-index:5;margin:-10px 0 7px;padding:10px 0;background:var(--bg);transition:box-shadow .15s}
+.ch.pin{box-shadow:0 1px 0 var(--line)}
+.ch>div{display:contents}
+.no{color:var(--accent);font-size:13px;font-weight:800;font-variant-numeric:tabular-nums}
+.ch h3{margin:0;font-size:23px;font-weight:800;line-height:1.3;letter-spacing:-.03em;text-wrap:balance}
+.ch .en{margin:0;color:var(--muted);font-size:13px;font-weight:500}
+.kd{font-size:13px;color:var(--muted)}
+.ch .en+.kd::before{content:"· ";}
+
+/* cards (standard) */
+.grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:12px}
+.nm{display:flex;flex-direction:column;min-width:0;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow)}
+.art{aspect-ratio:1/1;max-width:100%;border-radius:6px;overflow:hidden;background:var(--surface-2);position:relative}
+.art img{width:100%;height:100%;object-fit:cover;display:block}
+.mono{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:42px;letter-spacing:-.02em;color:var(--accent);background:var(--tint)}
+.tx{padding:11px 2px 10px;min-width:0}
+.tx h4{margin:0;font-size:15px;font-weight:750;line-height:1.3;overflow-wrap:anywhere}
+.by{margin:4px 0 0;font-size:12.5px;color:var(--muted);line-height:1.4;overflow-wrap:anywhere}
+.lks{display:flex;gap:8px;margin-top:auto}
+.lk{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--surface-2);transition:transform .15s,background-color .15s;flex-shrink:0}
+.lk svg{width:23px;height:23px;display:block}
+a.lk:hover{background:var(--line);transform:translateY(-1px)}
+.lk.off{opacity:.28;filter:grayscale(1)}
+.cr{margin-top:8px;font-size:12px;color:var(--muted)}
+.cr summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px}
+.cr summary::-webkit-details-marker{display:none}
+.cr summary::before{content:"+";font-weight:800;color:var(--accent)}
+.cr[open] summary::before{content:"–"}
+.cr p{margin:6px 0 0;line-height:1.5;overflow-wrap:anywhere}
+.empty{padding:60px 0;text-align:center;color:var(--muted)}
+
+/* winners */
+.nm.win{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand),var(--shadow)}
+.nm{position:relative}
+.tro{position:absolute;z-index:2;top:1px;left:1px;width:24px;height:24px;transform:rotate(-10deg);fill:var(--gold);stroke:var(--surface);stroke-width:1.4px;paint-order:stroke;stroke-linejoin:round;pointer-events:none}
+[data-density="dense"] .tro{top:-1px;left:1px;width:19px;height:19px}
+@media (max-width:960px){.tro{top:0;left:0;width:21px;height:21px}[data-density="dense"] .tro{top:-1px;left:1px;width:18px;height:18px}}
+.who{margin:4px 0 0;font-size:12.5px;color:var(--accent);font-weight:600;line-height:1.4;overflow-wrap:anywhere}
+[data-density="dense"] .who{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;margin-top:1px}
+
+/* condensed rows */
+[data-density="dense"] .field{padding-top:32px}
+[data-density="dense"] .cat{padding:16px 0 18px}
+[data-density="dense"] .ch{margin-bottom:0}
+[data-density="dense"] .ch h3{font-size:18px}
+[data-density="dense"] .grid{grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:8px}
+[data-density="dense"] .nm{display:grid;grid-template-columns:52px minmax(0,1fr) auto;grid-template-areas:"art tx lks" "art cr lks";column-gap:12px;align-items:center;padding:8px 10px}
+[data-density="dense"] .art{grid-area:art;width:52px;align-self:start;border-radius:5px}
+[data-density="dense"] .mono{font-size:17px}
+[data-density="dense"] .tx{grid-area:tx;padding:0}
+[data-density="dense"] .tx h4{font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+[data-density="dense"] .by{font-size:12px;margin-top:1px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+[data-density="dense"] .lks{grid-area:lks;align-self:center;margin:0;gap:4px}
+[data-density="dense"] .lk{width:32px;height:32px}
+[data-density="dense"] .lk svg{width:18px;height:18px}
+[data-density="dense"] .cr{grid-area:cr;margin-top:3px}
+
+/* phone index (hidden on desktop) */
+.idx-tab,.idx-panel,.idx-scrim{display:none}
+
+footer{margin-top:56px;border-top:1px solid var(--line);background:var(--surface)}
+footer .in{padding-top:28px;padding-bottom:48px;font-size:13px;color:var(--muted);display:grid;gap:8px}
+footer a{color:var(--accent)}
+.mk-site:last-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+.mk-site{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:center;padding:0 0 22px;margin-bottom:10px;border-bottom:1px solid var(--line)}
+.mk-site img{display:block;width:96px;height:auto}
+.mk-site p{margin:0;font-size:14px;color:var(--muted)}
+.cta{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:7px;background:var(--brand);color:var(--on-brand)!important;text-decoration:none;font-size:13px;font-weight:750;white-space:nowrap}
+.cta:hover{filter:brightness(.96)}
+
+@media (max-width:1180px){:root{--side:214px}}
+@media (max-width:960px){
+  :root{--pad:20px}
+  html,body{overscroll-behavior-x:none}
+  body{touch-action:pan-y}
+  .top .in{min-height:76px}
+  .brandmark .ico{width:39px;height:39px;flex-basis:39px}
+  .bm-t b{font-size:23px}
+  .toplinks .hub,.toplinks .cur{display:none}
+  .hero .in{padding-top:36px}
+  .crumb{margin-bottom:24px}
+  .hero h1{font-size:clamp(30px,8.2vw,44px)}
+  .lede{font-size:14px}
+  .stats{gap:8px}
+  .stats div{min-width:0;flex:1 1 0;gap:4px;padding:12px 10px}
+  .stats span{white-space:nowrap;font-size:11.5px}
+  .stats b{font-size:22px}
+  .shell{display:block;margin-top:32px;border-top:0}
+  .side{display:none}
+  .mbar{display:flex;gap:8px;align-items:center;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 calc(-1 * var(--padR)) 0 calc(-1 * var(--padL));padding:10px var(--padR) 10px var(--padL)}
+  .mbar{top:calc(env(safe-area-inset-top,0px) + 52px)}
+  .mbar:has(.mtop:empty){top:env(safe-area-inset-top,0px)}
+  .mtop{position:absolute;left:0;right:0;bottom:calc(100% + 1px);height:52px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 var(--padR) 0 var(--padL);background:var(--bg);opacity:0;visibility:hidden;transition:opacity .2s,visibility 0s linear .2s}
+  .mtop::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:env(safe-area-inset-top,0px);background:var(--bg)}
+  .mtop:empty{display:none}
+  .mbar.stuck .mtop{opacity:1;visibility:visible;transition:opacity .2s}
+  .mtop .brandmark.sm{gap:8px}.mtop .brandmark.sm .ico{width:30px;height:30px;flex-basis:30px}.mtop .brandmark.sm b{font-size:16px}.mtop .brandmark.sm .bm-by{margin-top:2px}
+  .mtop .side-ctx{margin:0;padding:0;background:none;gap:6px;white-space:nowrap;font-size:13.5px}
+  .mbar .find{flex:1;min-width:0}
+  .mbar .find input{height:42px}
+  .mbar .dens button{padding:7px 9px}
+  .mbar .dens button span{display:none}
+  .mbar .totop{width:42px;height:42px}
+  .field,.cat{scroll-margin-top:124px}
+  .fh p{order:3;flex:1 1 100%}
+  .fh span{margin-left:auto}
+  .field{padding-top:32px}
+  .ch h3{font-size:20px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .nm{padding:8px}
+  .lks{gap:5px}
+  .lk{width:36px;height:36px}
+  .lk svg{width:21px;height:21px}
+  .mono{font-size:32px}
+  [data-density="dense"] .grid{grid-template-columns:minmax(0,1fr);gap:6px}
+  [data-density="dense"] .nm{grid-template-columns:48px minmax(0,1fr) auto;column-gap:10px}
+  [data-density="dense"] .art{width:48px}
+  [data-density="dense"] .lks{gap:3px}
+  [data-density="dense"] .lk{width:31px;height:31px}
+  [data-density="dense"] .lk svg{width:17px;height:17px}
+  .mk-site{grid-template-columns:auto minmax(0,1fr)}.mk-site .cta{grid-column:1/-1;justify-self:start}
+
+  .idx-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;position:fixed;z-index:32;right:max(4px,env(safe-area-inset-right,0px));top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + max(96px,18dvh));width:34px;height:128px;border-radius:17px;border:0;padding:0;background:var(--ink);color:var(--bg);box-shadow:var(--pop);touch-action:none;-webkit-user-select:none;user-select:none;cursor:pointer;opacity:0;transform:translateX(calc(100% + 12px));transition:opacity .25s,transform .25s}
+  .idx-tab.show,.idx-tab.held{opacity:.95;transform:none}
+  .idx-tab b{font-weight:800;font-size:13px;color:var(--brand);font-variant-numeric:tabular-nums}
+  .idx-tab i{font-style:normal;writing-mode:vertical-rl;font-size:12px;font-weight:700;letter-spacing:.2em}
+  .idx-tab u{display:block;width:12px;height:2px;border-radius:1px;background:currentColor;opacity:.5;text-decoration:none;box-shadow:0 4px 0 currentColor}
+  .idx-scrim{display:block;position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .2s;touch-action:none}
+  .idx-scrim.open{opacity:1;pointer-events:auto}
+  .idx-panel{display:block;position:fixed;z-index:31;right:0;top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);width:min(80vw,310px);max-height:88vh;max-height:88dvh;overflow:hidden;padding:10px 0;padding-right:env(safe-area-inset-right,0px);background:var(--surface);border:1px solid var(--line);border-right:0;border-radius:14px 0 0 14px;box-shadow:var(--pop);touch-action:none;-webkit-user-select:none;user-select:none;transform:translateX(105%);transition:transform .22s ease}
+  .idx-panel.open{transform:none}
+  .idx-panel p{margin:0;padding:4px 18px 8px;font-size:11px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .idx-panel a{display:flex;gap:12px;align-items:baseline;padding:9px 54px 9px 18px;font-size:15px;font-weight:650;line-height:1.3;text-decoration:none;color:var(--ink)}
+  .idx-panel a span{font-weight:800;font-size:12px;color:var(--accent);font-variant-numeric:tabular-nums;flex-shrink:0}
+  .idx-panel a.cur{background:var(--tint)}
+  .idx-panel a.hot{background:var(--brand);color:var(--on-brand)}
+  .idx-panel a.hot span{color:var(--on-brand)}
+}
+@media (max-width:960px) and (max-height:620px){.idx-panel a{padding:6px 54px 6px 18px;font-size:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-listen" viewBox="0 0 52 48"><path d="M7 26v-6C7 11 14.6 5 24 5s17 6 17 15v6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><rect x="3.4" y="21" width="6.6" height="13.5" rx="3.3" fill="currentColor"/><rect x="38" y="21" width="6.6" height="13.5" rx="3.3" fill="currentColor"/><rect x="12.6" y="14.2" width="22.8" height="28.6" rx="5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M21 18.6l8 4.8-8 4.8z" fill="#FF7A7A"/><circle cx="17.6" cy="32.2" r="1.35" fill="currentColor"/><path d="M21 32.2h9.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="17.6" cy="37.2" r="1.35" fill="currentColor"/><path d="M21 37.2h9.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M41.6 6.4l2-3.6M44.8 10l3.6-2M45.6 14.6h4" stroke="#FF7A7A" stroke-width="2.3" stroke-linecap="round"/></symbol>
+  <symbol id="i-sp" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1ed760"/><path d="M6.2 9.1c3.9-1.2 8.4-.8 11.7 1.1M6.9 12.5c3.2-.9 6.8-.6 9.6 1M7.6 15.7c2.5-.7 5.2-.5 7.4.7" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-yt" viewBox="0 0 24 24"><rect x="0.5" y="4.2" width="23" height="15.6" rx="4.6" fill="#ff0033"/><path d="M9.8 8.6v6.8l5.9-3.4z" fill="#fff"/></symbol>
+  <symbol id="i-am" viewBox="0 0 24 24"><defs><linearGradient id="amg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fb5c74"/><stop offset="1" stop-color="#fa233b"/></linearGradient></defs><rect width="24" height="24" rx="5.6" fill="url(#amg)"/><path d="M16.6 5.2v9.7a2.3 2.3 0 1 1-1.4-2.1V8.4l-5.6 1.3v6.9a2.3 2.3 0 1 1-1.4-2.1V7.2z" fill="#fff"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><rect x="4" y="5" width="4" height="4" rx=".8"/><rect x="4" y="15" width="4" height="4" rx=".8"/><path d="M11 7h9M11 17h9"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6.6 2.5h10.8v5.6a5.4 5.4 0 0 1-10.8 0z"/><path d="M6.6 3.8H3.2v2.1a4.3 4.3 0 0 0 4.1 4.3l.3-1.8a2.5 2.5 0 0 1-2.6-2.5v-.3h1.6zM17.4 3.8h3.4v2.1a4.3 4.3 0 0 1-4.1 4.3l-.3-1.8a2.5 2.5 0 0 0 2.6-2.5v-.3h-1.6z"/><path d="M10.7 13.2h2.6v3.6h-2.6z"/><path d="M7.9 16.6h8.2a1.2 1.2 0 0 1 1.2 1.2v2.7H6.7v-2.7a1.2 1.2 0 0 1 1.2-1.2z"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></symbol>
+  <symbol id="i-find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+</svg>
+<header class="top"><div class="in"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><svg class="ico" viewBox="0 0 52 48" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="54" height="15"></span></span></a><nav class="toplinks" aria-label="網站導覽"><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></nav></div></header>
+<header class="hero">
+  <div class="in">
+    <nav class="crumb" aria-label="目前位置"><a href="/">聆聽清單</a><span class="sl" aria-hidden="true">/</span><a href="/#emerge">浮現祭</a><span class="sl" aria-hidden="true">/</span><span aria-current="page">2027 演出名單</span></nav>
+    <p class="eyebrow">Emerge Fest 2027</p>
+    <h1><span class="hn">2027</span> 浮現祭<br>演出名單聆聽清單</h1>
+    <p class="legend"><span>2027 年 2 月 20 日（六）、21 日（日）· 台中清水鰲峰山運動公園 · 演出名單陸續公布中，目前公布至第四波</span></p>
+    <p class="srclink"><b>官方來源</b><a href="https://www.facebook.com/emergemusicfest/" target="_blank" rel="noopener">浮現祭官方粉絲專頁 ↗</a></p>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="side" aria-label="獎項分類與工具">
+    <div class="side-top"><div class="st-in"><div class="st-row"><a class="brandmark sm lockup reload" href="/emerge/2027/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 52 48" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="54" height="15"></span></span></a><button type="button" class="totop" title="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg><span>回到頂端</span></button></div><p class="side-ctx"><a href="/#emerge">浮現祭</a><b>2027 演出名單</b></p></div></div>
+    <div class="side-tools">
+      <label class="find"><svg fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-find"/></svg>
+        <input class="q" type="search" placeholder="搜尋歌手、歌名或專輯" autocomplete="off" aria-label="搜尋作品"></label>
+      <div class="dens" role="group" aria-label="版面配置">
+        <button type="button" data-d="std" aria-pressed="true"><svg aria-hidden="true"><use href="#i-grid"/></svg><span>標準</span></button>
+        <button type="button" data-d="dense" aria-pressed="false"><svg aria-hidden="true"><use href="#i-list"/></svg><span>緊湊</span></button>
+      </div>
+    </div>
+    <p class="side-h">Lineup · 公布梯次</p>
+    <nav class="navscroll" aria-label="獎項分類"><ol class="nav"><li><a class="nf" href="#f1" data-f="f1"><span>01</span>第一波</a><ol class="nc"></ol></li><li><a class="nf" href="#f2" data-f="f2"><span>02</span>第二波</a><ol class="nc"></ol></li><li><a class="nf" href="#f3" data-f="f3"><span>03</span>第三波</a><ol class="nc"></ol></li><li><a class="nf" href="#f4" data-f="f4"><span>04</span>第四波</a><ol class="nc"></ol></li></ol></nav>
+  </aside>
+
+  <main>
+    <div class="mbar"><div class="mtop"><a class="brandmark sm lockup reload" href="/emerge/2027/" title="重新載入這一頁" aria-label="聆聽清單 by 22CS（重新載入這一頁）"><svg class="ico" viewBox="0 0 52 48" aria-hidden="true"><use href="#i-listen"/></svg><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="54" height="15"></span></span></a><p class="side-ctx"><a href="/#emerge">浮現祭</a><b>2027 演出名單</b></p></div>
+      <label class="find"><svg fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-find"/></svg>
+        <input class="q" type="search" placeholder="搜尋歌手或作品" autocomplete="off" aria-label="搜尋作品"></label>
+      <div class="dens" role="group" aria-label="版面配置">
+        <button type="button" data-d="std" aria-pressed="true" aria-label="標準版面"><svg aria-hidden="true"><use href="#i-grid"/></svg><span>標準</span></button>
+        <button type="button" data-d="dense" aria-pressed="false" aria-label="緊湊版面"><svg aria-hidden="true"><use href="#i-list"/></svg><span>緊湊</span></button>
+      </div>
+      <button type="button" class="totop" aria-label="回到頂端"><svg aria-hidden="true"><use href="#i-up"/></svg></button>
+    </div>
+    <p class="count" id="count" hidden></p>
+    <div class="field" id="f1"><section class="cat" id="c1"><header class="ch"><div><h3>第一波</h3></div><span class="kd">8 組演出者</span></header><ul class="grid"><li class="nm" data-s="trash  trash trash"><div class="art"><img src="a/1.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>TRASH</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/3KZMUYrA5eIfgZdIFRmNe4" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：TRASH"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCcm5ExAhZ0DbfUEdSUhMQ1w" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：TRASH"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/trash/1159018201" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：TRASH"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="康士坦的變化球 kst  康士坦的變化球 kst 康士坦的變化球 kst"><div class="art"><img src="a/2.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>康士坦的變化球 KST</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/4fmdz90I7bCk35iK6GZ9fK" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：康士坦的變化球 KST"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UC-kJgVw4Gaxf9dHDE5lT4zQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：康士坦的變化球 KST"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E5%BA%B7%E5%A3%AB%E5%9D%A6%E7%9A%84%E8%AE%8A%E5%8C%96%E7%90%83/1185455717" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：康士坦的變化球 KST"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="溫蒂漫步 wendy wander  溫蒂漫步 wendy wander 溫蒂漫步 wendy wander"><div class="art"><img src="a/3.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>溫蒂漫步 Wendy Wander</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/5YVLwkimiEhl8L409NfySF" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：溫蒂漫步 Wendy Wander"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCWS_qh5eYmvGFSUGDn-NL6w" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：溫蒂漫步 Wendy Wander"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E6%BA%AB%E8%92%82%E6%BC%AB%E6%AD%A5/1537365067" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：溫蒂漫步 Wendy Wander"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="イルカポリス 海豚刑警  イルカポリス 海豚刑警 イルカポリス 海豚刑警"><div class="art"><img src="a/4.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>イルカポリス 海豚刑警</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/5F14oggNO5Nvl08UsULzaT" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：イルカポリス 海豚刑警"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCOjS7H2XrIjcPJvzKb5_9nA" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：イルカポリス 海豚刑警"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E3%82%A4%E3%83%AB%E3%82%AB%E3%83%9D%E3%83%AA%E3%82%B9-%E6%B5%B7%E8%B1%9A%E5%88%91%E8%AD%A6/1468070841" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：イルカポリス 海豚刑警"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="tele  tele tele"><div class="art"><img src="a/5.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>Tele</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/2DesRdo7rppo0VC8cR3vsf" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：Tele"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCmwHShLM72vkB1K77F5Rwkg" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：Tele"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/tele/1605513087" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：Tele"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="luv  luv luv"><div class="art"><img src="a/6.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>luv</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/2Gy7SZvabW5UQgL0oljfeB" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：luv"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCSlAKzir4fEOLED33ugSU4A" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：luv"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/luv/1707135888" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：luv"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="ねぎ塩豚丼  ねぎ塩豚丼 ねぎ塩豚丼"><div class="art"><img src="a/7.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>ねぎ塩豚丼</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/6oV6Z93crY9rgbJtOyKE0X" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：ねぎ塩豚丼"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCb15VymqPPdgK9nnISoDDCg" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：ねぎ塩豚丼"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E3%81%AD%E3%81%8E%E5%A1%A9%E8%B1%9A%E4%B8%BC/1794102416" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：ねぎ塩豚丼"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="다다다 dadada  다다다 dadada 다다다 dadada"><div class="art"><img src="a/8.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>다다다 DADADA</h4><p class="who">韓國</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/2QJ3Y9xgZFulkgbDnteypu" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：다다다 DADADA"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCtYDYCTUHbTeC-DXo2I8CaA" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：다다다 DADADA"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/dadada/1831703256" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：다다다 DADADA"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li></ul></section></div><div class="field" id="f2"><section class="cat" id="c2"><header class="ch"><div><h3>第二波</h3></div><span class="kd">8 組演出者</span></header><ul class="grid"><li class="nm" data-s="美秀集團  美秀集團 美秀集團"><div class="art"><img src="a/9.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>美秀集團</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/3n16EAnJtz6SZGx2zJssrI" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：美秀集團"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UC9fwTdQyoeDFhOhNN3CQDlg" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：美秀集團"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E7%BE%8E%E7%A7%80%E9%9B%86%E5%9C%98/1315577977" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：美秀集團"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="crispy脆樂團  crispy脆樂團 crispy脆樂團"><div class="art"><img src="a/10.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>Crispy脆樂團</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/5AO5nzx14PfLNfVgYVd0rw" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：Crispy脆樂團"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCMhfHaA7BlFbGK9vSJQL_aQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：Crispy脆樂團"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E8%84%86%E6%A8%82%E5%9C%98/1183831644" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：Crispy脆樂團"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="我是機車少女i&#x27;mdifficult  我是機車少女i&#x27;mdifficult 我是機車少女i&#x27;mdifficult"><div class="art"><img src="a/11.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>我是機車少女I&#x27;mdifficult</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/00RNgtcAow7k32rk5KiUcl" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：我是機車少女I&#x27;mdifficult"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCAwfNG7w-LEXu5MDMDQRJ1g" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：我是機車少女I&#x27;mdifficult"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E6%88%91%E6%98%AF%E6%A9%9F%E8%BB%8A%E5%B0%91%E5%A5%B3/1461700843" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：我是機車少女I&#x27;mdifficult"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="淺堤 shallow levée  淺堤 shallow levée 淺堤 shallow levée"><div class="art"><img src="a/12.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>淺堤 Shallow Levée</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/6xDRh6bnmn1CQhRUntBka9" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：淺堤 Shallow Levée"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCPA2F4jRwD5-vLwIK9qTSGQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：淺堤 Shallow Levée"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E6%B7%BA%E5%A0%A4/1301801759" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：淺堤 Shallow Levée"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="who cares 胡凱兒  who cares 胡凱兒 who cares 胡凱兒"><div class="art"><img src="a/13.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>Who Cares 胡凱兒</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/0AiFba38vwZy2L1SJGX4mW" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：Who Cares 胡凱兒"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCkt49QaNu_ZD0l0otsSJFSA" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：Who Cares 胡凱兒"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E8%83%A1%E5%87%B1%E5%85%92/1441933599" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：Who Cares 胡凱兒"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="上山  上山 上山"><div class="art"><img src="a/14.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>上山</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/7N2rbojmxF4iaq8QhM0UfH" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：上山"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UC3UkTd4OUpAoEGinikHTeaw" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：上山"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E4%B8%8A%E5%B1%B1/1761111035" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：上山"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="fco.  fco. fco."><div class="art"><img src="a/15.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>FCO.</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/4J9kLpFakm3b9gYfdFfkAq" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：FCO."><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCwoUpR6R-AGBQj86fYaiEHQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：FCO."><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/fco/1852637457" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：FCO."><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="nek!  nek! nek!"><div class="art"><img src="a/16.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>NEK!</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/69bgop9pQQD8inX5vVOl5r" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：NEK!"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCRGJI7pH51ybmOhPMRdJqAA" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：NEK!"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/nek/1740731197" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：NEK!"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li></ul></section></div><div class="field" id="f3"><section class="cat" id="c3"><header class="ch"><div><h3>第三波</h3></div><span class="kd">8 組演出者</span></header><ul class="grid"><li class="nm" data-s="血肉果汁機 flesh juicer  血肉果汁機 flesh juicer 血肉果汁機 flesh juicer"><div class="art"><img src="a/17.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>血肉果汁機 Flesh Juicer</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/78ltY2tUrZpkWJ9CWYGZfl" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：血肉果汁機 Flesh Juicer"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCrogQiCc0y6ePY_m4VcY0mA" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：血肉果汁機 Flesh Juicer"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E8%A1%80%E8%82%89%E6%9E%9C%E6%B1%81%E6%A9%9F/996902316" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：血肉果汁機 Flesh Juicer"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="回聲樂團 echo of your soul  回聲樂團 echo of your soul 回聲樂團 echo of your soul"><div class="art"><img src="a/18.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>回聲樂團 Echo of Your Soul</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/0TEJQb3o4DFVAnBBoVWQmy" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：回聲樂團 Echo of Your Soul"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCjrAC0x3X20gSSELuPWJqAQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：回聲樂團 Echo of Your Soul"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E5%9B%9E%E8%81%B2%E6%A8%82%E5%9C%98/683062866" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：回聲樂團 Echo of Your Soul"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="梁河懸  梁河懸 梁河懸"><div class="art"><img src="a/19.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>梁河懸</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/658bjrNw6ZPjs1rcg6Uloo" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：梁河懸"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><span class="lk off" title="YouTube：找不到作品頁" aria-label="YouTube：找不到作品頁"><svg aria-hidden="true"><use href="#i-yt"/></svg></span><a class="lk" href="https://music.apple.com/tw/artist/%E6%A2%81%E6%B2%B3%E6%87%B8/1829343646" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：梁河懸"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="薄暮 evenfall  薄暮 evenfall 薄暮 evenfall"><div class="art"><img src="a/20.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>薄暮 EVENFALL</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/778rPzhc5oSLtFOeA3SfyF" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：薄暮 EVENFALL"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCixPFyIZ3uKqI3ENJvIzMLg" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：薄暮 EVENFALL"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E8%96%84%E6%9A%AE/1484428220" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：薄暮 EVENFALL"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="ハンブレッダーズ  ハンブレッダーズ ハンブレッダーズ"><div class="art"><img src="a/21.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>ハンブレッダーズ</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/32k7rSC70F3C7qif9Pgavi" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：ハンブレッダーズ"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCecNvZh5h1ZgJ8vycmMAlGg" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：ハンブレッダーズ"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E3%83%8F%E3%83%B3%E3%83%96%E3%83%AC%E3%83%83%E3%83%80%E3%83%BC%E3%82%BA/1072632597" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：ハンブレッダーズ"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="까치산 kachisan  까치산 kachisan 까치산 kachisan"><div class="art"><img src="a/22.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>까치산 KACHISAN</h4><p class="who">韓國</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/20pVcZq4VeWqe3CxlWx2nH" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：까치산 KACHISAN"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UC6Igq_9FoEQuQQM9poinXNg" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：까치산 KACHISAN"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/kachisan/1672907619" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：까치산 KACHISAN"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="ひとひら  ひとひら ひとひら"><div class="art"><img src="a/23.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>ひとひら</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/3PKV6Xh7jBI15NF76VX0hp" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：ひとひら"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><span class="lk off" title="YouTube：找不到作品頁" aria-label="YouTube：找不到作品頁"><svg aria-hidden="true"><use href="#i-yt"/></svg></span><a class="lk" href="https://music.apple.com/tw/artist/%E3%81%B2%E3%81%A8%E3%81%B2%E3%82%89/1571883186" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：ひとひら"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="song ning  song ning song ning"><div class="art"><img src="a/24.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>SONG NING</h4><p class="who">馬來西亞</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/0HSetAKLsr5qfFODMMZUvo" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：SONG NING"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCB_AjZ36N4oHux32Sul1wrg" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：SONG NING"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/song-ning/1859567980" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：SONG NING"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li></ul></section></div><div class="field" id="f4"><section class="cat" id="c4"><header class="ch"><div><h3>第四波</h3></div><span class="kd">7 組演出者</span></header><ul class="grid"><li class="nm" data-s="甜約翰 sweet john  甜約翰 sweet john 甜約翰 sweet john"><div class="art"><img src="a/25.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>甜約翰 Sweet John</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/78UcIEW1VFh2WOgNk0E7mm" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：甜約翰 Sweet John"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UC7xn0mpbaticwKL02M63oNA" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：甜約翰 Sweet John"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E7%94%9C%E7%B4%84%E7%BF%B0/1322196237" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：甜約翰 Sweet John"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="p!sco  p!sco p!sco"><div class="art"><img src="a/26.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>P!SCO</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/5ucZzHHKydsmjyZJT9vOWe" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：P!SCO"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCjaGVPB2EVo2V-o6BcTtD7Q" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：P!SCO"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/p-sco/442909035" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：P!SCO"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="sabrina 胡恂舞  sabrina 胡恂舞 sabrina 胡恂舞"><div class="art"><img src="a/27.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>Sabrina 胡恂舞</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/378nUaqWlvNG3xRIszxzLs" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：Sabrina 胡恂舞"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UClu243psFge7sM1Ph2WnoCA" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：Sabrina 胡恂舞"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/sabrina-%E8%83%A1%E6%81%82%E8%88%9E/1617320698" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：Sabrina 胡恂舞"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="a_root 同根生  a_root 同根生 a_root 同根生"><div class="art"><img src="a/28.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>A_Root 同根生</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/4GNkB3y24Z3AV8itXAUGxE" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：A_Root 同根生"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCr2YYt1xQn5osxyEiVEe2tw" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：A_Root 同根生"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/a-root-%E5%90%8C%E6%A0%B9%E7%94%9F/1846313473" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：A_Root 同根生"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="alien avenge 異族亡魂  alien avenge 異族亡魂 alien avenge 異族亡魂"><div class="art"><span class="mono" aria-hidden="true">AA</span></div><div class="tx"><h4>Alien Avenge 異族亡魂</h4></div><nav class="lks"><span class="lk off" title="Spotify：找不到作品頁" aria-label="Spotify：找不到作品頁"><svg aria-hidden="true"><use href="#i-sp"/></svg></span><span class="lk off" title="YouTube：找不到作品頁" aria-label="YouTube：找不到作品頁"><svg aria-hidden="true"><use href="#i-yt"/></svg></span><span class="lk off" title="Apple Music：找不到作品頁" aria-label="Apple Music：找不到作品頁"><svg aria-hidden="true"><use href="#i-am"/></svg></span></nav></li><li class="nm" data-s="pompadolls  pompadolls pompadolls"><div class="art"><img src="a/29.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>PompadollS</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/5LNw7upmiw5BIrN2UPLeL0" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：PompadollS"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCmu5lpe6Wt-7yCHe2rA4zYQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：PompadollS"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/pompadolls/1725916783" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：PompadollS"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-s="blue mash  blue mash blue mash"><div class="art"><img src="a/30.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"></div><div class="tx"><h4>Blue Mash</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/1qG4m6PAWqUuJ2b3Ahfr07" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：Blue Mash"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCu5y0ZiSiE-jTjcNf3eR8PQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：Blue Mash"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/blue-mash/1510559875" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：Blue Mash"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li></ul></section></div>
+    <p class="empty" id="empty" hidden>找不到符合的作品，換個關鍵字試試。</p>
+  </main>
+</div>
+
+<button type="button" class="idx-tab" id="idxTab" aria-label="開啟獎項分類" aria-controls="idxPanel" aria-expanded="false"><b id="idxNo">01</b><u></u><i>分類</i></button>
+<div class="idx-scrim" id="idxScrim"></div>
+<nav class="idx-panel" id="idxPanel" aria-label="獎項分類"><p>按住滑動選擇 · Categories</p><ol><li><a href="#f1" data-f="f1"><span>01</span>第一波</a></li><li><a href="#f2" data-f="f2"><span>02</span>第二波</a></li><li><a href="#f3" data-f="f3"><span>03</span>第三波</a></li><li><a href="#f4" data-f="f4"><span>04</span>第四波</a></li></ol></nav>
+
+<footer>
+  <div class="in">
+<div class="mk-site"><a href="https://www.22cs.xyz/" target="_blank" rel="noopener" aria-label="22 世紀衛星"><img src="/img/22cs-wordmark-coral.svg" alt="22 世紀衛星" width="96" height="26"></a><p>2027 浮現祭演出名單聆聽清單是 22 世紀衛星的資料專題。資料整理至 2026 年 11 月。</p><a class="cta" href="https://www.22cs.xyz/" target="_blank" rel="noopener">回到 22 世紀衛星主站 →</a></div>
+
+  </div>
+</footer>
+
+<script>
+(function(){
+  const root=document.documentElement;
+  const $=s=>[...document.querySelectorAll(s)];
+  const count=document.getElementById('count'), empty=document.getElementById('empty');
+  const cards=$('.nm'), cats=$('.cat'), fields=$('.field'), inputs=$('.q');
+  const navF=$('.nav>li'), navC=$('.nc a'), idxLinks=$('.idx-panel a');
+  const side=document.querySelector('.navscroll');
+
+  /* density toggle */
+  function setDensity(d,save){
+    root.dataset.density=d;
+    $('.dens button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.d===d)));
+    if(save){try{localStorage.setItem('g69-density',d)}catch(e){}}
+  }
+  let saved='std';try{saved=localStorage.getItem('g69-density')||'std'}catch(e){}
+  setDensity(saved==='dense'?'dense':'std',false);
+  $('.dens button').forEach(b=>b.addEventListener('click',()=>{
+    const cur=activeCat; setDensity(b.dataset.d,true);
+    if(cur && window.scrollY>200) cur.scrollIntoView({block:'start',behavior:'instant'});
+  }));
+
+  /* search */
+  const norm=s=>s.toLowerCase().normalize('NFKD').replace(/\p{M}/gu,'');
+  cards.forEach(c=>c._s=norm(c.dataset.s));
+  let t;
+  inputs.forEach(inp=>inp.addEventListener('input',()=>{
+    inputs.forEach(o=>{if(o!==inp)o.value=inp.value});
+    clearTimeout(t);t=setTimeout(()=>run(inp.value),120);
+  }));
+  function run(raw){
+    const v=norm(raw.trim());let n=0;
+    cards.forEach(c=>{const hit=!v||c._s.includes(v);c.hidden=!hit;if(hit)n++});
+    cats.forEach(s=>{s.hidden=!!v&&!s.querySelector('.nm:not([hidden])')});
+    fields.forEach(f=>{f.hidden=!!v&&!f.querySelector('.cat:not([hidden])')});
+    navC.forEach(a=>a.classList.toggle('gone',document.getElementById(a.dataset.c).hidden));
+    navF.forEach(li=>li.querySelector('.nf').classList.toggle('gone',document.getElementById(li.querySelector('.nf').dataset.f).hidden));
+    idxLinks.forEach(a=>a.classList.toggle('gone',document.getElementById(a.dataset.f).hidden));
+    paint(raw.trim());
+    count.hidden=!v;count.textContent=`符合「${raw.trim()}」的作品：${n} 筆`;
+    empty.hidden=!v||n>0;
+  }
+
+  /* highlight matches inside visible cards (accent-insensitive, same rule as the filter) */
+  let painted=[];
+  function paint(q){
+    painted.forEach(m=>{const p=m.parentNode;if(!p)return;p.replaceChild(document.createTextNode(m.textContent),m);p.normalize()});
+    painted=[];
+    const v=norm(q);if(!v)return;
+    cards.forEach(c=>{
+      if(c.hidden)return;
+      const w=document.createTreeWalker(c,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest('.lks,.vh,svg,.mono')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+      const nodes=[];while(w.nextNode())nodes.push(w.currentNode);
+      nodes.forEach(n=>{
+        const src=n.nodeValue;let ns='';const map=[];
+        for(let i=0;i<src.length;){const cp=src.codePointAt(i),ch=String.fromCodePoint(cp),k=norm(ch);for(let j=0;j<k.length;j++)map.push([i,i+ch.length]);ns+=k;i+=ch.length}
+        const hits=[];let at=ns.indexOf(v);
+        while(at>=0){hits.push([map[at][0],map[at+v.length-1][1]]);at=ns.indexOf(v,at+v.length)}
+        if(!hits.length)return;
+        const frag=document.createDocumentFragment();let last=0;
+        hits.forEach(([a,b])=>{if(a<last)return;frag.append(src.slice(last,a));const m=document.createElement('mark');m.className='hit';m.textContent=src.slice(a,b);frag.append(m);painted.push(m);last=b});
+        frag.append(src.slice(last));n.parentNode.replaceChild(frag,n);
+      });
+    });
+  }
+
+  /* desktop sidebar: logo, back-to-top and award/edition appear once the sidebar sticks */
+  const sideEl=document.querySelector('.side'), mbarEl=document.querySelector('.mbar');
+  if(sideEl){
+    let raf=0;
+    /* category headers stay pinned under the bar while their section is on screen */
+    let cht=0, pinned=null;
+    const setCht=()=>{cht=(mbarEl&&mbarEl.offsetParent!==null)?Math.round(parseFloat(getComputedStyle(mbarEl).top)+mbarEl.offsetHeight):0;root.style.setProperty('--cht',cht+'px')};
+    setCht();
+    const upd=()=>{raf=0;
+      sideEl.classList.toggle('stuck',sideEl.getBoundingClientRect().top<=1&&window.scrollY>40);
+      if(mbarEl&&mbarEl.offsetParent!==null)mbarEl.classList.toggle('stuck',mbarEl.getBoundingClientRect().top<=parseFloat(getComputedStyle(mbarEl).top)+1&&window.scrollY>40);
+      let on=null;
+      for(const c of cats){if(c.hidden)continue;const r=c.getBoundingClientRect();if(r.bottom<=cht)continue;if(r.top<cht-2)on=c.querySelector('.ch');break}
+      if(on!==pinned){if(pinned)pinned.classList.remove('pin');if(on)on.classList.add('pin');pinned=on}
+    };
+    window.addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(upd)},{passive:true});
+    window.addEventListener('resize',()=>{setCht();upd()});upd();
+  }
+
+  /* scroll spy */
+  let activeCat=null;
+  const idxNo=document.getElementById('idxNo');
+  function mark(cat){
+    if(!cat||cat===activeCat)return;
+    activeCat=cat;
+    const fid=cat.closest('.field').id;
+    navF.forEach(li=>li.classList.toggle('on',li.querySelector('.nf').dataset.f===fid));
+    let onLink=null;
+    navC.forEach(a=>{const on=a.dataset.c===cat.id;a.classList.toggle('on',on);if(on)onLink=a});
+    idxLinks.forEach((a,i)=>{const on=a.dataset.f===fid;a.classList.toggle('cur',on);if(on)idxNo.textContent=String(i+1).padStart(2,'0')});
+    if(onLink&&side&&side.offsetParent!==null){
+      const r=onLink.getBoundingClientRect(),sr=side.getBoundingClientRect();
+      if(r.top<sr.top+120||r.bottom>sr.bottom-40) side.scrollTop+=r.top-sr.top-sr.height*0.35;
+    }
+  }
+  const io=new IntersectionObserver(es=>{
+    const vis=es.filter(e=>e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);
+    if(vis.length) mark(vis[0].target);
+  },{rootMargin:'-12% 0px -80% 0px'});
+  cats.forEach(c=>io.observe(c));
+
+  /* theme toggle: flips the effective theme and remembers it (shared by all listen.22cs pages) */
+  const mq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+  function effTheme(){return root.dataset.theme || (mq && mq.matches ? 'dark' : 'light')}
+  function syncTheme(){$('.themebtn').forEach(b=>{const d=effTheme()==='dark';const l=d?'切換為淺色主題':'切換為深色主題';b.setAttribute('aria-label',l);b.title=l})}
+  $('.themebtn').forEach(b=>b.addEventListener('click',()=>{const nx=effTheme()==='dark'?'light':'dark';root.dataset.theme=nx;try{localStorage.setItem('l22-theme',nx)}catch(e){}syncTheme()}));
+  if(mq&&mq.addEventListener)mq.addEventListener('change',syncTheme);
+  syncTheme();
+
+  /* back to top; sidebar logo reloads the page at the top */
+  $('.lockup.reload').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();try{history.scrollRestoration='manual'}catch(_){}window.scrollTo(0,0);location.replace(location.pathname)}));
+  $('.totop').forEach(b=>b.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'})));
+
+  /* phone category scrubber */
+  const tab=document.getElementById('idxTab'), panel=document.getElementById('idxPanel'), scrim=document.getElementById('idxScrim');
+  let hideT, open=false, drag=null;
+  function showTab(){tab.classList.add('show');clearTimeout(hideT);hideT=setTimeout(()=>{if(!open)tab.classList.remove('show')},1800)}
+  window.addEventListener('scroll',showTab,{passive:true});
+  function setOpen(v){
+    open=v;panel.classList.toggle('open',v);scrim.classList.toggle('open',v);tab.classList.toggle('held',v);
+    tab.setAttribute('aria-expanded',String(v));
+    if(!v){idxLinks.forEach(a=>a.classList.remove('hot'));showTab()}
+  }
+  function jump(fid){
+    const el=document.getElementById(fid);
+    setOpen(false);
+    if(el&&!el.hidden){el.scrollIntoView({block:'start',behavior:'instant'});const c=el.querySelector('.cat');if(c)mark(c)}
+  }
+  function hotAt(x,y){
+    const el=document.elementFromPoint(x,y);
+    const a=el&&el.closest?el.closest('.idx-panel a'):null;
+    idxLinks.forEach(l=>l.classList.toggle('hot',l===a));
+    return a;
+  }
+  function startDrag(e){
+    e.preventDefault();
+    drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,hot:null,src:e.currentTarget,was:open};
+    try{e.currentTarget.setPointerCapture(e.pointerId)}catch(_){}
+    if(!open)setOpen(true);
+    drag.hot=hotAt(e.clientX,e.clientY);
+  }
+  function moveDrag(e){
+    if(!drag||e.pointerId!==drag.id)return;
+    if(Math.abs(e.clientY-drag.y)+Math.abs(e.clientX-drag.x)>6)drag.moved=true;
+    drag.hot=hotAt(e.clientX,e.clientY);
+  }
+  function endDrag(e){
+    if(!drag||e.pointerId!==drag.id)return;
+    const d=drag;drag=null;
+    const a=hotAt(e.clientX,e.clientY);
+    if(d.src===tab&&d.was&&!d.moved)setOpen(false);
+    else if(a&&!a.classList.contains('gone')&&(d.moved||d.src===panel))jump(a.dataset.f);
+    else if(d.src===panel&&!a)setOpen(false);
+    else idxLinks.forEach(l=>l.classList.remove('hot'));
+  }
+  [tab,panel].forEach(el=>{
+    el.addEventListener('pointerdown',startDrag);
+    el.addEventListener('pointermove',moveDrag);
+    el.addEventListener('pointerup',endDrag);
+    el.addEventListener('pointercancel',()=>{drag=null;idxLinks.forEach(l=>l.classList.remove('hot'))});
+  });
+  idxLinks.forEach(a=>a.addEventListener('click',e=>{e.preventDefault()}));
+  idxLinks.forEach(a=>a.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();jump(a.dataset.f)}}));
+  tab.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setOpen(!open);if(open)idxLinks[0].focus()}});
+  scrim.addEventListener('pointerdown',e=>{e.preventDefault();setOpen(false)});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&open)setOpen(false)});
+})();
+</script>
+
+</body>
+</html>
