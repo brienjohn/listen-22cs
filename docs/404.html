@@ -156,8 +156,8 @@ footer a{color:var(--accent)}
 .visual .go{position:absolute;z-index:2;top:10px;right:10px;margin:0;background:color-mix(in srgb,var(--surface) 90%,transparent);box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .series.has-banner .sb{padding-top:4px}.series.has-banner .eds li:first-child{border-top:0}
 /* real-cover stack beside each list row; hidden when it would touch the text */
-.eds a{position:relative;isolation:isolate}.eds .nm{position:relative;z-index:1}.eds .chev{position:relative;z-index:1}
-.cvs{position:absolute;right:24px;top:50%;width:170px;height:40px;margin-top:-20px;pointer-events:none;z-index:0}
+.eds a{position:relative}.eds .nm{position:relative;z-index:1}.eds .chev{position:relative;z-index:1}
+.cvs{position:absolute;right:36px;top:50%;width:170px;height:40px;margin-top:-20px;pointer-events:none;z-index:0}
 /* covers stay crisp: no wash over the stack, only a gentle step-down behind the front card */
 :root[data-theme="dark"] .cvs img{box-shadow:0 1px 2px rgba(0,0,0,.35),0 3px 9px rgba(0,0,0,.45)}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cvs img{box-shadow:0 1px 2px rgba(0,0,0,.35),0 3px 9px rgba(0,0,0,.45)}}
 .cvs img{position:absolute;top:50%;width:38px;height:38px;margin-top:-19px;border-radius:4px;object-fit:cover;background:var(--surface-2);outline:1px solid rgba(255,255,255,.7);outline-offset:-1px;box-shadow:0 1px 2px rgba(40,25,20,.14),0 3px 8px rgba(40,25,20,.16)}
@@ -172,32 +172,27 @@ footer a{color:var(--accent)}
 .go svg{width:16px;height:16px}.go:hover{background:var(--brand);color:var(--on-brand)}
 .eds{list-style:none;margin:0;padding:0}
 .eds li.x{display:none}.series.open .eds li.x{display:block}
-.eds a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;color:var(--ink);text-decoration:none;font-size:14px;font-weight:750}
+.eds a{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 -10px;padding:9px 10px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14px;font-weight:750}
 .eds li{border-top:1px solid var(--line)}
 .eds .nm{min-width:0}
 .eds .yr{margin-left:6px;color:var(--muted);font-size:12.5px;font-weight:500;font-variant-numeric:tabular-nums}
 .eds .new{display:inline-block;margin-left:7px;padding:1px 7px;border-radius:999px;background:var(--brand);color:#fff;font-size:10.5px;font-weight:800;vertical-align:2px}
 :root[data-theme="dark"] .eds .new{color:#1B1B1F}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .eds .new{color:#1B1B1F}}
-.eds .chev{width:16px;height:16px;flex:none;color:var(--muted);border-radius:50%}
-/* row hover / keyboard focus: a soft coral plate behind the whole row (drawn by ::before, so nothing reflows), 2px lift,
-   coral arrow disc, and the cover stack fans out only by the slack the page script measured (--sp) */
-.eds a{--hl-bg:color-mix(in srgb,#FF7A7A 11%,var(--surface));--hl-line:color-mix(in srgb,#FF7A7A 42%,var(--surface));--hl-shadow:0 6px 16px rgba(255,122,122,.20),0 1px 3px rgba(60,30,30,.08)}
-:root[data-theme="dark"] .eds a{--hl-bg:color-mix(in srgb,#FF7A7A 17%,var(--surface));--hl-line:color-mix(in srgb,#FF7A7A 50%,var(--surface));--hl-shadow:0 6px 18px rgba(0,0,0,.45),0 0 0 1px rgba(255,122,122,.08)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .eds a{--hl-bg:color-mix(in srgb,#FF7A7A 17%,var(--surface));--hl-line:color-mix(in srgb,#FF7A7A 50%,var(--surface));--hl-shadow:0 6px 18px rgba(0,0,0,.45),0 0 0 1px rgba(255,122,122,.08)}}
-.eds a::before{content:"";position:absolute;z-index:-1;inset:1px -10px;border-radius:12px;background:var(--hl-bg);border:1px solid var(--hl-line);box-shadow:var(--hl-shadow);opacity:0;transition:opacity .2s ease}
-.eds a,.eds .chev,.cvs img{transition:transform .2s ease,translate .2s ease,color .2s ease,background-color .2s ease,box-shadow .2s ease}
-.eds a:focus-visible{outline:none}
-.eds a:focus-visible::before{opacity:1;box-shadow:var(--hl-shadow),0 0 0 2px var(--accent)}
-.eds a:focus-visible{color:var(--accent);transform:translateY(-2px)}
-.eds a:focus-visible .chev{color:#fff;background:#FF7A7A;box-shadow:0 0 0 5px #FF7A7A;transform:translate(2px,-2px)}
-.eds a:focus-visible .cvs img{translate:calc(var(--f,0) * var(--sp,0px) * -1) 0}
+/* arrow: a fixed 24px disc that holds the 16px chevron dead centre; the -4px margins keep its layout footprint at the old 16px,
+   so the row height and every position are identical with or without the disc */
+.eds .chev{display:grid;place-items:center;flex:none;width:24px;height:24px;margin:-4px -4px -4px 0;border-radius:50%;color:var(--muted);line-height:0}
+.eds .chev svg{display:block;width:16px;height:16px}
+/* row hover / keyboard focus: only colours change — the row's own background turns soft coral, title and arrow recolour */
+.eds a{--hl:color-mix(in srgb,#FF7A7A 14%,var(--surface));transition:background-color .2s ease,color .2s ease}
+.eds .chev{transition:background-color .2s ease,color .2s ease}
+:root[data-theme="dark"] .eds a{--hl:color-mix(in srgb,#FF7A7A 22%,var(--surface))}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .eds a{--hl:color-mix(in srgb,#FF7A7A 22%,var(--surface))}}
+.eds a:focus-visible{outline:none;background-color:var(--hl);color:var(--accent)}
+.eds a:focus-visible .chev{background-color:#FF7A7A;color:#fff}
 @media (hover:hover) and (pointer:fine){
-  .eds a:hover{color:var(--accent);transform:translateY(-2px)}
-  .eds a:hover::before{opacity:1}
-  .eds a:hover .chev{color:#fff;background:#FF7A7A;box-shadow:0 0 0 5px #FF7A7A;transform:translate(2px,-2px)}
-  .eds a:hover .cvs img{translate:calc(var(--f,0) * var(--sp,0px) * -1) 0}
+  .eds a:hover{background-color:var(--hl);color:var(--accent)}
+  .eds a:hover .chev{background-color:#FF7A7A;color:#fff}
 }
-@media (prefers-reduced-motion:reduce){.eds a:hover,.eds a:focus-visible,.eds a:hover .chev,.eds a:focus-visible .chev{transform:none}.eds a:hover .cvs img,.eds a:focus-visible .cvs img{translate:none}}
 .more{align-self:flex-start;margin:4px 0 6px;padding:6px 0;border:0;background:none;color:var(--accent);font-size:13px;font-weight:750;cursor:pointer}
 @media (max-width:1099px){.sgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.o-hy{left:-160px}.o-hm{right:-170px}.o-cy{right:-180px}.home-hero h1{font-size:44px}.hero-baby{width:108px}}
 @media (max-width:620px){
@@ -232,8 +227,8 @@ if(top&&h1&&'IntersectionObserver'in window){new IntersectionObserver(function(e
 function fit(){var W=innerWidth,MAX=W<=620?3:W<=1099?4:5,ROT=[3,-2,4,-3,2],S=38,ST=31;
 document.querySelectorAll('.cvs').forEach(function(c){var a=c.parentNode,n=a.querySelector('.nm');if(!n||!a.offsetParent)return;var im=[].slice.call(c.querySelectorAll('img'));c.classList.remove('off');
 if(!im.length){c.classList.add('off');return}var nr=n.getBoundingClientRect().right,tries=[];for(var k=Math.min(MAX,im.length);k>=1;k--)tries.push([k,S]);
-function set(k,s){var st=ST;im.forEach(function(m,i){if(i>=k){m.style.display='none';return}var f=k-1-i;m.style.display='block';m.style.width=m.style.height=s+'px';m.style.marginTop=(-s/2)+'px';m.style.right=(f*st)+'px';m.style.transform='rotate('+ROT[f]+'deg)';m.style.setProperty('--f',f)})}
-for(var t=0;t<tries.length;t++){set(tries[t][0],tries[t][1]);var l=1e9;im.forEach(function(m){if(m.style.display!=='none')l=Math.min(l,m.getBoundingClientRect().left)});if(nr+6<=l){c.style.setProperty('--sp',Math.max(0,Math.min(4,(l-nr-6)/Math.max(1,tries[t][0]-1))).toFixed(1)+'px');return}}c.classList.add('off')})}
+function set(k,s){var st=ST;im.forEach(function(m,i){if(i>=k){m.style.display='none';return}var f=k-1-i;m.style.display='block';m.style.width=m.style.height=s+'px';m.style.marginTop=(-s/2)+'px';m.style.right=(f*st)+'px';m.style.transform='rotate('+ROT[f]+'deg)'})}
+for(var t=0;t<tries.length;t++){set(tries[t][0],tries[t][1]);var l=1e9;im.forEach(function(m){if(m.style.display!=='none')l=Math.min(l,m.getBoundingClientRect().left)});if(nr+6<=l)return}c.classList.add('off')})}
 document.querySelectorAll('.cvs img').forEach(function(m){m.addEventListener('error',function(){m.remove();fit()})});
 document.querySelectorAll('.more').forEach(function(b){b.addEventListener('click',function(){var c=b.closest('.series'),o=c.classList.toggle('open');b.setAttribute('aria-expanded',o);b.textContent=o?'收合':b.dataset.label;fit()})});
 fit();addEventListener('resize',fit);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit)})();</script>
