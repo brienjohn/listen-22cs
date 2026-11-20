@@ -135,7 +135,9 @@ footer a{color:var(--accent)}
 .s-award h2{background:var(--lab-award)}.s-fest h2{background:var(--lab-fest)}.s-chart h2{background:var(--lab-chart)}
 .sh .sen{color:var(--muted);font-size:13px;font-weight:800;letter-spacing:.1em}
 .sh{min-height:55px}.sh .acc{display:block;width:33px;height:31px;object-fit:contain;margin-left:-6px;transform:rotate(17deg)}
-.s-fest .acc{width:57px;height:25px;margin-left:-2px;transform:rotate(-9deg)}.s-chart .acc{width:29px;height:28px;transform:rotate(-19deg)}
+.s-fest .acc{width:57px;height:25px;margin-left:-2px;transform:rotate(-9deg)}
+/* sparks: mirrored so the three strokes fan up/right out of the label's top-right corner */
+.sh .sen{position:relative}.sh .sen .spark{position:absolute;left:calc(100% - 8px);top:-9px;width:22px;height:21px;margin:0;transform:scaleX(-1)}
 .sgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
 .series{display:flex;flex-direction:column;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden;scroll-margin-top:96px}
 .art{display:flex;height:86px;overflow:hidden;background:var(--surface-2)}
@@ -155,10 +157,14 @@ footer a{color:var(--accent)}
 .series.has-banner .sb{padding-top:4px}.series.has-banner .eds li:first-child a{border-top:0}
 /* real-cover stack beside each list row; hidden when it would touch the text */
 .eds a{position:relative}.eds .nm{position:relative;z-index:1}.eds .chev{position:relative;z-index:1}
-.cvs{position:absolute;right:30px;top:50%;width:82px;height:36px;margin-top:-18px;opacity:.46;pointer-events:none;z-index:0}
-:root[data-theme="dark"] .cvs{opacity:.54}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cvs{opacity:.54}}
+.cvs{position:absolute;right:24px;top:50%;width:84px;height:34px;margin-top:-17px;opacity:.6;pointer-events:none;z-index:0}
+:root[data-theme="dark"] .cvs{opacity:.66}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cvs{opacity:.66}}
 .cvs img{position:absolute;top:0;width:34px;height:34px;border-radius:4px;object-fit:cover;outline:1px solid rgba(255,255,255,.55);box-shadow:0 2px 7px rgba(0,0,0,.12)}
-.cvs img:nth-child(1){left:0;transform:rotate(-11deg)}.cvs img:nth-child(2){left:23px;transform:rotate(3deg)}.cvs img:nth-child(3){left:46px;transform:rotate(10deg)}
+.cvs img:nth-child(1){right:46px;transform:rotate(-11deg)}.cvs img:nth-child(2){right:23px;transform:rotate(3deg)}.cvs img:nth-child(3){right:0;transform:rotate(10deg)}
+/* tighter fallbacks for narrow rows (still 2–3 real covers); the stack hides only when even the smallest would touch the text */
+.cvs.t1 img{width:28px;height:28px;top:3px}.cvs.t1 img:nth-child(1){right:28px}.cvs.t1 img:nth-child(2){right:14px}
+.cvs.t2 img{width:26px;height:26px;top:4px}.cvs.t2 img:nth-child(1){right:12px}.cvs.t2 img:nth-child(2){right:0}.cvs.t2 img:nth-child(3){display:none}
+.cvs.t3 img{width:22px;height:22px;top:6px}.cvs.t3 img:nth-child(1){right:9px}.cvs.t3 img:nth-child(2){right:0}.cvs.t3 img:nth-child(3){display:none}
 .cvs.off{visibility:hidden}
 .st{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;min-height:53px}
 .st h3{margin:0;font-size:22px;font-weight:900;line-height:1.25;letter-spacing:-.03em}
@@ -187,9 +193,9 @@ footer a{color:var(--accent)}
   .hero-mark{height:6px;margin:8px 0 7px 4px}
   .hero-by{margin-left:4px;font-size:12px}.hero-by img{width:44px}
   .hero-type .rays{right:-18px;top:0;width:17px;height:17px}
-  .sect{margin-bottom:30px}.sh{gap:8px;margin-bottom:11px;min-height:46px}.sh .acc{width:25px;height:24px}.s-fest .acc{width:43px;height:19px}.sh h2{padding:7px 18px;font-size:21px}.sh .sen{font-size:11px;letter-spacing:.07em}
+  .sect{margin-bottom:30px}.sh{gap:8px;margin-bottom:11px;min-height:46px}.sh .acc{width:25px;height:24px}.s-fest .acc{width:43px;height:19px}.sh .sen .spark{width:18px;height:17px;left:calc(100% - 6px);top:-7px}.sh h2{padding:7px 18px;font-size:21px}.sh .sen{font-size:11px;letter-spacing:.07em}
   .sgrid{grid-template-columns:minmax(0,1fr);gap:13px}
-  .art{height:70px}.sb{padding:12px 15px 6px}.series.has-banner .sb{padding-top:2px}.cap{left:14px;max-width:60%}.cap h3{font-size:20px}.cap p{font-size:9.5px}.visual .go{top:8px;right:8px}.cvs{display:none}.st{min-height:46px}.st h3{font-size:20px}.go{width:30px;height:30px}
+  .art{height:70px}.sb{padding:12px 15px 6px}.series.has-banner .sb{padding-top:2px}.cap{left:14px;max-width:60%}.cap h3{font-size:20px}.cap p{font-size:9.5px}.visual .go{top:8px;right:8px}.st{min-height:46px}.st h3{font-size:20px}.go{width:30px;height:30px}
 }
 </style>
 </head>
@@ -205,7 +211,9 @@ document.querySelectorAll('.themebtn').forEach(function(b){b.addEventListener('c
 if(mq&&mq.addEventListener)mq.addEventListener('change',sync);sync();
 var top=document.querySelector('.top.sticky'),h1=document.querySelector('.home-hero h1');
 if(top&&h1&&'IntersectionObserver'in window){new IntersectionObserver(function(es){top.classList.toggle('scrolled',!es[0].isIntersecting)},{rootMargin:'-80px 0px 0px 0px'}).observe(h1)}
-function fit(){document.querySelectorAll('.cvs').forEach(function(c){var n=c.parentNode.querySelector('.nm');if(!n||!c.offsetParent)return;c.classList.remove('off');if(n.getBoundingClientRect().right+10>c.getBoundingClientRect().left)c.classList.add('off')})}
+var TIERS=['','t1','t2','t3'];
+function fit(){document.querySelectorAll('.cvs').forEach(function(c){var a=c.parentNode,n=a.querySelector('.nm');if(!n||!a.offsetParent)return;c.classList.remove('off','t1','t2','t3');if(c.querySelectorAll('img').length<2){c.classList.add('off');return}var nr=n.getBoundingClientRect().right,ok=false;for(var k=0;k<TIERS.length&&!ok;k++){if(TIERS[k])c.classList.add(TIERS[k]);var l=1e9;c.querySelectorAll('img').forEach(function(m){if(getComputedStyle(m).display!=='none')l=Math.min(l,m.getBoundingClientRect().left)});if(nr+6<=l)ok=true;else if(TIERS[k])c.classList.remove(TIERS[k])}if(!ok)c.classList.add('off')})}
+document.querySelectorAll('.cvs img').forEach(function(m){m.addEventListener('error',function(){m.remove();fit()})});
 document.querySelectorAll('.more').forEach(function(b){b.addEventListener('click',function(){var c=b.closest('.series'),o=c.classList.toggle('open');b.setAttribute('aria-expanded',o);b.textContent=o?'收合':b.dataset.label;fit()})});
 fit();addEventListener('resize',fit);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit)})();</script>
 </body>
