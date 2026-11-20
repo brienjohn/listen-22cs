@@ -62,8 +62,6 @@ button{font:inherit;color:inherit}
 .bm-by img{width:42px;height:auto;display:block}
 .toplinks{display:flex;align-items:center;gap:14px;min-width:0;color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap}
 .toplinks a{text-decoration:none}.toplinks a:hover,.toplinks [aria-current]{color:var(--ink)}
-.edsw{min-width:0;display:flex}
-.edsw select{max-width:min(46vw,280px);height:36px;text-overflow:ellipsis;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:0 12px;font:inherit;font-size:12.5px;font-weight:650}
 .themebtn{display:inline-grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface-2);color:var(--ink);cursor:pointer;flex-shrink:0}
 .themebtn:hover{border-color:var(--brand)}
 .themebtn svg{width:19px;height:19px;display:block}
@@ -76,6 +74,7 @@ button{font:inherit;color:inherit}
 .crumb{display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:var(--muted);font-size:12.5px;font-weight:650;margin:0 0 26px}
 .crumb a{text-decoration:none}.crumb a:hover{color:var(--ink)}
 .crumb .sl{opacity:.5}
+.crumbrow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 16px;margin:0 0 26px}.crumbrow .crumb{margin:0}
 .hero h1{margin:0;font-weight:900;letter-spacing:-.03em;text-wrap:balance}
 .hero h1 .hn{position:relative;z-index:0;white-space:nowrap}
 .hero h1 .hn::after{content:"";position:absolute;left:-.04em;right:-.04em;bottom:-.02em;height:.2em;border-radius:999px;background:var(--brand);opacity:.85;z-index:-1}
@@ -99,12 +98,82 @@ footer a{color:var(--accent)}
   .bm-t b{font-size:17px}
   .bm-by{margin-top:3px;font-size:10px}.bm-by img{width:37px}
   .toplinks{gap:8px}
-  .edsw select{max-width:calc(100vw - 236px);height:40px}
   .themebtn{width:40px;height:40px}
   .hero .in{padding-top:28px}
-  .crumb{margin-bottom:20px}
+  .crumb{margin-bottom:20px}.crumbrow{margin-bottom:20px}
   .mk-site{grid-template-columns:auto minmax(0,1fr)}.mk-site .cta{grid-column:1/-1;justify-self:start}
 }
+
+/* ---- V16.1 global navigation: 音樂獎 / 音樂節 / 榜單 on every page; 探索清單 menu on phones ---- */
+.top .in{position:relative}
+.secnav{display:flex;align-items:center;gap:4px}
+.secnav a{padding:8px 14px;border-radius:999px;font-size:14px;font-weight:800;color:var(--ink);text-decoration:none;white-space:nowrap;transition:background-color .18s,color .18s}
+.secnav a:hover,.secnav a.on{background:color-mix(in srgb,var(--brand) 14%,var(--surface));color:var(--accent)}
+.hx{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto}
+.xbtn{display:none;align-items:center;gap:5px;height:38px;padding:0 13px 0 15px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);color:var(--ink);font-size:13.5px;font-weight:800;cursor:pointer;white-space:nowrap}
+.xbtn svg{width:15px;height:15px;transition:transform .18s}.xbtn[aria-expanded="true"] svg{transform:rotate(180deg)}
+.xbtn:hover,.xbtn[aria-expanded="true"]{border-color:var(--brand)}
+.xmenu{position:absolute;z-index:40;right:var(--padR);top:calc(100% + 8px);width:min(260px,calc(100vw - 32px));padding:8px;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 44px rgba(30,15,20,.16)}
+.xmenu a{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:11px 12px;border-radius:12px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:800}
+.xmenu a small{color:var(--muted);font-size:10.5px;font-weight:750;letter-spacing:.08em}
+.xmenu a:hover,.xmenu a:focus-visible,.xmenu a.on{background:color-mix(in srgb,var(--brand) 14%,var(--surface));color:var(--accent);outline:none}
+.xmenu[hidden]{display:none}
+@media (max-width:620px){.top .secnav{display:none}.xbtn{display:inline-flex}}
+
+/* ---- status badges (data-driven: 最新 / 第 n 波) ---- */
+.new,.wave{display:inline-block;margin-left:7px;padding:1px 7px;border-radius:999px;font-size:10.5px;font-weight:800;line-height:1.55;vertical-align:2px;white-space:nowrap}
+.new{background:var(--brand);color:#fff}
+.wave{background:#BFEADB;color:#1F3A33}
+:root[data-theme="dark"] .new{color:#1B1B1F}:root[data-theme="dark"] .wave{background:#397B70;color:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .new{color:#1B1B1F}:root:not([data-theme="light"]) .wave{background:#397B70;color:#fff}}
+
+/* ---- list-page series switcher pill (opens the same SeriesIndex as the home 「瀏覽全部」 rows) ---- */
+.swpill{display:inline-flex;align-items:center;gap:12px;min-height:40px;padding:0 13px 0 17px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font-size:13.5px;font-weight:800;white-space:nowrap;cursor:pointer;box-shadow:var(--shadow);transition:background-color .18s,border-color .18s}
+.swpill svg{width:15px;height:15px;color:var(--accent);transition:transform .18s}
+.swpill:hover,.swpill[aria-expanded="true"]{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 12%,var(--surface))}
+.swpill[aria-expanded="true"] svg{transform:rotate(180deg)}
+
+/* ---- SeriesIndex: desktop popover / phone bottom sheet ---- */
+.sxi{position:absolute;z-index:90;width:min(400px,calc(100vw - 32px));max-height:min(560px,calc(100dvh - 24px));display:flex;flex-direction:column;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:22px;box-shadow:0 24px 60px rgba(30,15,20,.2);overflow:hidden;animation:sxi-in .16s ease-out;outline:none}
+:root[data-theme="dark"] .sxi{box-shadow:0 24px 60px rgba(0,0,0,.55)}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sxi{box-shadow:0 24px 60px rgba(0,0,0,.55)}}
+.sxi[hidden],.sxi-scrim[hidden]{display:none}
+@keyframes sxi-in{from{opacity:.3;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:none}}
+.sxi-h{flex:none;padding:17px 18px 12px;border-bottom:1px solid var(--line)}
+.sxi-tb{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sxi-tb h2{margin:0;font-size:18px;font-weight:900;letter-spacing:-.02em;line-height:1.3}
+.sxi-x{display:grid;place-items:center;flex:none;width:34px;height:34px;padding:0;border:0;border-radius:50%;background:var(--surface-2);color:var(--ink);cursor:pointer}
+.sxi-x svg{width:17px;height:17px}.sxi-x:hover{background:color-mix(in srgb,var(--brand) 18%,var(--surface))}
+.sxi-sub{margin:3px 0 11px;color:var(--muted);font-size:12px}
+.sxi-find{display:block}
+.sxi-find input{width:100%;height:40px;padding:0 13px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:14px}
+.sxi-find input::placeholder{color:var(--muted)}
+.sxi-find input:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.sxi-f{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.sxi-f button{padding:5px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font-size:12px;font-weight:750;cursor:pointer}
+.sxi-f button[aria-pressed="true"]{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 14%,var(--surface));color:var(--accent)}
+.sxi-b{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;padding:8px 10px 12px}
+.sxi-list{list-style:none;margin:0;padding:0}
+.sxi-list a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:12px;color:var(--ink);text-decoration:none;transition:background-color .18s,color .18s}
+.sxi-list a:hover,.sxi-list a:focus-visible,.sxi-list a.on{background:color-mix(in srgb,#FF7A7A 14%,var(--surface));outline:none}
+:root[data-theme="dark"] .sxi-list a:hover,:root[data-theme="dark"] .sxi-list a:focus-visible,:root[data-theme="dark"] .sxi-list a.on{background:color-mix(in srgb,#FF7A7A 22%,var(--surface))}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sxi-list a:hover,:root:not([data-theme="light"]) .sxi-list a:focus-visible,:root:not([data-theme="light"]) .sxi-list a.on{background:color-mix(in srgb,#FF7A7A 22%,var(--surface))}}
+.sxi-list a:hover b,.sxi-list a:focus-visible b,.sxi-list a.on b{color:var(--accent)}
+.sxi-t{display:flex;flex-direction:column;min-width:0}
+.sxi-t b{font-size:14px;font-weight:800;line-height:1.35}
+.sxi-t small{margin-top:1px;color:var(--muted);font-size:11.5px}
+.sxi-r{display:flex;align-items:center;gap:4px;flex:none;color:var(--muted)}
+.sxi-r svg{width:16px;height:16px}.sxi-r .new,.sxi-r .wave{margin:0}
+.sxi-ck{color:var(--accent);font-size:15px;font-weight:900}
+.sxi-none{margin:22px 8px;text-align:center;color:var(--muted);font-size:13px}
+.sxi-scrim{position:fixed;inset:0;z-index:89;background:rgba(20,16,22,.55);animation:sxi-fade .18s ease-out}
+@keyframes sxi-fade{from{opacity:0}}
+.sxi.sheet{position:fixed;left:0;right:0;bottom:0;top:auto;width:100%;max-height:min(83dvh,720px);border-radius:24px 24px 0 0;border-bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -10px 50px rgba(0,0,0,.3);animation:sxi-up .2s ease-out}
+@keyframes sxi-up{from{transform:translateY(28px);opacity:.5}to{transform:none;opacity:1}}
+.sxi.sheet .sxi-h{padding:18px 18px 12px}
+.sxi.sheet .sxi-list a{padding:12px}
+html.sxi-lock,html.sxi-lock body{overflow:hidden}
+@media (prefers-reduced-motion:reduce){.sxi,.sxi-scrim{animation:none!important}}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 :root{--gold:#D4A017;--pop:0 12px 40px rgba(20,20,28,.16);--side:236px}
@@ -334,10 +403,10 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></symbol>
   <symbol id="i-find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
 </svg>
-<header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><img class="ico" src="/img/baby-coral-surprised.png" alt="" width="40" height="42"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><nav class="toplinks" aria-label="網站導覽"><label class="edsw"><span class="vh">選擇屆次</span><select onchange="location.href=this.value"><option value="/gima/17/">第 17 屆</option><option value="/gima/16/">第 16 屆</option><option value="/gima/15/">第 15 屆</option><option value="/gima/14/" selected>第 14 屆</option></select></label><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></nav></div></div></header>
+<header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><img class="ico" src="/img/baby-coral-surprised.png" alt="" width="40" height="42"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><nav class="secnav" aria-label="內容分類"><a href="/#awards" class=on>音樂獎</a><a href="/#festivals">音樂節</a><a href="/#charts">榜單</a></nav><div class="hx"><button type="button" class="xbtn" aria-expanded="false" aria-controls="xmenu">探索清單<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></div></div><nav class="xmenu" id="xmenu" aria-label="探索清單" hidden><a href="/#awards" class=on>音樂獎<small>AWARDS</small></a><a href="/#festivals">音樂節<small>FESTIVALS</small></a><a href="/#charts">榜單<small>CHARTS &amp; LISTS</small></a></nav></div></header>
 <header class="hero">
   <div class="in">
-    <nav class="crumb" aria-label="目前位置"><a href="/">聆聽清單</a><span class="sl" aria-hidden="true">/</span><a href="/#gima">金音創作獎</a><span class="sl" aria-hidden="true">/</span><span aria-current="page">第 14 屆</span></nav>
+    <div class="crumbrow"><nav class="crumb" aria-label="目前位置"><a href="/">聆聽清單</a><span class="sl" aria-hidden="true">/</span><a href="/#awards">音樂獎</a><span class="sl" aria-hidden="true">/</span><a href="/#gima">金音創作獎</a><span class="sl" aria-hidden="true">/</span><span aria-current="page">第 14 屆</span></nav><button type="button" class="swpill" data-sxi data-series="gima" data-current="/gima/14/" aria-haspopup="dialog" aria-expanded="false" aria-controls="sxi" title="切換金音創作獎的其他清單"><span>第 14 屆 · 2023</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
     <p class="eyebrow">The 14th Golden Indie Music Awards · 2023</p>
     <h1>第 <span class="hn">14</span> 屆金音創作獎<br>入圍作品聆聽清單</h1>
     <p class="legend"><span>頒獎典禮：2023 年 10 月 28 日</span></p>
@@ -562,5 +631,6 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
 })();
 </script>
 
+<script src="/js/nav.js" defer></script>
 </body>
 </html>
