@@ -154,10 +154,17 @@ footer a{color:var(--accent)}
 .v-gma .cap,.v-gima .cap{max-width:34%}
 .visual.dk .cap{text-shadow:0 1px 6px rgba(0,0,0,.55)}.visual.lt .cap{text-shadow:0 1px 6px rgba(255,248,236,.75)}
 .visual .go{position:absolute;z-index:2;top:10px;right:10px;margin:0;background:color-mix(in srgb,var(--surface) 90%,transparent);box-shadow:0 2px 8px rgba(0,0,0,.18)}
-.series.has-banner .sb{padding-top:4px}.series.has-banner .eds li:first-child{border-top:0}
+/* banner cards: the list rows run edge to edge of the card (the row link owns the 18px side padding, so its hover colour
+   fills the full width); separators stay inset by being drawn as a 1px band on the row item instead of a border */
+.series.has-banner .sb{--rp:18px;padding-top:4px;padding-left:0;padding-right:0}
+.series.has-banner .eds li{border-top:0;padding-top:1px;background:linear-gradient(var(--line),var(--line)) var(--rp) 0/calc(100% - 2 * var(--rp)) 1px no-repeat}
+.series.has-banner .eds li:first-child{padding-top:0;background:none}
+.series.has-banner .eds a{padding-left:var(--rp);padding-right:var(--rp)}
+.series.has-banner .more{margin-left:var(--rp)}
+.series.has-banner .cvs{right:calc(var(--rp) + 26px)}
 /* real-cover stack beside each list row; hidden when it would touch the text */
 .eds a{position:relative}.eds .nm{position:relative;z-index:1}.eds .chev{position:relative;z-index:1}
-.cvs{position:absolute;right:36px;top:50%;width:170px;height:40px;margin-top:-20px;pointer-events:none;z-index:0}
+.cvs{position:absolute;right:26px;top:50%;width:170px;height:40px;margin-top:-20px;pointer-events:none;z-index:0}
 /* covers stay crisp: no wash over the stack, only a gentle step-down behind the front card */
 :root[data-theme="dark"] .cvs img{box-shadow:0 1px 2px rgba(0,0,0,.35),0 3px 9px rgba(0,0,0,.45)}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cvs img{box-shadow:0 1px 2px rgba(0,0,0,.35),0 3px 9px rgba(0,0,0,.45)}}
 .cvs img{position:absolute;top:50%;width:38px;height:38px;margin-top:-19px;border-radius:4px;object-fit:cover;background:var(--surface-2);outline:1px solid rgba(255,255,255,.7);outline-offset:-1px;box-shadow:0 1px 2px rgba(40,25,20,.14),0 3px 8px rgba(40,25,20,.16)}
@@ -172,7 +179,7 @@ footer a{color:var(--accent)}
 .go svg{width:16px;height:16px}.go:hover{background:var(--brand);color:var(--on-brand)}
 .eds{list-style:none;margin:0;padding:0}
 .eds li.x{display:none}.series.open .eds li.x{display:block}
-.eds a{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 -10px;padding:9px 10px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14px;font-weight:750}
+.eds a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;color:var(--ink);text-decoration:none;font-size:14px;font-weight:750}
 .eds li{border-top:1px solid var(--line)}
 .eds .nm{min-width:0}
 .eds .yr{margin-left:6px;color:var(--muted);font-size:12.5px;font-weight:500;font-variant-numeric:tabular-nums}
@@ -189,8 +196,13 @@ footer a{color:var(--accent)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .eds a{--hl:color-mix(in srgb,#FF7A7A 22%,var(--surface))}}
 .eds a:focus-visible{outline:none;background-color:var(--hl);color:var(--accent)}
 .eds a:focus-visible .chev{background-color:#FF7A7A;color:#fff}
+/* the cover stack still fans out on hover/focus — only by the slack the page script measured (--sp), so it never reaches the text */
+.cvs img{transition:translate .22s ease}
+.eds a:focus-visible .cvs img{translate:calc(var(--f,0) * var(--sp,0px) * -1) 0}
+@media (prefers-reduced-motion:reduce){.eds a .cvs img{translate:none!important}}
 @media (hover:hover) and (pointer:fine){
   .eds a:hover{background-color:var(--hl);color:var(--accent)}
+  .eds a:hover .cvs img{translate:calc(var(--f,0) * var(--sp,0px) * -1) 0}
   .eds a:hover .chev{background-color:#FF7A7A;color:#fff}
 }
 .more{align-self:flex-start;margin:4px 0 6px;padding:6px 0;border:0;background:none;color:var(--accent);font-size:13px;font-weight:750;cursor:pointer}
@@ -208,7 +220,7 @@ footer a{color:var(--accent)}
   .hero-type .rays{right:-18px;top:0;width:17px;height:17px}
   .sect{margin-bottom:30px}.sh{gap:8px;margin-bottom:11px;min-height:46px}.sh .acc{width:25px;height:24px}.s-fest .acc{width:43px;height:19px}.sh .sen .spark{width:18px;height:17px;left:calc(100% - 6px);top:-7px}.sh h2{padding:7px 18px;font-size:21px}.sh .sen{font-size:11px;letter-spacing:.07em}
   .sgrid{grid-template-columns:minmax(0,1fr);gap:13px}
-  .art{height:70px}.sb{padding:12px 15px 6px}.series.has-banner .sb{padding-top:2px}.cap{left:14px;max-width:60%}.cap h3{font-size:20px}.cap p{font-size:9.5px}.visual .go{top:8px;right:8px}.st{min-height:46px}.st h3{font-size:20px}.go{width:30px;height:30px}
+  .art{height:70px}.sb{padding:12px 15px 6px}.series.has-banner .sb{padding-top:2px;--rp:15px}.cap{left:14px;max-width:60%}.cap h3{font-size:20px}.cap p{font-size:9.5px}.visual .go{top:8px;right:8px}.st{min-height:46px}.st h3{font-size:20px}.go{width:30px;height:30px}
 }
 </style>
 </head>
@@ -227,8 +239,8 @@ if(top&&h1&&'IntersectionObserver'in window){new IntersectionObserver(function(e
 function fit(){var W=innerWidth,MAX=W<=620?3:W<=1099?4:5,ROT=[3,-2,4,-3,2],S=38,ST=31;
 document.querySelectorAll('.cvs').forEach(function(c){var a=c.parentNode,n=a.querySelector('.nm');if(!n||!a.offsetParent)return;var im=[].slice.call(c.querySelectorAll('img'));c.classList.remove('off');
 if(!im.length){c.classList.add('off');return}var nr=n.getBoundingClientRect().right,tries=[];for(var k=Math.min(MAX,im.length);k>=1;k--)tries.push([k,S]);
-function set(k,s){var st=ST;im.forEach(function(m,i){if(i>=k){m.style.display='none';return}var f=k-1-i;m.style.display='block';m.style.width=m.style.height=s+'px';m.style.marginTop=(-s/2)+'px';m.style.right=(f*st)+'px';m.style.transform='rotate('+ROT[f]+'deg)'})}
-for(var t=0;t<tries.length;t++){set(tries[t][0],tries[t][1]);var l=1e9;im.forEach(function(m){if(m.style.display!=='none')l=Math.min(l,m.getBoundingClientRect().left)});if(nr+6<=l)return}c.classList.add('off')})}
+function set(k,s){var st=ST;im.forEach(function(m,i){if(i>=k){m.style.display='none';return}var f=k-1-i;m.style.display='block';m.style.width=m.style.height=s+'px';m.style.marginTop=(-s/2)+'px';m.style.right=(f*st)+'px';m.style.transform='rotate('+ROT[f]+'deg)';m.style.setProperty('--f',f)})}
+for(var t=0;t<tries.length;t++){set(tries[t][0],tries[t][1]);var l=1e9;im.forEach(function(m){if(m.style.display!=='none')l=Math.min(l,m.getBoundingClientRect().left)});if(nr+6<=l){c.style.setProperty('--sp',Math.max(0,Math.min(4,(l-nr-6)/Math.max(1,tries[t][0]-1))).toFixed(1)+'px');return}}c.classList.add('off')})}
 document.querySelectorAll('.cvs img').forEach(function(m){m.addEventListener('error',function(){m.remove();fit()})});
 document.querySelectorAll('.more').forEach(function(b){b.addEventListener('click',function(){var c=b.closest('.series'),o=c.classList.toggle('open');b.setAttribute('aria-expanded',o);b.textContent=o?'收合':b.dataset.label;fit()})});
 fit();addEventListener('resize',fit);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit)})();</script>
