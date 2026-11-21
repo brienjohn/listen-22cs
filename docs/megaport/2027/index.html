@@ -204,6 +204,125 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
   .eds a:hover .cvs img{translate:calc(var(--f,0) * var(--sp,0px) * -1) 0}
   .eds a:hover .chev{background-color:#FF7A7A;color:#fff}
 }
+.pg-btn{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 14px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13.5px;font-weight:700;cursor:pointer}
+.pg-btn:hover{border-color:var(--ink)}
+.pg-btn.pri{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.pg-btn.pri:hover{filter:brightness(.96)}
+.pg-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+a.pg-btn{text-decoration:none}
+.pg-btn:disabled{opacity:.5;cursor:default}
+
+/* 我的聆聽紀錄 entry in the header (all pages) */
+.mebtn{display:inline-grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface-2);color:var(--ink);flex-shrink:0;text-decoration:none}
+.mebtn:hover,.mebtn[aria-current]{border-color:var(--brand)}
+.mebtn[aria-current]{background:var(--tint)}
+.mebtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+
+/* read-only stars */
+.stars-ro{position:relative;display:inline-block;line-height:0;vertical-align:-2px}
+.stars-ro svg{width:15px;height:15px;margin-right:2px}
+.stars-ro .sr-bg svg{fill:var(--line)}
+.stars-ro .sr-fg{position:absolute;inset:0 auto 0 0;overflow:hidden;white-space:nowrap}
+.stars-ro .sr-fg svg{fill:#F5A524}
+
+/* review dialog */
+.rvdlg{width:min(480px,calc(100vw - 32px));max-height:calc(100dvh - 32px);padding:0;border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--ink);box-shadow:0 12px 40px rgba(20,20,28,.2)}
+.rvdlg::backdrop{background:rgba(10,10,14,.5)}
+.rv-in{display:grid;gap:16px;padding:18px}
+.rv-hd{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:14px;align-items:start}
+.rv-art{display:grid;place-items:center;width:64px;height:64px;border-radius:8px;overflow:hidden;background:var(--tint);color:var(--accent);font-weight:900;font-size:22px}
+.rv-art img{width:100%;height:100%;object-fit:cover;display:block}
+.rv-meta{min-width:0}
+.rv-meta h2{margin:0;font-size:17px;font-weight:800;line-height:1.3;overflow-wrap:anywhere}
+.rv-by{margin:3px 0 0;font-size:13px;color:var(--muted)}
+.rv-from{margin:3px 0 0;font-size:12px;color:var(--muted)}
+.rv-x{display:grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--muted);font-size:18px;line-height:1;cursor:pointer}
+.rv-lab{display:block;margin:0 0 8px;font-size:12px;font-weight:750;letter-spacing:.08em;color:var(--muted)}
+.rv-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.rv-stars{position:relative;display:inline-block;line-height:0;cursor:pointer;border-radius:6px;touch-action:manipulation}
+.rv-stars svg{width:34px;height:34px;margin-right:6px}
+.rv-stars svg:last-child{margin-right:0}
+.rv-stars .rs-bg svg{fill:var(--line)}
+.rv-stars .rs-fg{position:absolute;inset:0 auto 0 0;width:0;overflow:hidden;white-space:nowrap;pointer-events:none}
+.rv-stars .rs-fg svg{fill:#F5A524}
+.rv-val{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
+.rv-clr,.rv-del{border:0;padding:0;background:none;font:inherit;font-size:12.5px;color:var(--accent);text-decoration:underline;cursor:pointer}
+.rv-hint{margin:8px 0 0;font-size:12px;color:var(--muted)}
+.rvdlg textarea{display:block;width:100%;min-height:120px;resize:vertical;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px;line-height:1.6}
+.rvdlg textarea:focus{outline:2px solid var(--brand);outline-offset:0;border-color:var(--brand)}
+.rv-cnt{margin:6px 0 0;text-align:right;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rv-note{margin:0;font-size:12px;line-height:1.55;color:var(--muted)}
+.rv-note a{color:var(--accent);font-weight:650}
+.rv-act{display:flex;align-items:center;gap:8px}
+.rv-sp{flex:1}
+.rv-del[hidden]{display:none}
+
+/* 繼續聽 rows (home + /me/) */
+.rs-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.rs-card{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center;height:100%;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);color:var(--ink);text-decoration:none;transition:border-color .15s,transform .15s}
+.rs-card:hover{border-color:var(--brand);transform:translateY(-1px)}
+.rs-cv{display:flex;align-items:center;padding-left:8px}
+.rs-cv img,.rs-cv i{display:block;width:44px;height:44px;margin-left:-14px;border-radius:7px;object-fit:cover;background:var(--surface-2);border:2px solid var(--surface);box-shadow:0 2px 6px rgba(20,20,28,.12)}
+.rs-cv img:nth-child(n+4){display:none}
+.rs-cv i{background:var(--tint)}
+.rs-tx{display:grid;gap:4px;min-width:0}
+.rs-t{font-size:15px;font-weight:800;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rs-n{font-size:12.5px;font-weight:650;color:var(--muted);font-variant-numeric:tabular-nums}
+.rs-n em{font-style:normal;margin-left:6px;color:var(--accent);font-weight:800}
+.rs-bar{display:block;height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.rs-bar i{display:block;height:100%;border-radius:inherit;background:var(--brand)}
+.rs-when{font-size:11.5px;color:var(--muted)}
+.resume{margin:0 0 44px}
+.resume .sh{justify-content:space-between}
+.resume .more{font-size:13px;font-weight:700;color:var(--accent);text-decoration:none;white-space:nowrap}
+.resume .more:hover{text-decoration:underline}
+
+/* /me/ page */
+.me-hero .stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.me-hero .stats div{display:flex;align-items:baseline;gap:7px;min-width:120px;padding:13px 16px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.me-hero .stats b{font-size:24px;font-weight:900;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.me-hero .stats span{font-size:12px;font-weight:650;color:var(--muted)}
+.me{padding:12px 0 40px}
+.me-sec{margin:0 0 48px;scroll-margin-top:96px}
+.me-sec>h2,.me-h h2{margin:0;font-size:24px;font-weight:900;letter-spacing:-.03em}
+.me-h{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;margin:0 0 16px}
+.me-sec>h2{margin-bottom:16px}
+.me-tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.me-tools input[type=search],.me-tools select{height:38px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px}
+.me-tools input[type=search]{width:min(240px,60vw)}
+.me-tools label{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:650;color:var(--muted);cursor:pointer}
+.me-tools input[type=checkbox]{width:16px;height:16px;margin:0;accent-color:var(--brand)}
+.me-none,.rs-none,.wk-none{margin:0;padding:22px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);font-size:14px;text-align:center}
+.me-none a,.rs-none a{color:var(--accent);font-weight:700}
+.wk-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.wk{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:16px;align-items:start;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.wk-art{display:grid;place-items:center;width:72px;height:72px;border-radius:8px;overflow:hidden;background:var(--tint)}
+.wk-art img{width:100%;height:100%;object-fit:cover;display:block}
+.wk-mono{font-weight:900;font-size:22px;color:var(--accent)}
+.wk-tx{min-width:0}
+.wk h3{margin:0;font-size:16px;font-weight:800;line-height:1.3;overflow-wrap:anywhere}
+.wk-by{margin:3px 0 0;font-size:13px;color:var(--muted)}
+.wk-r{display:flex;align-items:center;gap:6px;margin:8px 0 0;font-size:13px}
+.wk-n{margin:8px 0 0;font-size:14.5px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+.wk-from{margin:8px 0 0;font-size:12px;color:var(--muted)}
+.wk-from a{color:var(--accent);font-weight:650;text-decoration:none}
+.wk-from a:hover{text-decoration:underline}
+.me-bk{max-width:760px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.me-bk p{margin:0 0 14px;font-size:14px;line-height:1.65;color:var(--muted)}
+.me-bk .pg-act{display:flex;flex-wrap:wrap;gap:8px 10px}
+.me-bk label.pg-btn input{position:absolute;width:1px;height:1px;opacity:0}
+.me-bk label.pg-btn:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.me-msg{min-height:1.5em;margin:14px 0 0!important;color:var(--ink)!important;font-weight:650}
+.me-wipe{margin:18px 0 0!important;padding-top:14px;border-top:1px solid var(--line)}
+.me-wipe button{border:0;padding:0;background:none;font:inherit;font-size:13px;color:var(--accent);text-decoration:underline;cursor:pointer}
+@media (max-width:620px){
+  .rs-list{grid-template-columns:minmax(0,1fr)}
+  .wk{grid-template-columns:56px minmax(0,1fr);gap:12px}
+  .wk-art{width:56px;height:56px}
+  .wk-ed{grid-column:2;justify-self:start;height:34px}
+  .me-tools input[type=search],.me-tools select{font-size:16px}
+  .me-sec>h2,.me-h h2{font-size:21px}
+}
 
 :root{--gold:#D4A017;--pop:0 12px 40px rgba(20,20,28,.16);--side:236px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gold:#E0B43B;--pop:0 12px 40px rgba(0,0,0,.55)}}
@@ -429,14 +548,10 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
 .pg-bar{display:block;height:8px;margin:12px 0 14px;border-radius:99px;background:var(--surface-2);overflow:hidden}
 .pg-bar i{display:block;height:100%;width:0;border-radius:inherit;background:var(--brand);transition:width .35s ease}
 .pg-act{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
-.pg-btn{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 14px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13.5px;font-weight:700;cursor:pointer}
-.pg-btn:hover{border-color:var(--ink)}
-.pg-btn.pri{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
-.pg-btn.pri:hover{filter:brightness(.96)}
-.pg-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .pg-hide{display:inline-flex;align-items:center;gap:7px;margin-left:auto;font-size:13px;font-weight:650;color:var(--muted);cursor:pointer}
 .pg-hide input{width:16px;height:16px;margin:0;accent-color:var(--brand)}
 .pg-note{margin:12px 0 0;font-size:12px;line-height:1.55;color:var(--muted)}
+.pg-note a{color:var(--accent);font-weight:650}
 .pg-reset{border:0;padding:0;margin-left:6px;background:none;font:inherit;font-size:12px;color:var(--accent);text-decoration:underline;cursor:pointer}
 .pg-reset[hidden]{display:none}
 .pg-mini{display:grid;gap:7px}
@@ -461,6 +576,15 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
 [data-hide-heard] .cat:not(:has(.nm:not(.heard))){display:none}
 .nm.pick{animation:pick 2.6s ease}
 @keyframes pick{0%,70%{box-shadow:0 0 0 3px var(--brand),var(--shadow-hi)}100%{box-shadow:var(--shadow)}}
+
+/* 評分・筆記 button under each work */
+.rvb{display:inline-flex;align-items:center;gap:5px;max-width:100%;margin:8px 0 0;padding:4px 9px 4px 7px;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--muted);font:inherit;font-size:12px;font-weight:700;line-height:1.3;cursor:pointer}
+.rvb svg{width:13px;height:13px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+.rvb:hover{color:var(--ink);border-color:var(--muted)}
+.rvb.on{color:var(--ink);border-color:#F5A524;background:rgba(245,165,36,.1)}
+.rvb.on svg{fill:#F5A524;stroke:#F5A524}
+.rvb span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+[data-density="dense"] .rvb{margin-top:4px;padding:2px 8px 2px 6px;font-size:11.5px}
 
 /* share dialog */
 .shdlg{width:min(440px,calc(100vw - 32px));max-height:calc(100dvh - 32px);padding:0;border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--ink);box-shadow:var(--pop)}
@@ -497,11 +621,12 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></symbol>
   <symbol id="i-find" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.84 5.76 6.36.92-4.6 4.49 1.08 6.33L12 17.3l-5.68 3 1.08-6.33-4.6-4.49 6.36-.92z"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
   <symbol id="i-dice" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r=".9" fill="currentColor"/><circle cx="15.5" cy="15.5" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="15.5" cy="8.5" r=".9" fill="currentColor"/><circle cx="8.5" cy="15.5" r=".9" fill="currentColor"/></symbol>
   <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V3.5M7.5 8 12 3.5 16.5 8"/><path d="M5 11.5v7A2 2 0 0 0 7 20.5h10a2 2 0 0 0 2-2v-7"/></symbol>
 </svg>
-<header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><img class="ico" src="/img/baby-coral-surprised.png" alt="" width="40" height="42"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><nav class="secnav" aria-label="內容分類"><a href="/#awards">音樂獎</a><a href="/#festivals" class=on>音樂節</a><a href="/#charts">榜單</a></nav><div class="hx"><button type="button" class="xbtn" aria-expanded="false" aria-controls="xmenu">探索清單<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></div></div><nav class="xmenu" id="xmenu" aria-label="探索清單" hidden><a href="/#awards">音樂獎<small>AWARDS</small></a><a href="/#festivals" class=on>音樂節<small>FESTIVALS</small></a><a href="/#charts">榜單<small>CHARTS &amp; LISTS</small></a></nav></div></header>
+<header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><img class="ico" src="/img/baby-coral-surprised.png" alt="" width="40" height="42"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><nav class="secnav" aria-label="內容分類"><a href="/#awards">音樂獎</a><a href="/#festivals" class=on>音樂節</a><a href="/#charts">榜單</a></nav><div class="hx"><button type="button" class="xbtn" aria-expanded="false" aria-controls="xmenu">探索清單<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a class="mebtn" href="/me/" aria-label="我的聆聽紀錄" title="我的聆聽紀錄"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10a1.5 1.5 0 0 1 1.5 1.5v15.5L12 16.6l-6.5 3.9V5A1.5 1.5 0 0 1 7 3.5z"/><path d="m9.2 9.6 2 2 3.6-3.8"/></svg></a><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></div></div><nav class="xmenu" id="xmenu" aria-label="探索清單" hidden><a href="/#awards">音樂獎<small>AWARDS</small></a><a href="/#festivals" class=on>音樂節<small>FESTIVALS</small></a><a href="/#charts">榜單<small>CHARTS &amp; LISTS</small></a></nav></div></header>
 <header class="hero">
   <div class="in">
     <div class="crumbrow"><nav class="crumb" aria-label="目前位置"><a href="/">聆聽清單</a><span class="sl" aria-hidden="true">/</span><a href="/#festivals">音樂節</a><span class="sl" aria-hidden="true">/</span><a href="/#megaport">大港開唱</a><span class="sl" aria-hidden="true">/</span><span aria-current="page">2027 演出名單</span></nav></div>
@@ -517,7 +642,7 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
         <button type="button" class="pg-btn js-share"><svg aria-hidden="true"><use href="#i-share"/></svg>分享進度</button>
         <label class="pg-hide"><input type="checkbox" class="js-hide">隱藏已聽</label>
       </div>
-      <p class="pg-note">點封面右上角的勾勾就能標記「已聽」。紀錄只存在這台裝置的瀏覽器裡，不需要登入。<button type="button" class="pg-reset js-reset" hidden>清除這份紀錄</button></p>
+      <p class="pg-note">點封面右上角的勾勾標記「已聽」，點作品下方的「評分・筆記」留下自己的看法。紀錄只存在這台裝置的瀏覽器裡，不需要登入；可以到<a href="/me/">我的聆聽紀錄</a>匯出備份。<button type="button" class="pg-reset js-reset" hidden>清除這份紀錄</button></p>
     </section>
   </div>
 </header>
@@ -550,7 +675,7 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
       <span class="pg-bar mbar-pg" aria-hidden="true"><i class="js-bar"></i></span>
     </div>
     <p class="count" id="count" hidden></p>
-    <div class="field" id="f1"><section class="cat" id="c1"><header class="ch"><div><h3>第一波</h3></div><span class="kd">1 組演出者</span></header><ul class="grid"><li class="nm" data-id="1" data-s="洪榮宏  洪榮宏 洪榮宏"><div class="art"><img src="a/7.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"><button type="button" class="hd" aria-pressed="false" aria-label="標記為已聽：洪榮宏" title="標記為已聽"><svg aria-hidden="true"><use href="#i-check"/></svg></button></div><div class="tx"><h4>洪榮宏</h4></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/21GU61itsJIOXs64dkcwzZ" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：洪榮宏"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCdLRI11OrDEqaAszBH9VytQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：洪榮宏"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E6%B4%AA%E6%A6%AE%E5%AE%8F/417429273" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：洪榮宏"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li></ul></section></div><div class="field" id="f2"><section class="cat" id="c2"><header class="ch"><div><h3>第二波</h3></div><span class="kd">1 組演出者</span></header><ul class="grid"><li class="nm" data-id="2" data-s="the hu  the hu the hu"><div class="art"><img src="a/8.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"><button type="button" class="hd" aria-pressed="false" aria-label="標記為已聽：The HU" title="標記為已聽"><svg aria-hidden="true"><use href="#i-check"/></svg></button></div><div class="tx"><h4>The HU</h4><p class="who">蒙古</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/0b2B3PwcYzQAhuJacmcYgc" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：The HU"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCHEdEk00phCybcsq05cOfqg" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：The HU"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/the-hu/391885107" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：The HU"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li></ul></section></div><div class="field" id="f3"><section class="cat" id="c3"><header class="ch"><div><h3>第三波</h3></div><span class="kd">4 組演出者</span></header><ul class="grid"><li class="nm" data-id="3" data-s="sim  sim sim"><div class="art"><img src="a/9.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"><button type="button" class="hd" aria-pressed="false" aria-label="標記為已聽：SiM" title="標記為已聽"><svg aria-hidden="true"><use href="#i-check"/></svg></button></div><div class="tx"><h4>SiM</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/2BM933ADIluGGrPBOhPgIt" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：SiM"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCZ3k79bJuQd5w9qAiH4VPwQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：SiM"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/sim/1124210967" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：SiM"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-id="4" data-s="hump back  hump back hump back"><div class="art"><img src="a/10.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"><button type="button" class="hd" aria-pressed="false" aria-label="標記為已聽：Hump Back" title="標記為已聽"><svg aria-hidden="true"><use href="#i-check"/></svg></button></div><div class="tx"><h4>Hump Back</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/0zgpYPDY3hFaK1DqbWgCjI" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：Hump Back"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCaJ3q5nA93hWBhJT4r96g0g" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：Hump Back"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/hump-back/1361437165" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：Hump Back"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-id="5" data-s="the oral cigarettes  the oral cigarettes the oral cigarettes"><div class="art"><img src="a/11.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"><button type="button" class="hd" aria-pressed="false" aria-label="標記為已聽：THE ORAL CIGARETTES" title="標記為已聽"><svg aria-hidden="true"><use href="#i-check"/></svg></button></div><div class="tx"><h4>THE ORAL CIGARETTES</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/4rqJz9fE9prZvQd8WsQv6q" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：THE ORAL CIGARETTES"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCdrwZwfJ5sPjR8t7PGnmgVQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：THE ORAL CIGARETTES"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/the-oral-cigarettes/684141729" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：THE ORAL CIGARETTES"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-id="6" data-s="tempalay  tempalay tempalay"><div class="art"><img src="a/12.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"><button type="button" class="hd" aria-pressed="false" aria-label="標記為已聽：Tempalay" title="標記為已聽"><svg aria-hidden="true"><use href="#i-check"/></svg></button></div><div class="tx"><h4>Tempalay</h4><p class="who">日本</p></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/5IlQkA8Lq4X0dOWHBumeJP" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：Tempalay"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCfbzpFkr-Idf7e4TdLudMEQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：Tempalay"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/tempalay/1041632537" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：Tempalay"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li></ul></section></div>
+    <div class="field" id="f1"><section class="cat" id="c1"><header class="ch"><div><h3>第一波</h3></div><span class="kd">1 組演出者</span></header><ul class="grid"><li class="nm" data-id="1" data-w="r:洪榮宏" data-k="artist" data-s="洪榮宏  洪榮宏 洪榮宏"><div class="art"><img src="a/7.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"><button type="button" class="hd" aria-pressed="false" aria-label="標記為已聽：洪榮宏" title="標記為已聽"><svg aria-hidden="true"><use href="#i-check"/></svg></button></div><div class="tx"><h4>洪榮宏</h4><button type="button" class="rvb" aria-haspopup="dialog" aria-label="評分與筆記：洪榮宏"><svg aria-hidden="true"><use href="#i-star"/></svg><span>評分・筆記</span></button></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/21GU61itsJIOXs64dkcwzZ" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：洪榮宏"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCdLRI11OrDEqaAszBH9VytQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：洪榮宏"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/%E6%B4%AA%E6%A6%AE%E5%AE%8F/417429273" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：洪榮宏"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li></ul></section></div><div class="field" id="f2"><section class="cat" id="c2"><header class="ch"><div><h3>第二波</h3></div><span class="kd">1 組演出者</span></header><ul class="grid"><li class="nm" data-id="2" data-w="r:hu" data-k="artist" data-s="the hu  the hu the hu"><div class="art"><img src="a/8.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"><button type="button" class="hd" aria-pressed="false" aria-label="標記為已聽：The HU" title="標記為已聽"><svg aria-hidden="true"><use href="#i-check"/></svg></button></div><div class="tx"><h4>The HU</h4><p class="who">蒙古</p><button type="button" class="rvb" aria-haspopup="dialog" aria-label="評分與筆記：The HU"><svg aria-hidden="true"><use href="#i-star"/></svg><span>評分・筆記</span></button></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/0b2B3PwcYzQAhuJacmcYgc" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：The HU"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCHEdEk00phCybcsq05cOfqg" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：The HU"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/the-hu/391885107" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：The HU"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li></ul></section></div><div class="field" id="f3"><section class="cat" id="c3"><header class="ch"><div><h3>第三波</h3></div><span class="kd">4 組演出者</span></header><ul class="grid"><li class="nm" data-id="3" data-w="r:sim" data-k="artist" data-s="sim  sim sim"><div class="art"><img src="a/9.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"><button type="button" class="hd" aria-pressed="false" aria-label="標記為已聽：SiM" title="標記為已聽"><svg aria-hidden="true"><use href="#i-check"/></svg></button></div><div class="tx"><h4>SiM</h4><p class="who">日本</p><button type="button" class="rvb" aria-haspopup="dialog" aria-label="評分與筆記：SiM"><svg aria-hidden="true"><use href="#i-star"/></svg><span>評分・筆記</span></button></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/2BM933ADIluGGrPBOhPgIt" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：SiM"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCZ3k79bJuQd5w9qAiH4VPwQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：SiM"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/sim/1124210967" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：SiM"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-id="4" data-w="r:humpback" data-k="artist" data-s="hump back  hump back hump back"><div class="art"><img src="a/10.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"><button type="button" class="hd" aria-pressed="false" aria-label="標記為已聽：Hump Back" title="標記為已聽"><svg aria-hidden="true"><use href="#i-check"/></svg></button></div><div class="tx"><h4>Hump Back</h4><p class="who">日本</p><button type="button" class="rvb" aria-haspopup="dialog" aria-label="評分與筆記：Hump Back"><svg aria-hidden="true"><use href="#i-star"/></svg><span>評分・筆記</span></button></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/0zgpYPDY3hFaK1DqbWgCjI" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：Hump Back"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCaJ3q5nA93hWBhJT4r96g0g" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：Hump Back"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/hump-back/1361437165" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：Hump Back"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-id="5" data-w="r:oralcigarettes" data-k="artist" data-s="the oral cigarettes  the oral cigarettes the oral cigarettes"><div class="art"><img src="a/11.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"><button type="button" class="hd" aria-pressed="false" aria-label="標記為已聽：THE ORAL CIGARETTES" title="標記為已聽"><svg aria-hidden="true"><use href="#i-check"/></svg></button></div><div class="tx"><h4>THE ORAL CIGARETTES</h4><p class="who">日本</p><button type="button" class="rvb" aria-haspopup="dialog" aria-label="評分與筆記：THE ORAL CIGARETTES"><svg aria-hidden="true"><use href="#i-star"/></svg><span>評分・筆記</span></button></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/4rqJz9fE9prZvQd8WsQv6q" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：THE ORAL CIGARETTES"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCdrwZwfJ5sPjR8t7PGnmgVQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：THE ORAL CIGARETTES"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/the-oral-cigarettes/684141729" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：THE ORAL CIGARETTES"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li><li class="nm" data-id="6" data-w="r:tempalay" data-k="artist" data-s="tempalay  tempalay tempalay"><div class="art"><img src="a/12.jpg" alt="" loading="lazy" decoding="async" width="300" height="300"><button type="button" class="hd" aria-pressed="false" aria-label="標記為已聽：Tempalay" title="標記為已聽"><svg aria-hidden="true"><use href="#i-check"/></svg></button></div><div class="tx"><h4>Tempalay</h4><p class="who">日本</p><button type="button" class="rvb" aria-haspopup="dialog" aria-label="評分與筆記：Tempalay"><svg aria-hidden="true"><use href="#i-star"/></svg><span>評分・筆記</span></button></div><nav class="lks"><a class="lk" href="https://open.spotify.com/artist/5IlQkA8Lq4X0dOWHBumeJP" target="_blank" rel="noopener" title="Spotify" aria-label="Spotify：Tempalay"><svg aria-hidden="true"><use href="#i-sp"/></svg></a><a class="lk" href="https://music.youtube.com/channel/UCfbzpFkr-Idf7e4TdLudMEQ" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube：Tempalay"><svg aria-hidden="true"><use href="#i-yt"/></svg></a><a class="lk" href="https://music.apple.com/tw/artist/tempalay/1041632537" target="_blank" rel="noopener" title="Apple Music" aria-label="Apple Music：Tempalay"><svg aria-hidden="true"><use href="#i-am"/></svg></a></nav></li></ul></section></div>
     <p class="empty" id="empty" hidden>找不到符合的作品，換個關鍵字試試。</p>
   </main>
 </div>
@@ -626,7 +751,7 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
     const v=norm(q);if(!v)return;
     cards.forEach(c=>{
       if(c.hidden)return;
-      const w=document.createTreeWalker(c,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest('.lks,.vh,svg,.mono')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+      const w=document.createTreeWalker(c,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest('.lks,.vh,svg,.mono,.rvb')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
       const nodes=[];while(w.nextNode())nodes.push(w.currentNode);
       nodes.forEach(n=>{
         const src=n.nodeValue;let ns='';const map=[];
@@ -748,35 +873,34 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
   scrim.addEventListener('pointerdown',e=>{e.preventDefault();setOpen(false)});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&open)setOpen(false)});
 })();
-
+</script>
+<script src="/js/my.js"></script>
+<script>
 /* Layer 1 (no account): listened marks, progress, random pick, share card.
-   Storage — localStorage "l22-progress" = {v:1, lists:{"<page path>":{t:<total>, title:"…", h:{"<item id>":<ms timestamp>}}}}
-   The same shape can later be uploaded to a sync code / account and merged by max timestamp per item. */
+   Storage lives in /js/my.js (window.L22S): lists[path].h = listened item ids, works[workKey] = rating + note (follows the work across lists). */
 (function(){
   const root=document.documentElement, $=s=>[...document.querySelectorAll(s)];
-  const prog=document.querySelector('.prog');if(!prog)return;
-  const TOTAL=+prog.dataset.total, UNIT=prog.dataset.unit, KEY='l22-progress', HIDEKEY='l22-hide-heard';
+  const prog=document.querySelector('.prog'), S=window.L22S;if(!prog||!S)return;
+  const TOTAL=+prog.dataset.total, UNIT=prog.dataset.unit, HIDEKEY='l22-hide-heard';
   const PATH=location.pathname.replace(/index\.html$/,'');
   const TITLE=(prog.dataset.title||document.title).replace(/｜.*$/,'').replace(/聆聽(清單)?$/,'').trim();
   const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   const cards=$('.nm[data-id]');
-  const load=()=>{try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.v===1&&d.lists&&typeof d.lists==='object')return d}catch(e){}return {v:1,lists:{}}};
-  let db=load();
-  const mine=()=>((db.lists[PATH]||{}).h)||{};
-  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}};
-
-  function setHeard(id,on){
-    db=load();
-    const L=db.lists[PATH]||(db.lists[PATH]={t:TOTAL,title:TITLE,h:{}});
-    L.t=TOTAL;L.title=TITLE;
-    if(on)L.h[id]=Date.now();else delete L.h[id];
-    if(!Object.keys(L.h).length)delete db.lists[PATH];
-    save();paint();
-  }
+  const mine=()=>((S.load().lists[PATH]||{}).h)||{};
+  const coverOf=c=>{const i=c.querySelector('.art img');if(!i)return '';try{return new URL(i.getAttribute('src'),location.href).pathname}catch(e){return ''}};
+  const info=c=>({wk:c.dataset.w,ti:((c.querySelector('h4')||{}).textContent||'').trim(),ar:((c.querySelector('.by')||{}).textContent||'').trim(),k:c.dataset.k,img:coverOf(c),from:PATH,fromT:TITLE});
+  function setHeard(c,on){S.setHeard(PATH,c.dataset.id,on,{t:TOTAL,title:TITLE,u:UNIT,img:coverOf(c)})}
   function count(){const h=mine();return cards.filter(c=>c.dataset.id in h).length}
   function paint(){
-    const h=mine();let n=0;
+    const h=mine(), W=S.load().works;let n=0;
     cards.forEach(c=>{
+      const w=W[c.dataset.w], rb=c.querySelector('.rvb');
+      if(rb){
+        const r=w&&+w.r, nt=w&&w.n;
+        rb.classList.toggle('on',!!(r||nt));
+        rb.querySelector('span').textContent=r?(S.fmtR(r)+(nt?' · 筆記':'')):(nt?'筆記':'評分・筆記');
+        rb.setAttribute('aria-label','評分與筆記：'+((c.querySelector('h4')||{}).textContent||'')+(r?`（${S.fmtR(r)} 顆星）`:'')+(nt?'（有筆記）':''));
+      }
       const on=c.dataset.id in h;if(on)n++;
       c.classList.toggle('heard',on);
       const b=c.querySelector('.hd');if(!b)return;
@@ -792,8 +916,11 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
     const pb=prog.querySelector('[role=progressbar]');if(pb)pb.setAttribute('aria-valuenow',n);
     $('.js-reset').forEach(e=>e.hidden=!n);
   }
-  cards.forEach(c=>{const b=c.querySelector('.hd');if(b)b.addEventListener('click',()=>setHeard(c.dataset.id,!(c.dataset.id in mine())))});
-  window.addEventListener('storage',e=>{if(e.key===KEY){db=load();paint()}});
+  cards.forEach(c=>{
+    const b=c.querySelector('.hd');if(b)b.addEventListener('click',()=>setHeard(c,!(c.dataset.id in mine())));
+    const r=c.querySelector('.rvb');if(r)r.addEventListener('click',()=>S.openReview(Object.assign(info(c),{onSave:has=>{if(has&&!(c.dataset.id in mine()))setHeard(c,true)}})));
+  });
+  S.onChange(paint);
 
   /* hide listened */
   const setHide=v=>{if(v)root.dataset.hideHeard='';else delete root.dataset.hideHeard;$('.js-hide').forEach(i=>i.checked=v)};
@@ -820,7 +947,7 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
   /* reset */
   $('.js-reset').forEach(b=>b.addEventListener('click',()=>{
     if(!confirm(`確定要清除「${TITLE}」的已聽紀錄嗎？清除後無法復原。`))return;
-    db=load();delete db.lists[PATH];save();paint();
+    S.clearList(PATH);
   }));
 
   /* share card: drawn on a canvas in the browser (covers are same-origin, so the canvas stays exportable) */
