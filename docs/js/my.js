@@ -5,6 +5,7 @@
      lists: { "<list path>": { t: total, title, u: unit, c: [recent cover paths ≤5], at: last change ms, h: { "<item id>": ms } } }
      works: { "<work key>": { r: 0–5 step .5 (0 = no rating), n: note ≤2000 chars, t: updated ms, c: created ms,
                               ti: title, ar: artist, k: kind, img: cover path, from: list path, fromT: list title } }
+     favs:  { "<work key>": { t: favourited ms, ti, ar, k, img, from, fromT } }   (V18 收藏; optional — older backups simply have none)
    Work key = build.py wkey(): "<kind letter>:<normalised artist>|<normalised title>" so a rating follows the work across lists.
    Import merges per item by newest timestamp, so a later sync code / account can reuse the same merge. */
 (function () {
@@ -15,7 +16,11 @@
   function load() {
     try {
       var d = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if (d && d.v === 1 && d.lists && typeof d.lists === 'object') { if (!d.works || typeof d.works !== 'object') d.works = {}; return d; }
+      if (d && d.v === 1 && d.lists && typeof d.lists === 'object') {
+        if (!d.works || typeof d.works !== 'object') d.works = {};
+        if (d.favs && typeof d.favs !== 'object') delete d.favs;
+        return d;
+      }
     } catch (e) {}
     return blank();
   }
@@ -28,7 +33,7 @@
   }
   function save(d) {
     try { localStorage.setItem(KEY, JSON.stringify(d)); }
-    catch (e) { alert('這台裝置的瀏覽器無法儲存紀錄（可能是無痕模式或儲存空間已滿）。'); return false; }
+    catch (e) { alert('這台裝置的瀏覽器無法儲存記錄（可能是無痕模式或儲存空間已滿）。'); return false; }
     persist(); emit(); return true;
   }
   window.addEventListener('storage', function (e) { if (e.key === KEY || e.key === null) emit(); });
@@ -75,6 +80,18 @@
     return Object.keys(d.works).map(function (k) { var w = d.works[k]; w.wk = k; return w; });
   }
 
+  /* ---------- favs (收藏) — kept apart from works so a favourite never needs a rating or note ---------- */
+  var META = ['ti', 'ar', 'k', 'img', 'from', 'fromT'];
+  function isFav(wk) { var f = load().favs; return !!(f && f[wk]); }
+  function setFav(wk, on, meta) {
+    var d = load(); if (!d.favs) d.favs = {};
+    if (on) { var o = { t: Date.now() }; META.forEach(function (k) { if (meta && meta[k] != null) o[k] = meta[k]; }); d.favs[wk] = o; }
+    else delete d.favs[wk];
+    if (!Object.keys(d.favs).length) delete d.favs;
+    return save(d);
+  }
+  function favs() { var f = load().favs || {}; return Object.keys(f).map(function (k) { var w = f[k]; w.wk = k; return w; }); }
+
   /* ---------- backup ---------- */
   function stamp() { var t = new Date(); return t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0'); }
   function exportFile() {
@@ -87,7 +104,7 @@
   var pathOk = function (v) { return typeof v === 'string' && /^\/[^\s<>"']{0,300}$/.test(v); };
   function merge(inc) {
     if (!inc || inc.v !== 1 || typeof inc.lists !== 'object') throw new Error('format');
-    var d = load(), nl = 0, nw = 0;
+    var d = load(), nl = 0, nw = 0, nf = 0;
     Object.keys(inc.lists || {}).forEach(function (p) {
       var I = inc.lists[p]; if (!pathOk(p) || !I || typeof I.h !== 'object') return;
       var L = d.lists[p] || (d.lists[p] = { h: {} }), add = 0;
@@ -113,8 +130,15 @@
         img: pathOk(w.img) ? w.img : '', from: pathOk(w.from) ? w.from : '', fromT: str(w.fromT, 200) };
       nw++;
     });
+    Object.keys(inc.favs && typeof inc.favs === 'object' ? inc.favs : {}).forEach(function (k) {
+      var f = inc.favs[k], t = f && +f.t; if (!f || typeof f !== 'object' || k.length > 400 || !(t > 0)) return;
+      if (!d.favs) d.favs = {};
+      var cur = d.favs[k]; if (cur && (+cur.t || 0) >= t) return;
+      d.favs[k] = { t: t, ti: str(f.ti, 300), ar: str(f.ar, 300), k: str(f.k, 12), img: pathOk(f.img) ? f.img : '', from: pathOk(f.from) ? f.from : '', fromT: str(f.fromT, 200) };
+      nf++;
+    });
     save(d);
-    return { lists: nl, works: nw };
+    return { lists: nl, works: nw, favs: nf };
   }
   /* read + validate a backup file WITHOUT touching stored data; merge() only runs after the visitor confirms */
   function readFile(file) {
@@ -126,10 +150,11 @@
         try {
           var inc = JSON.parse(fr.result);
           if (!inc || inc.v !== 1 || typeof inc.lists !== 'object') throw new Error('format');
-          var nl = 0, nh = 0, nw = 0;
+          var nl = 0, nh = 0, nw = 0, nf = 0;
           Object.keys(inc.lists || {}).forEach(function (p) { var I = inc.lists[p]; if (pathOk(p) && I && typeof I.h === 'object') { var k = Object.keys(I.h).length; if (k) { nl++; nh += k; } } });
           Object.keys(inc.works || {}).forEach(function (k) { var w = inc.works[k]; if (w && typeof w === 'object' && ((+w.r > 0) || (typeof w.n === 'string' && w.n.trim()))) nw++; });
-          ok({ data: inc, name: file.name, lists: nl, heard: nh, works: nw, at: inc.exportedAt || '' });
+          if (inc.favs && typeof inc.favs === 'object') Object.keys(inc.favs).forEach(function (k) { var f = inc.favs[k]; if (f && typeof f === 'object' && +f.t > 0) nf++; });
+          ok({ data: inc, name: file.name, lists: nl, heard: nh, works: nw, favs: nf, at: inc.exportedAt || '' });
         } catch (e) { bad(e); }
       };
       fr.onerror = function () { bad(fr.error); };
@@ -154,9 +179,12 @@
     var t = new Date(ts); return (t.getFullYear() !== new Date().getFullYear() ? t.getFullYear() + ' 年 ' : '') + (t.getMonth() + 1) + ' 月 ' + t.getDate() + ' 日';
   }
   var STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.84 5.76 6.36.92-4.6 4.49 1.08 6.33L12 17.3l-5.68 3 1.08-6.33-4.6-4.49 6.36-.92z"/></svg>';
-  function starsHTML(r, cls) {  // read-only star row
-    var w = Math.max(0, Math.min(5, +r || 0)) / 5 * 100, row = STAR + STAR + STAR + STAR + STAR;
-    return '<span class="stars-ro ' + (cls || '') + '" role="img" aria-label="' + r + ' 顆星"><span class="sr-bg">' + row + '</span><span class="sr-fg" style="width:' + w + '%">' + row + '</span></span>';
+  function starsHTML(r, cls) {  // read-only: only the stars actually given (2 → ★★, 2.5 → ★★ + half), never empty outline stars
+    r = Math.max(0, Math.min(5, Math.round((+r || 0) * 2) / 2)); if (!r) return '';
+    var full = Math.floor(r), h = '';
+    for (var i = 0; i < full; i++) h += STAR;
+    if (r % 1) h += '<span class="sr-half">' + STAR + '</span>';
+    return '<span class="stars-ro ' + (cls || '') + '" role="img" aria-label="' + fmtR(r) + ' 顆星">' + h + '</span>';
   }
   var fmtR = function (r) { return (r % 1 ? r.toFixed(1) : String(r)); };
 
@@ -177,8 +205,8 @@
       + '<p class="rv-sub"><span class="rv-val" aria-hidden="true">未評分</span><span>點星星左半邊是半顆</span><button type="button" class="lnk-btn rv-clr" hidden>清除評分</button></p></div>'
       + '<div class="rv-noteb"><label class="rv-lab" for="rvN">我的筆記</label>'
       + '<textarea id="rvN" maxlength="2000" rows="5" placeholder="記下你聽到的、喜歡的，或想再聽的地方。"></textarea><p class="rv-cnt"><span>0</span> / 2000</p></div>'
-      + '<p class="rv-note">紀錄只保存在這個瀏覽器，記得到<a href="/me/#backup">我的聆聽紀錄</a>備份。</p>'
-      + '<div class="rv-act"><button type="button" class="lnk-btn rv-del">刪除這則紀錄</button><span class="rv-sp"></span>'
+      + '<p class="rv-note">記錄只保存在這個瀏覽器，記得到<a href="/me/#backup">我的聆聽記錄</a>備份。</p>'
+      + '<div class="rv-act"><button type="button" class="lnk-btn rv-del">刪除這則記錄</button><span class="rv-sp"></span>'
       + '<button type="button" class="pg-btn rv-cancel">取消</button><button type="button" class="pg-btn pri rv-save">儲存</button></div></div>';
     doc.body.appendChild(dlg);
     var st = dlg.querySelector('.rv-stars'), ta = dlg.querySelector('textarea'), cnt = dlg.querySelector('.rv-cnt span'), vEl = dlg.querySelector('.rv-val');
@@ -268,7 +296,7 @@
     return items.length;
   }
 
-  /* ---------- /me/ page ---------- */
+  /* ---------- /me/ page (V18: stats + backup in one card, records search right after it, 清除 kept apart) ---------- */
   var NOTE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8.5L19 8v12.5H6z"/><path d="M14 3.5V8.5h5M9 12.5h6.5M9 16h4.5"/></svg>';
   function renderMe() {
     var me = doc.getElementById('me'); if (!me) return;
@@ -282,9 +310,10 @@
       $id('meStats').innerHTML = !any ? '' : [[L.filter(function (x) { return !x.done; }).length, '進行中的清單'], [heard, '已聽標記'],
         [W.filter(function (w) { return w.r > 0; }).length, '已評分'], [W.filter(function (w) { return w.n; }).length, '有筆記']]
         .map(function (s) { return '<div><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('');
-      $id('meStNote').hidden = !any;
+      $id('meStats').hidden = !any;
       $id('meEmpty').hidden = any;
       me.hidden = !any;
+      var wb = $id('meWipe'); if (wb) wb.disabled = !any;
     }
     function wks() {
       var v = (q.value || '').trim().toLowerCase(), all = works(), W = all;
@@ -295,21 +324,21 @@
       W.sort(function (a, b) { return s === 'hi' ? (b.r - a.r) || (b.t - a.t) : s === 'lo' ? ((a.r || 9) - (b.r || 9)) || (b.t - a.t) : b.t - a.t; });
       list.innerHTML = W.map(function (w) {
         var art = w.img ? '<img src="' + esc(w.img) + '" alt="" loading="lazy" width="64" height="64">' : '<span class="wk-mono">' + esc(String(w.ti || '').trim().slice(0, 2)) + '</span>';
-        var st = (w.r ? '<span class="wk-r">' + starsHTML(w.r) + fmtR(w.r) + '</span>' : '') + (w.n ? '<span class="wk-nb">' + NOTE + '筆記</span>' : '');
+        var st = (w.r ? '<span class="wk-r">' + starsHTML(w.r) + '</span>' : '') + (w.n ? '<span class="wk-nb">' + NOTE + '筆記</span>' : '');
         return '<li class="wk" data-w="' + esc(w.wk) + '"><span class="wk-art">' + art + '</span><div class="wk-tx">'
-          + '<h3>' + esc(w.ti) + '</h3>' + (w.ar ? '<p class="wk-by">' + esc(w.ar) + '</p>' : '')
+          + '<div class="wk-hd"><h3>' + esc(w.ti) + '</h3><button type="button" class="pg-btn wk-ed" aria-label="編輯「' + esc(w.ti) + '」的評分與筆記">編輯</button></div>'
+          + (w.ar ? '<p class="wk-by">' + esc(w.ar) + '</p>' : '')
           + (st ? '<p class="wk-st">' + st + '</p>' : '')
           + (w.n ? '<p class="wk-n">' + esc(w.n) + '</p>' : '')
-          + '<p class="wk-from">' + (w.from ? '來自 <a href="' + esc(w.from) + '">' + esc(w.fromT || w.from) + '</a> · ' : '') + esc(rel(w.t)) + '</p></div>'
-          + '<button type="button" class="pg-btn wk-ed" aria-label="編輯「' + esc(w.ti) + '」的評分與筆記">編輯</button></li>';
+          + '<p class="wk-from">' + (w.from ? '來自 <a href="' + esc(w.from) + '">' + esc(w.fromT || w.from) + '</a> · ' : '') + esc(rel(w.t)) + '</p></div></li>';
       }).join('');
       var none = me.querySelector('.wk-none'), filtered = !!(v || F !== 'all');
       none.hidden = !!W.length;
-      none.querySelector('.wk-nt').textContent = all.length && filtered ? '沒有符合條件的紀錄。' : '還沒有評分或筆記。在任何清單裡點作品下方的「評分・筆記」就能開始。';
+      none.querySelector('.wk-nt').textContent = all.length && filtered ? '沒有符合條件的記錄。' : '還沒有評分或筆記。在任何清單裡點作品旁的 ⋯ 就能開始。';
       none.querySelector('.wk-clear').hidden = !(all.length && filtered);
     }
     function all() {
-      if (!available()) { $id('meErr').hidden = false; $id('meEmpty').hidden = true; me.hidden = true; return; }
+      if (!available()) { $id('meErr').hidden = false; $id('meEmpty').hidden = true; $id('meStats').hidden = true; me.hidden = true; return; }
       $id('meErr').hidden = true;
       stats(); renderResume($id('meResume'), { keep: true }); renderResume($id('meDone'), { done: true }); wks();
       $id('meResume').querySelector('.rs-none').hidden = !!lists().filter(function (x) { return !x.done; }).length;
@@ -324,7 +353,7 @@
     });
     $id('meRetry').addEventListener('click', all);
     $id('meExport').addEventListener('click', function () {
-      if (!lists().length && !works().length) { say('目前沒有紀錄可以匯出。'); return; }
+      if (!lists().length && !works().length && !favs().length) { say('目前沒有記錄可以匯出。'); return; }
       exportFile(); say('已下載備份檔。檔案內含你的私人筆記，請妥善保管；換裝置時用「匯入備份」還原。');
     });
     var pending = null, imp = $id('meImp');
@@ -333,26 +362,51 @@
       if (!f) { say('已取消匯入。'); return; }
       readFile(f).then(function (r) {
         pending = r; imp.hidden = false; say('');
-        $id('meImpTx').textContent = '「' + r.name + '」包含 ' + r.lists + ' 份清單的 ' + r.heard + ' 筆已聽紀錄、' + r.works + ' 則評分與筆記。'
-          + '匯入會與這台裝置上現有的紀錄合併：沒有的會加入，同一筆以較新的為準，不會刪除現有紀錄。';
+        $id('meImpTx').textContent = '「' + r.name + '」包含 ' + r.lists + ' 份清單的 ' + r.heard + ' 筆已聽記錄、' + r.works + ' 則評分與筆記。'
+          + '匯入會與這台裝置上現有的記錄合併：沒有的會加入，同一筆以較新的為準，不會刪除現有記錄。';
         $id('meImpGo').focus();
-      }).catch(function () { pending = null; imp.hidden = true; say('無法匯入：「' + f.name + '」不是聆聽清單的備份檔，或檔案已損毀。現有紀錄沒有任何變動。', true); });
+      }).catch(function () { pending = null; imp.hidden = true; say('無法匯入：「' + f.name + '」不是聆聽清單的備份檔，或檔案已損毀。現有記錄沒有任何變動。', true); });
     });
     $id('meImpGo').addEventListener('click', function () {
       if (!pending) return;
-      try { var r = merge(pending.data); say('匯入完成：更新了 ' + r.lists + ' 份清單的已聽紀錄、' + r.works + ' 則評分與筆記。'); }
-      catch (e) { say('匯入失敗，現有紀錄沒有任何變動。', true); }
+      try { var r = merge(pending.data); say('匯入完成：更新了 ' + r.lists + ' 份清單的已聽記錄、' + r.works + ' 則評分與筆記。'); }
+      catch (e) { say('匯入失敗，現有記錄沒有任何變動。', true); }
       pending = null; imp.hidden = true;
     });
-    $id('meImpNo').addEventListener('click', function () { pending = null; imp.hidden = true; say('已取消匯入，現有紀錄沒有任何變動。'); });
+    $id('meImpNo').addEventListener('click', function () { pending = null; imp.hidden = true; say('已取消匯入，現有記錄沒有任何變動。'); });
     $id('meWipe').addEventListener('click', function () {
-      if (!confirm('確定清除這台裝置上的全部聆聽紀錄（已聽、評分、筆記）嗎？\n清除後無法復原，建議先匯出備份。')) return;
-      wipe(); say('已清除這台裝置上的全部紀錄。');
+      if (!confirm('確定清除這台裝置上的全部聆聽記錄（已聽、評分、筆記）嗎？\n清除後無法復原，建議先匯出備份。')) return;
+      wipe(); say('已清除這台裝置上的全部記錄。');
     });
     subs.push(all); all();
   }
 
-  window.L22S = { load: load, setHeard: setHeard, clearList: clearList, lists: lists, work: work, saveWork: saveWork, works: works,
+  /* ---------- (i) popovers shared by list pages and /me/: .js-pop[aria-controls] toggles a .ipop; Esc / outside click closes ---------- */
+  var popOpen = null;
+  function popClose(focus) {
+    if (!popOpen) return; var p = popOpen; popOpen = null;
+    p.el.hidden = true; doc.querySelectorAll('.js-pop[aria-controls="' + p.el.id + '"]').forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
+    if (focus && p.btn && p.btn.focus) p.btn.focus({ preventScroll: true });
+  }
+  function popOpenFor(btn) {
+    var el = doc.getElementById(btn.getAttribute('aria-controls')); if (!el) return;
+    if (popOpen && popOpen.el === el) { popClose(false); return; }
+    popClose(false);
+    el.hidden = false; el.style.left = ''; el.style.right = '';
+    doc.querySelectorAll('.js-pop[aria-controls="' + el.id + '"]').forEach(function (b) { b.setAttribute('aria-expanded', 'true'); });
+    popOpen = { el: el, btn: btn };
+    var r = el.getBoundingClientRect(), over = r.right - (window.innerWidth - 12);
+    if (over > 0) el.style.left = (parseFloat(getComputedStyle(el).left) || 0) - over + 'px';
+    if (el.getBoundingClientRect().left < 12) el.style.left = (parseFloat(el.style.left) || 0) + (12 - el.getBoundingClientRect().left) + 'px';
+  }
+  doc.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.js-pop');
+    if (b) { e.preventDefault(); popOpenFor(b); return; }
+    if (popOpen && !popOpen.el.contains(e.target)) popClose(false);
+  });
+  doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && popOpen) { popClose(true); } });
+
+  window.L22S = { load: load, setHeard: setHeard, clearList: clearList, lists: lists, work: work, saveWork: saveWork, works: works, isFav: isFav, setFav: setFav, favs: favs,
     exportFile: exportFile, readFile: readFile, importFile: importFile, merge: merge, wipe: wipe, available: available, openReview: openReview,
     renderResume: renderResume, starsHTML: starsHTML, fmtR: fmtR, rel: rel, esc: esc, onChange: function (f) { subs.push(f); } };
 
