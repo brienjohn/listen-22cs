@@ -116,16 +116,29 @@
     save(d);
     return { lists: nl, works: nw };
   }
-  function importFile(file) {
+  /* read + validate a backup file WITHOUT touching stored data; merge() only runs after the visitor confirms */
+  function readFile(file) {
     return new Promise(function (ok, bad) {
       if (!file) return bad(new Error('none'));
       if (file.size > 5e6) return bad(new Error('size'));
       var fr = new FileReader();
-      fr.onload = function () { try { ok(merge(JSON.parse(fr.result))); } catch (e) { bad(e); } };
+      fr.onload = function () {
+        try {
+          var inc = JSON.parse(fr.result);
+          if (!inc || inc.v !== 1 || typeof inc.lists !== 'object') throw new Error('format');
+          var nl = 0, nh = 0, nw = 0;
+          Object.keys(inc.lists || {}).forEach(function (p) { var I = inc.lists[p]; if (pathOk(p) && I && typeof I.h === 'object') { var k = Object.keys(I.h).length; if (k) { nl++; nh += k; } } });
+          Object.keys(inc.works || {}).forEach(function (k) { var w = inc.works[k]; if (w && typeof w === 'object' && ((+w.r > 0) || (typeof w.n === 'string' && w.n.trim()))) nw++; });
+          ok({ data: inc, name: file.name, lists: nl, heard: nh, works: nw, at: inc.exportedAt || '' });
+        } catch (e) { bad(e); }
+      };
       fr.onerror = function () { bad(fr.error); };
       fr.readAsText(file);
     });
   }
+  function importFile(file) { return readFile(file).then(function (r) { return merge(r.data); }); }
+  function available() { try { var k = '__l22t'; localStorage.setItem(k, '1'); localStorage.removeItem(k); return true; } catch (e) { return false; } }
+
   function wipe() { try { localStorage.removeItem(KEY); } catch (e) {} emit(); }
 
   /* ---------- helpers ---------- */
@@ -147,8 +160,10 @@
   }
   var fmtR = function (r) { return (r % 1 ? r.toFixed(1) : String(r)); };
 
-  /* ---------- review dialog (shared by list pages and /me/) ---------- */
-  var dlg, cur = null, val = 0, shown = 0, S = 34, G = 6;
+
+  /* ---------- review dialog (shared by list pages and /me/) — V17: 40px stars (+4px gap) with half-star taps,
+     −/＋ half-step buttons (44px) for precise input, unsaved-change guard, focus returns to the opener ---------- */
+  var dlg, cur = null, val = 0, base = null, opener = null, S = 40, G = 4;
   function build() {
     dlg = doc.createElement('dialog');
     dlg.className = 'rvdlg'; dlg.setAttribute('aria-labelledby', 'rvT');
@@ -158,19 +173,18 @@
       + '<div class="rv-rate"><p class="rv-lab" id="rvL">我的評分</p>'
       + '<div class="rv-row"><div class="rv-stars" role="slider" tabindex="0" aria-labelledby="rvL" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" aria-valuetext="未評分">'
       + '<span class="rs-bg">' + STAR + STAR + STAR + STAR + STAR + '</span><span class="rs-fg">' + STAR + STAR + STAR + STAR + STAR + '</span></div>'
-      + '<span class="rv-val" aria-hidden="true">未評分</span><button type="button" class="rv-clr" hidden>清除評分</button></div>'
-      + '<p class="rv-hint">點星星評分，點左半邊是半顆；也可以用方向鍵調整。</p></div>'
-      + '<div class="rv-noteb"><label class="rv-lab" for="rvN">筆記</label>'
-      + '<textarea id="rvN" maxlength="2000" rows="5" placeholder="聽完的感想、最喜歡的歌、在哪裡聽到的……"></textarea><p class="rv-cnt"><span>0</span> / 2000</p></div>'
-      + '<p class="rv-note">評分和筆記只存在這台裝置的瀏覽器裡。記得到<a href="/me/#backup">我的聆聽紀錄</a>匯出備份。</p>'
-      + '<div class="rv-act"><button type="button" class="rv-del">刪除這則紀錄</button><span class="rv-sp"></span>'
+      + '<span class="rv-step"><button type="button" class="rv-dn" aria-label="減少半顆星">−</button><button type="button" class="rv-up" aria-label="增加半顆星">＋</button></span></div>'
+      + '<p class="rv-sub"><span class="rv-val" aria-hidden="true">未評分</span><span>點星星左半邊是半顆</span><button type="button" class="lnk-btn rv-clr" hidden>清除評分</button></p></div>'
+      + '<div class="rv-noteb"><label class="rv-lab" for="rvN">我的筆記</label>'
+      + '<textarea id="rvN" maxlength="2000" rows="5" placeholder="記下你聽到的、喜歡的，或想再聽的地方。"></textarea><p class="rv-cnt"><span>0</span> / 2000</p></div>'
+      + '<p class="rv-note">紀錄只保存在這個瀏覽器，記得到<a href="/me/#backup">我的聆聽紀錄</a>備份。</p>'
+      + '<div class="rv-act"><button type="button" class="lnk-btn rv-del">刪除這則紀錄</button><span class="rv-sp"></span>'
       + '<button type="button" class="pg-btn rv-cancel">取消</button><button type="button" class="pg-btn pri rv-save">儲存</button></div></div>';
     doc.body.appendChild(dlg);
-    var st = dlg.querySelector('.rv-stars'), ta = dlg.querySelector('textarea'), cnt = dlg.querySelector('.rv-cnt span');
+    var st = dlg.querySelector('.rv-stars'), ta = dlg.querySelector('textarea'), cnt = dlg.querySelector('.rv-cnt span'), vEl = dlg.querySelector('.rv-val');
     function paint(v) {
-      shown = v;
       dlg.querySelector('.rs-fg').style.width = (Math.floor(v) * (S + G) + (v % 1) * S) + 'px';
-      dlg.querySelector('.rv-val').textContent = v ? fmtR(v) + ' / 5' : '未評分';
+      vEl.textContent = v ? fmtR(v) + ' / 5 顆星' : '未評分'; vEl.classList.toggle('on', !!v);
     }
     function setVal(v) {
       val = Math.max(0, Math.min(5, Math.round(v * 2) / 2)); paint(val);
@@ -192,121 +206,160 @@
       else if (k === 'Home') v = 0; else if (k === 'End') v = 5; else if (/^[0-5]$/.test(k)) v = +k; else return;
       e.preventDefault(); setVal(v);
     });
+    dlg.querySelector('.rv-up').addEventListener('click', function () { setVal(val + 0.5); });
+    dlg.querySelector('.rv-dn').addEventListener('click', function () { setVal(val - 0.5); });
     dlg.querySelector('.rv-clr').addEventListener('click', function () { setVal(0); st.focus(); });
     ta.addEventListener('input', function () { cnt.textContent = ta.value.length; });
-    dlg.querySelector('.rv-x').addEventListener('click', function () { dlg.close(); });
-    dlg.querySelector('.rv-cancel').addEventListener('click', function () { dlg.close(); });
-    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    function dirty() { return base && (val !== base.r || ta.value.trim() !== base.n); }
+    function tryClose() { if (dirty() && !confirm('有尚未儲存的評分或筆記，確定要放棄嗎？')) return; base = null; dlg.close(); }
+    dlg.querySelector('.rv-x').addEventListener('click', tryClose);
+    dlg.querySelector('.rv-cancel').addEventListener('click', tryClose);
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) tryClose(); });
+    dlg.addEventListener('cancel', function (e) { e.preventDefault(); tryClose(); });  // Esc
+    dlg.addEventListener('close', function () { var o = opener; opener = null; if (o && o.isConnected && o.focus) o.focus({ preventScroll: true }); });
     dlg.querySelector('.rv-save').addEventListener('click', function () {
       if (!cur) return;
       var o = cur;
       if (saveWork(o.wk, { r: val, n: ta.value }, { ti: o.ti, ar: o.ar, k: o.k, img: o.img, from: o.from, fromT: o.fromT })) {
-        dlg.close(); if (o.onSave) o.onSave(!!(val || ta.value.trim()));
+        base = null; dlg.close(); if (o.onSave) o.onSave(!!(val || ta.value.trim()));
       }
     });
     dlg.querySelector('.rv-del').addEventListener('click', function () {
       if (!cur || !confirm('確定刪除這則評分和筆記嗎？刪除後無法復原。')) return;
-      var o = cur; saveWork(o.wk, { r: 0, n: '' }); dlg.close(); if (o.onSave) o.onSave(false);
+      var o = cur; saveWork(o.wk, { r: 0, n: '' }); base = null; dlg.close(); if (o.onSave) o.onSave(false);
     });
   }
   function openReview(o) {
     if (!dlg) build();
     if (!dlg.showModal) return;
-    cur = o;
+    cur = o; opener = doc.activeElement;
     var w = work(o.wk) || {}, art = dlg.querySelector('.rv-art'), ta = dlg.querySelector('textarea');
-    art.innerHTML = o.img ? '<img src="' + esc(o.img) + '" alt="" width="64" height="64">' : '<span>' + esc(String(o.ti || '').trim().slice(0, 2)) + '</span>';
+    art.innerHTML = o.img ? '<img src="' + esc(o.img) + '" alt="" width="56" height="56">' : '<span>' + esc(String(o.ti || '').trim().slice(0, 2)) + '</span>';
     dlg.querySelector('#rvT').textContent = o.ti || '';
     dlg.querySelector('.rv-by').textContent = o.ar || '';
     dlg.querySelector('.rv-by').hidden = !o.ar;
     dlg.querySelector('.rv-from').textContent = o.fromT ? '來自「' + o.fromT + '」' : '';
     ta.value = w.n || ''; dlg.querySelector('.rv-cnt span').textContent = ta.value.length;
     dlg._set(+w.r || 0);
+    base = { r: +w.r || 0, n: (w.n || '').trim() };
     dlg.querySelector('.rv-del').hidden = !(w.r || w.n);
     dlg.showModal();
     dlg.querySelector('.rv-stars').focus();
   }
 
-  /* ---------- 繼續聽 rows (home + /me/) ---------- */
+  /* ---------- 繼續聽 cards (home + /me/): series banner thumb, list name, series line, 6px mint track, count + %, chevron ---------- */
+  var TYPE = { award: '音樂獎', fest: '音樂節', chart: '榜單' };
+  var CHEV = '<span class="rs-chev" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
   function resumeHTML(x) {
-    var pct = x.t ? Math.round(x.n / x.t * 100) : 0;
-    var cv = x.c.map(function (u) { return '<img src="' + esc(u) + '" alt="" loading="lazy" width="44" height="44">'; }).join('');
+    var pf = x.t ? Math.round(x.n / x.t * 1000) / 10 : 0, pct = pf % 1 ? pf.toFixed(1) : String(pf), slug = x.p.split('/')[1] || '', D = window.L22 || {}, ser = D[slug];
+    var line = (ser ? ser.name + (TYPE[ser.type] ? ' · ' + TYPE[ser.type] : '') + ' · ' : '') + rel(x.last);
     return '<li><a class="rs-card" href="' + esc(x.p) + '">'
-      + '<span class="rs-cv" aria-hidden="true">' + (cv || '<i></i>') + '</span>'
-      + '<span class="rs-tx"><b class="rs-t">' + esc(x.title) + '</b>'
-      + '<span class="rs-n">' + (x.done ? '全部聽完 · ' : '已聽 ') + x.n + ' / ' + x.t + ' ' + esc(x.u) + '<em>' + pct + '%</em></span>'
+      + '<img class="rs-bn" src="/img/banners/' + esc(slug) + '-800.jpg" alt="" loading="lazy" width="80" height="60" onerror="this.removeAttribute(\'src\')">'
+      + '<span class="rs-tx"><b class="rs-t">' + esc(x.title) + '</b><span class="rs-s">' + esc(line) + '</span>'
       + '<span class="rs-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></span>'
-      + '<span class="rs-when">' + esc(rel(x.last)) + '</span></span></a></li>';
+      + '<span class="rs-n">' + (x.done ? '已完成 · ' : '已聽 ') + x.n + ' / ' + x.t + ' ' + esc(x.u) + '<em>' + pct + '%</em></span></span>' + CHEV + '</a></li>';
   }
   function renderResume(sec, opt) {
     opt = opt || {};
-    var all = lists(), items = all.filter(function (x) { return opt.done ? x.done : !x.done; });
+    var items = lists().filter(function (x) { return opt.done ? x.done : !x.done; });
     if (opt.limit) items = items.slice(0, opt.limit);
-    var ul = sec.querySelector('.rs-list');
-    ul.innerHTML = items.map(resumeHTML).join('');
+    sec.querySelector('.rs-list').innerHTML = items.map(resumeHTML).join('');
     sec.hidden = !items.length && !opt.keep;
     return items.length;
   }
 
   /* ---------- /me/ page ---------- */
+  var NOTE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8.5L19 8v12.5H6z"/><path d="M14 3.5V8.5h5M9 12.5h6.5M9 16h4.5"/></svg>';
   function renderMe() {
     var me = doc.getElementById('me'); if (!me) return;
-    var q = me.querySelector('.wk-q'), sort = me.querySelector('.wk-sort'), onlyN = me.querySelector('.wk-notes'), list = me.querySelector('.wk-list');
+    var q = me.querySelector('.wk-q'), sort = me.querySelector('.wk-sort'), list = me.querySelector('.wk-list'), F = 'all';
+    var segs = [].slice.call(me.querySelectorAll('.seg button'));
+    var $id = function (i) { return doc.getElementById(i); }, msg = $id('meMsg');
+    function say(t, err) { msg.textContent = t; msg.classList.toggle('err', !!err); }
     function stats() {
       var L = lists(), W = works(), heard = L.reduce(function (s, x) { return s + x.n; }, 0);
-      var box = doc.getElementById('meStats');
-      box.innerHTML = [[L.length, '份清單'], [heard, '筆已聽'], [W.filter(function (w) { return w.r > 0; }).length, '則評分'], [W.filter(function (w) { return w.n; }).length, '則筆記']]
+      var any = !!(L.length || W.length);
+      $id('meStats').innerHTML = !any ? '' : [[L.filter(function (x) { return !x.done; }).length, '進行中的清單'], [heard, '已聽標記'],
+        [W.filter(function (w) { return w.r > 0; }).length, '已評分'], [W.filter(function (w) { return w.n; }).length, '有筆記']]
         .map(function (s) { return '<div><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('');
-      doc.getElementById('meEmpty').hidden = !!(L.length || W.length);
+      $id('meStNote').hidden = !any;
+      $id('meEmpty').hidden = any;
+      me.hidden = !any;
     }
     function wks() {
-      var v = (q.value || '').trim().toLowerCase(), W = works();
-      if (onlyN.checked) W = W.filter(function (w) { return w.n; });
+      var v = (q.value || '').trim().toLowerCase(), all = works(), W = all;
+      if (F === 'rated') W = W.filter(function (w) { return w.r > 0; });
+      if (F === 'note') W = W.filter(function (w) { return w.n; });
       if (v) W = W.filter(function (w) { return ((w.ti || '') + ' ' + (w.ar || '') + ' ' + (w.n || '') + ' ' + (w.fromT || '')).toLowerCase().indexOf(v) >= 0; });
       var s = sort.value;
       W.sort(function (a, b) { return s === 'hi' ? (b.r - a.r) || (b.t - a.t) : s === 'lo' ? ((a.r || 9) - (b.r || 9)) || (b.t - a.t) : b.t - a.t; });
       list.innerHTML = W.map(function (w) {
-        var art = w.img ? '<img src="' + esc(w.img) + '" alt="" loading="lazy" width="72" height="72">' : '<span class="wk-mono">' + esc(String(w.ti || '').trim().slice(0, 2)) + '</span>';
+        var art = w.img ? '<img src="' + esc(w.img) + '" alt="" loading="lazy" width="64" height="64">' : '<span class="wk-mono">' + esc(String(w.ti || '').trim().slice(0, 2)) + '</span>';
+        var st = (w.r ? '<span class="wk-r">' + starsHTML(w.r) + fmtR(w.r) + '</span>' : '') + (w.n ? '<span class="wk-nb">' + NOTE + '筆記</span>' : '');
         return '<li class="wk" data-w="' + esc(w.wk) + '"><span class="wk-art">' + art + '</span><div class="wk-tx">'
           + '<h3>' + esc(w.ti) + '</h3>' + (w.ar ? '<p class="wk-by">' + esc(w.ar) + '</p>' : '')
-          + (w.r ? '<p class="wk-r">' + starsHTML(w.r) + '<b>' + fmtR(w.r) + '</b></p>' : '')
+          + (st ? '<p class="wk-st">' + st + '</p>' : '')
           + (w.n ? '<p class="wk-n">' + esc(w.n) + '</p>' : '')
           + '<p class="wk-from">' + (w.from ? '來自 <a href="' + esc(w.from) + '">' + esc(w.fromT || w.from) + '</a> · ' : '') + esc(rel(w.t)) + '</p></div>'
           + '<button type="button" class="pg-btn wk-ed" aria-label="編輯「' + esc(w.ti) + '」的評分與筆記">編輯</button></li>';
       }).join('');
-      var none = me.querySelector('.wk-none');
+      var none = me.querySelector('.wk-none'), filtered = !!(v || F !== 'all');
       none.hidden = !!W.length;
-      none.textContent = works().length ? '沒有符合條件的紀錄。' : '還沒有評分或筆記。在任何清單裡點作品下方的「評分・筆記」就能開始。';
+      none.querySelector('.wk-nt').textContent = all.length && filtered ? '沒有符合條件的紀錄。' : '還沒有評分或筆記。在任何清單裡點作品下方的「評分・筆記」就能開始。';
+      none.querySelector('.wk-clear').hidden = !(all.length && filtered);
     }
-    function all() { stats(); renderResume(doc.getElementById('meResume'), { keep: true }); renderResume(doc.getElementById('meDone'), { done: true }); wks();
-      doc.querySelector('#meResume .rs-none').hidden = !!lists().filter(function (x) { return !x.done; }).length; }
-    [q, onlyN, sort].forEach(function (el) { el.addEventListener(el === q ? 'input' : 'change', wks); });
+    function all() {
+      if (!available()) { $id('meErr').hidden = false; $id('meEmpty').hidden = true; me.hidden = true; return; }
+      $id('meErr').hidden = true;
+      stats(); renderResume($id('meResume'), { keep: true }); renderResume($id('meDone'), { done: true }); wks();
+      $id('meResume').querySelector('.rs-none').hidden = !!lists().filter(function (x) { return !x.done; }).length;
+    }
+    segs.forEach(function (b) { b.addEventListener('click', function () { F = b.dataset.f; segs.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); }); wks(); }); });
+    q.addEventListener('input', wks); sort.addEventListener('change', wks);
+    me.querySelector('.wk-clear').addEventListener('click', function () { q.value = ''; F = 'all'; segs.forEach(function (o) { o.setAttribute('aria-pressed', String(o.dataset.f === 'all')); }); wks(); });
     list.addEventListener('click', function (e) {
       var b = e.target.closest('.wk-ed'); if (!b) return;
-      var w = work(b.closest('.wk').dataset.w); if (!w) return;
-      openReview({ wk: b.closest('.wk').dataset.w, ti: w.ti, ar: w.ar, k: w.k, img: w.img, from: w.from, fromT: w.fromT });
+      var k = b.closest('.wk').dataset.w, w = work(k); if (!w) return;
+      openReview({ wk: k, ti: w.ti, ar: w.ar, k: w.k, img: w.img, from: w.from, fromT: w.fromT });
     });
-    var msg = doc.getElementById('meMsg');
-    doc.getElementById('meExport').addEventListener('click', function () { exportFile(); msg.textContent = '已下載備份檔。換裝置或清除瀏覽器資料後，用「匯入備份」還原。'; });
-    doc.getElementById('meImport').addEventListener('change', function (e) {
+    $id('meRetry').addEventListener('click', all);
+    $id('meExport').addEventListener('click', function () {
+      if (!lists().length && !works().length) { say('目前沒有紀錄可以匯出。'); return; }
+      exportFile(); say('已下載備份檔。檔案內含你的私人筆記，請妥善保管；換裝置時用「匯入備份」還原。');
+    });
+    var pending = null, imp = $id('meImp');
+    $id('meImport').addEventListener('change', function (e) {
       var f = e.target.files && e.target.files[0]; e.target.value = '';
-      importFile(f).then(function (r) { msg.textContent = '匯入完成：更新 ' + r.lists + ' 份清單的已聽紀錄、' + r.works + ' 則評分與筆記。原有紀錄都保留，同一筆以較新的為準。'; })
-        .catch(function () { msg.textContent = '無法匯入：這不是聆聽清單的備份檔，或檔案已損毀。'; });
+      if (!f) { say('已取消匯入。'); return; }
+      readFile(f).then(function (r) {
+        pending = r; imp.hidden = false; say('');
+        $id('meImpTx').textContent = '「' + r.name + '」包含 ' + r.lists + ' 份清單的 ' + r.heard + ' 筆已聽紀錄、' + r.works + ' 則評分與筆記。'
+          + '匯入會與這台裝置上現有的紀錄合併：沒有的會加入，同一筆以較新的為準，不會刪除現有紀錄。';
+        $id('meImpGo').focus();
+      }).catch(function () { pending = null; imp.hidden = true; say('無法匯入：「' + f.name + '」不是聆聽清單的備份檔，或檔案已損毀。現有紀錄沒有任何變動。', true); });
     });
-    doc.getElementById('meWipe').addEventListener('click', function () {
+    $id('meImpGo').addEventListener('click', function () {
+      if (!pending) return;
+      try { var r = merge(pending.data); say('匯入完成：更新了 ' + r.lists + ' 份清單的已聽紀錄、' + r.works + ' 則評分與筆記。'); }
+      catch (e) { say('匯入失敗，現有紀錄沒有任何變動。', true); }
+      pending = null; imp.hidden = true;
+    });
+    $id('meImpNo').addEventListener('click', function () { pending = null; imp.hidden = true; say('已取消匯入，現有紀錄沒有任何變動。'); });
+    $id('meWipe').addEventListener('click', function () {
       if (!confirm('確定清除這台裝置上的全部聆聽紀錄（已聽、評分、筆記）嗎？\n清除後無法復原，建議先匯出備份。')) return;
-      wipe(); msg.textContent = '已清除這台裝置上的全部紀錄。';
+      wipe(); say('已清除這台裝置上的全部紀錄。');
     });
     subs.push(all); all();
   }
 
   window.L22S = { load: load, setHeard: setHeard, clearList: clearList, lists: lists, work: work, saveWork: saveWork, works: works,
-    exportFile: exportFile, importFile: importFile, merge: merge, wipe: wipe, openReview: openReview, renderResume: renderResume,
-    starsHTML: starsHTML, fmtR: fmtR, rel: rel, esc: esc, onChange: function (f) { subs.push(f); } };
+    exportFile: exportFile, readFile: readFile, importFile: importFile, merge: merge, wipe: wipe, available: available, openReview: openReview,
+    renderResume: renderResume, starsHTML: starsHTML, fmtR: fmtR, rel: rel, esc: esc, onChange: function (f) { subs.push(f); } };
 
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', init); else init();
   function init() {
     renderMe();
     var hr = doc.getElementById('homeResume');
-    if (hr) { var go = function () { renderResume(hr, { limit: 4 }); }; subs.push(go); go(); }
+    if (hr) { var go = function () { renderResume(hr, { limit: 3 }); }; subs.push(go); go(); }
   }
 })();
