@@ -200,8 +200,7 @@
       + '<button type="button" class="rv-x" aria-label="關閉">×</button></div>'
       + '<div class="rv-rate"><p class="rv-lab" id="rvL">我的評分</p>'
       + '<div class="rv-row"><div class="rv-stars" role="slider" tabindex="0" aria-labelledby="rvL" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" aria-valuetext="未評分">'
-      + '<span class="rs-bg">' + STAR + STAR + STAR + STAR + STAR + '</span><span class="rs-fg">' + STAR + STAR + STAR + STAR + STAR + '</span></div>'
-      + '<span class="rv-step"><button type="button" class="rv-dn" aria-label="減少半顆星">−</button><button type="button" class="rv-up" aria-label="增加半顆星">＋</button></span></div>'
+      + '<span class="rs-bg">' + STAR + STAR + STAR + STAR + STAR + '</span><span class="rs-fg">' + STAR + STAR + STAR + STAR + STAR + '</span></div></div>'
       + '<p class="rv-sub"><span class="rv-val" aria-hidden="true">未評分</span><span>點星星左半邊是半顆</span><button type="button" class="lnk-btn rv-clr" hidden>清除評分</button></p></div>'
       + '<div class="rv-noteb"><label class="rv-lab" for="rvN">我的筆記</label>'
       + '<textarea id="rvN" maxlength="2000" rows="5" placeholder="記下你聽到的、喜歡的，或想再聽的地方。"></textarea><p class="rv-cnt"><span>0</span> / 2000</p></div>'
@@ -234,8 +233,6 @@
       else if (k === 'Home') v = 0; else if (k === 'End') v = 5; else if (/^[0-5]$/.test(k)) v = +k; else return;
       e.preventDefault(); setVal(v);
     });
-    dlg.querySelector('.rv-up').addEventListener('click', function () { setVal(val + 0.5); });
-    dlg.querySelector('.rv-dn').addEventListener('click', function () { setVal(val - 0.5); });
     dlg.querySelector('.rv-clr').addEventListener('click', function () { setVal(0); st.focus(); });
     ta.addEventListener('input', function () { cnt.textContent = ta.value.length; });
     function dirty() { return base && (val !== base.r || ta.value.trim() !== base.n); }
@@ -307,8 +304,8 @@
     function stats() {
       var L = lists(), W = works(), heard = L.reduce(function (s, x) { return s + x.n; }, 0);
       var any = !!(L.length || W.length);
-      $id('meStats').innerHTML = !any ? '' : [[L.filter(function (x) { return !x.done; }).length, '進行中的清單'], [heard, '已聽標記'],
-        [W.filter(function (w) { return w.r > 0; }).length, '已評分'], [W.filter(function (w) { return w.n; }).length, '有筆記']]
+      $id('meStats').innerHTML = !any ? '' : [[L.filter(function (x) { return !x.done; }).length, '進行中的清單'], [heard, '已聽'],
+        [W.filter(function (w) { return w.r > 0; }).length, '已評分'], [W.filter(function (w) { return w.n; }).length, '筆記']]
         .map(function (s) { return '<div><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('');
       $id('meStats').hidden = !any;
       $id('meEmpty').hidden = any;
@@ -340,8 +337,7 @@
     function all() {
       if (!available()) { $id('meErr').hidden = false; $id('meEmpty').hidden = true; $id('meStats').hidden = true; me.hidden = true; return; }
       $id('meErr').hidden = true;
-      stats(); renderResume($id('meResume'), { keep: true }); renderResume($id('meDone'), { done: true }); wks();
-      $id('meResume').querySelector('.rs-none').hidden = !!lists().filter(function (x) { return !x.done; }).length;
+      stats(); renderResume($id('meResume'), {}); renderResume($id('meDone'), { done: true }); wks();
     }
     segs.forEach(function (b) { b.addEventListener('click', function () { F = b.dataset.f; segs.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); }); wks(); }); });
     q.addEventListener('input', wks); sort.addEventListener('change', wks);
