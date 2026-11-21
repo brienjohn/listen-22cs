@@ -574,8 +574,8 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
 [data-density="dense"] .hd svg{width:12px;height:12px}
 [data-hide-heard] .nm.heard{display:none}
 [data-hide-heard] .cat:not(:has(.nm:not(.heard))){display:none}
-.nm.pick{animation:pick 2.6s ease}
-@keyframes pick{0%,70%{box-shadow:0 0 0 3px var(--brand),var(--shadow-hi)}100%{box-shadow:var(--shadow)}}
+.nm.pick{animation:pick 5s ease}
+@keyframes pick{0%{box-shadow:0 0 0 0 var(--brand),var(--shadow-hi)}8%{box-shadow:0 0 0 7px var(--brand),var(--shadow-hi)}16%{box-shadow:0 0 0 3px var(--brand),var(--shadow-hi)}24%{box-shadow:0 0 0 7px var(--brand),var(--shadow-hi)}32%,85%{box-shadow:0 0 0 3px var(--brand),var(--shadow-hi)}100%{box-shadow:var(--shadow)}}
 
 /* 評分・筆記 button under each work */
 .rvb{display:inline-flex;align-items:center;gap:5px;max-width:100%;margin:8px 0 0;padding:4px 9px 4px 7px;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--muted);font:inherit;font-size:12px;font-weight:700;line-height:1.3;cursor:pointer}
@@ -935,10 +935,18 @@ a.lk:hover{background:var(--line);transform:translateY(-1px)}
     if(!pool.length)pool=cards.filter(c=>!(c.dataset.id in h));
     if(!pool.length){const o=btn.innerHTML;btn.textContent='全部都聽完了！';setTimeout(()=>btn.innerHTML=o,2200);return}
     const c=pool[Math.floor(Math.random()*pool.length)];
+    /* highlight only once the smooth scroll has settled (long jumps can take a while), so the effect is fully visible */
+    const settle=done=>{let y=-1,still=0;const t0=performance.now();
+      const tick=()=>{const ny=window.scrollY;still=ny===y?still+1:0;y=ny;
+        if(still>=6||performance.now()-t0>4000)done();else requestAnimationFrame(tick)};
+      requestAnimationFrame(tick)};
     const go=()=>{
+      $('.nm.pick').forEach(o=>o.classList.remove('pick'));
       c.scrollIntoView({block:'center',behavior:reduce?'auto':'smooth'});
-      c.classList.remove('pick');void c.offsetWidth;c.classList.add('pick');
-      const l=c.querySelector('a.lk');if(l)setTimeout(()=>l.focus({preventScroll:true}),reduce?0:450);
+      settle(()=>{
+        c.classList.remove('pick');void c.offsetWidth;c.classList.add('pick');
+        const l=c.querySelector('a.lk');if(l)l.focus({preventScroll:true});
+      });
     };
     if(c.hidden){const q=$('.q');q.forEach(i=>i.value='');if(q[0])q[0].dispatchEvent(new Event('input'));setTimeout(go,180)}else go();
   }
