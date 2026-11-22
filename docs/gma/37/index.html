@@ -1141,14 +1141,21 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
   const dlab=i=>idxLinks[i]?idxLinks[i].textContent.replace(/^\s*\d+/,'').trim():'';
   function setRail(i){if(!rail)return;rail.style.setProperty('--p',DN>1?i/(DN-1):0);rail.setAttribute('aria-valuenow',String(i+1));rail.setAttribute('aria-valuetext',`${i+1} / ${DN}：${dlab(i)}`)}
   /* V18.3.5: land a jump with the section header right under the sticky bars, measured live (--cht), so no card is left half-covered above it */
+  /* jumps re-check themselves (next frames + 250 ms) so a smooth scroll still running (隨機聽, 回到頂端) cannot carry the page past the target;
+     any touch / wheel by the visitor cancels the re-check */
+  let jumpSeq=0;['touchstart','wheel'].forEach(ev=>window.addEventListener(ev,()=>{jumpSeq++},{passive:true,capture:true}));
   function jump(fid){const el=document.getElementById(fid);if(!el||el.hidden)return;
-    const c=el.classList.contains('cat')?el:el.querySelector('.cat:not([hidden])'), top=parseFloat(root.style.getPropertyValue('--cht'))||0;
-    const fh=el.classList.contains('field')&&el.querySelector('.fh'), h=c&&c.querySelector('.ch');
-    let y;
-    if(fh&&fh.offsetParent!==null)y=fh.getBoundingClientRect().top+window.scrollY-top-10;   /* field heading (not sticky): just under the bars */
-    else if(h)y=c.getBoundingClientRect().top+window.scrollY+parseFloat(getComputedStyle(c).paddingTop)+parseFloat(getComputedStyle(h).marginTop)-top;   /* sticky header: its natural spot = pinned spot */
-    else y=el.getBoundingClientRect().top+window.scrollY-top;
-    window.scrollTo({top:Math.max(0,Math.round(y)),behavior:'instant'});if(c)mark(c)}
+    const c=el.classList.contains('cat')?el:el.querySelector('.cat:not([hidden])');
+    const place=()=>{const top=parseFloat(root.style.getPropertyValue('--cht'))||0;
+      const fh=el.classList.contains('field')&&el.querySelector('.fh'), h=c&&c.querySelector('.ch');
+      let y;
+      if(fh&&fh.offsetParent!==null)y=fh.getBoundingClientRect().top+window.scrollY-top-10;   /* field heading (not sticky): just under the bars */
+      else if(h)y=c.getBoundingClientRect().top+window.scrollY+parseFloat(getComputedStyle(c).paddingTop)+parseFloat(getComputedStyle(h).marginTop)-top;   /* sticky header: its natural spot = pinned spot */
+      else y=el.getBoundingClientRect().top+window.scrollY-top;
+      y=Math.max(0,Math.round(y));if(Math.abs(window.scrollY-y)>1)window.scrollTo({top:y,behavior:'instant'})};
+    place();const my=++jumpSeq,again=()=>{if(my===jumpSeq)place()};
+    requestAnimationFrame(()=>requestAnimationFrame(again));setTimeout(again,250);
+    if(c)mark(c)}
   if(rail&&ov&&DN){
     rail.setAttribute('aria-valuemax',String(DN));setRail(0);
     const showRail=()=>{rail.classList.add('show');clearTimeout(dHideT);dHideT=setTimeout(()=>{if(!dmode&&document.activeElement!==rail)rail.classList.remove('show')},2200)};
