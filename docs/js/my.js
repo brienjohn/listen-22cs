@@ -48,6 +48,8 @@
   function setHeard(path, id, on, info) {
     var d = load(), L = d.lists[path] || (d.lists[path] = { h: {} }), now = Date.now();
     if (!L.h || typeof L.h !== 'object') L.h = {};
+    var was = !!L.h[id];
+    if (on !== was) statHeard(path, id, on ? 1 : -1);   // anonymous +1 / −1 (statistics below)
     L.t = info.t; L.title = info.title; if (info.u) L.u = info.u;
     L.c = (L.c || []).filter(function (u) { return u !== info.img; });
     if (on) { L.h[id] = now; if (L.x) delete L.x[id]; if (info.img) L.c.unshift(info.img); L.c = L.c.slice(0, 5); }
@@ -74,6 +76,7 @@
   function saveWork(wk, data, meta) {
     var d = load(), w = d.works[wk], r = Math.round((+data.r || 0) * 2) / 2, n = String(data.n || '').trim().slice(0, 2000);
     r = Math.max(0, Math.min(5, r));
+    statRate(wk, Math.max(0, Math.min(5, Math.round((+(w && w.r) || 0) * 2) / 2)), r);   // anonymous rating old → new (never the note)
     if (!r && !n) { delete d.works[wk]; (d.wx || (d.wx = {}))[wk] = Date.now(); }
     else {
       if (d.wx) delete d.wx[wk];
@@ -458,6 +461,22 @@
         else if (!e.shiftKey && doc.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
       });
       if (location.hash === '#backup') setTimeout(dmOpen, 0);   // 「記得到我的聆聽記錄備份」 link from the review dialog
+    }
+    /* 匿名統計 row (V18.4): on by default; off = nothing is sent and the unsent queue is dropped */
+    var stState = $id('stState'), stAct = $id('stAct');
+    function statRow() {
+      if (!stAct) return;
+      var on = statOn();
+      stState.textContent = on ? '參與中' : '未參與'; stState.className = 'sy-st' + (on ? ' ok' : '');
+      stAct.innerHTML = on ? '<button type="button" class="pg-btn" data-st="off">不參與統計</button>' : '<button type="button" class="pg-btn pri" data-st="on">參與統計</button>';
+    }
+    if (stAct) {
+      stAct.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-st]'); if (!b) return;
+        statSetOn(b.dataset.st === 'on'); statRow();
+        say(b.dataset.st === 'on' ? '已參與匿名統計，之後的已聽和評分會計入全站總數。' : '已停止參與匿名統計；之後的已聽和評分不會再送出。之前已計入的總數不會減少（伺服器不知道哪些是你的）。');
+      });
+      statRow();
     }
     /* 雲端同步 row */
     var syState = $id('syState'), syAct = $id('syAct'), dmDot = dmBtn && dmBtn.querySelector('.dm-dot'), dmSt = $id('dmSt');
@@ -1061,9 +1080,89 @@
   }
 
 
+
+  /* ---------- anonymous statistics (V18.4) ----------
+     What leaves the browser: {t:'h', list path, item id, +1/−1} when a visitor ticks / un-ticks 已聽 and {t:'r', work key, old, new}
+     when a rating changes. No note, no list title, no sync code, no id of any kind. The server keeps running totals only and
+     publishes a total once ≥ 3 visitors are behind it. On by default; 資料管理 can switch it off (l22-stat-off). */
+  var STQ = 'l22-statq', STREP = 'l22-stat-rep', STOFF = 'l22-stat-off', stT = 0;
+  function stGet(k, d) { try { var v = JSON.parse(localStorage.getItem(k) || 'null'); return v == null ? d : v; } catch (e) { return d; } }
+  function stSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function statOn() { try { return localStorage.getItem(STOFF) !== '1'; } catch (e) { return false; } }
+  function statSetOn(on) {
+    try { if (on) localStorage.removeItem(STOFF); else { localStorage.setItem(STOFF, '1'); localStorage.removeItem(STQ); } } catch (e) {}
+  }
+  function statPush(ev) {
+    if (!statOn()) return;
+    var q = stGet(STQ, []); q.push(ev); if (q.length > 600) q = q.slice(-600); stSet(STQ, q);
+    clearTimeout(stT); stT = setTimeout(function () { statFlush(false); }, 2500);
+  }
+  function statHeard(path, id, d) {
+    var i = parseInt(id, 10); if (!(i >= 0) || !/^\/[a-z0-9-]+\/[a-z0-9-]+\/$/.test(path)) return;
+    var rep = stGet(STREP, {}), k = path + '|' + i;
+    if (d > 0) { if (rep[k]) return; rep[k] = 1; }   // one +1 per item per device, even after 清除這份記錄 and re-ticking
+    else delete rep[k];
+    stSet(STREP, rep); statPush({ t: 'h', p: path, i: i, d: d });
+  }
+  function statRate(wk, o, n) { if (o !== n && wk) statPush({ t: 'r', k: wk, o: o, n: n }); }
+  function statFlush(leaving) {
+    var q = stGet(STQ, []); if (!q.length || !statOn() || !window.fetch) return;
+    var batch = q.slice(0, 60);
+    if (leaving) stSet(STQ, q.slice(batch.length));   // page is closing: no response will arrive, drop optimistically
+    try {
+      fetch(API + '/v1/stats/ev', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ e: batch }), keepalive: !!leaving })
+        .then(function (r) {
+          if (leaving || !(r.ok || r.status === 400)) return;   // 400 = malformed batch: drop it rather than retry forever
+          var cur = stGet(STQ, []); stSet(STQ, cur.slice(batch.length));
+          if (cur.length > batch.length) stT = setTimeout(function () { statFlush(false); }, 600);
+        }, function () {});
+    } catch (e) {}
+  }
+  window.addEventListener('pagehide', function () { statFlush(true); });
+  doc.addEventListener('visibilitychange', function () { if (doc.visibilityState === 'hidden') statFlush(true); });
+  function statPost(route, body) {
+    return fetch(API + '/v1/stats/' + route, body ? { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(body) } : {})
+      .then(function (r) { return r.ok ? r.json() : null; }, function () { return null; });
+  }
+  function statList(path, keys) { return window.fetch ? statPost('q', { p: path, k: keys || [] }) : Promise.resolve(null); }
+  function statTop() { return window.fetch ? statPost('top') : Promise.resolve(null); }
+
+
+  /* ---------- home 「大家在聽」 (V18.4 first version): top items of the last 7 days + all time, from the anonymous totals ---------- */
+  function renderPop(sec) {
+    statTop().then(function (res) {
+      if (!res || (!(res.week || []).length && !(res.all || []).length)) return;
+      var paths = {};
+      (res.week || []).concat(res.all || []).forEach(function (x) { paths[x.p] = 1; });
+      return Promise.all(Object.keys(paths).map(function (p) {
+        return fetch(p + 'items.json').then(function (r) { return r.ok ? r.json() : null; }, function () { return null; }).then(function (j) { return [p, j]; });
+      })).then(function (pairs) {
+        var IX = {}; pairs.forEach(function (x) { if (x[1]) IX[x[0]] = x[1].i || {}; });
+        var D = window.L22 || {};
+        var label = function (p) {
+          var slug = p.split('/')[1], s = D[slug] || {}, it = (s.items || []).filter(function (i) { return i.url === p; })[0];
+          return (s.name || '') + (it ? ' ' + (it.name || it.label || '') : '');
+        };
+        var col = function (rows, sel) {
+          var ul = sec.querySelector(sel + ' .pop-list'), box = sec.querySelector(sel);
+          var html = (rows || []).filter(function (x) { return IX[x.p] && IX[x.p][x.i]; }).slice(0, 6).map(function (x, k) {
+            var it = IX[x.p][x.i];
+            return '<li><a class="pop-it" href="' + esc(x.p) + '"><span class="pop-k">' + (k + 1) + '</span>'
+              + (it[2] ? '<img src="' + esc(it[2]) + '" alt="" loading="lazy" width="48" height="48">' : '<span class="pop-mono">' + esc(String(it[0]).slice(0, 2)) + '</span>')
+              + '<span class="pop-tx"><b>' + esc(it[0]) + '</b><span>' + esc((it[1] ? it[1] + ' · ' : '') + label(x.p)) + '</span></span>'
+              + '<span class="pop-n">' + x.n + ' 人</span></a></li>';
+          }).join('');
+          ul.innerHTML = html; box.hidden = !html; return !!html;
+        };
+        var a = col(res.week, '.pop-week'), b = col(res.all, '.pop-all');
+        sec.hidden = !(a || b);
+      });
+    });
+  }
+
   window.L22S = { load: load, setHeard: setHeard, clearList: clearList, lists: lists, work: work, saveWork: saveWork, works: works, isFav: isFav, setFav: setFav, favs: favs,
     exportFile: exportFile, readFile: readFile, importFile: importFile, merge: merge, wipe: wipe, available: available, openReview: openReview,
-    renderResume: renderResume, shareList: shareList, shareWork: shareWork, starsHTML: starsHTML, fmtR: fmtR, rel: rel, esc: esc, onChange: function (f) { subs.push(f); },
+    renderResume: renderResume, stats: { on: statOn, set: statSetOn, list: statList, top: statTop, flush: statFlush }, shareList: shareList, shareWork: shareWork, starsHTML: starsHTML, fmtR: fmtR, rel: rel, esc: esc, onChange: function (f) { subs.push(f); },
     sync: { info: syncInfo, now: syncNow, enable: syncEnable, peek: syncPeek, join: syncJoin, leave: syncLeave, del: syncDelete, norm: normCode, fmt: fmtCode } };
 
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', init); else init();
@@ -1072,5 +1171,6 @@
     renderMe();
     var hr = doc.getElementById('homeResume');
     if (hr) { var go = function () { renderResume(hr, { limit: 4 }); }; subs.push(go); go(); }
+    var hp = doc.getElementById('homePop'); if (hp) renderPop(hp);
   }
 })();

@@ -553,6 +553,23 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 .resume .rs-list.rs-c{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 @media (max-width:860px){.resume .rs-list.rs-c{grid-template-columns:minmax(0,1fr)}}
 
+/* ===== V18.4 home 「大家在聽」 (first version — visuals to be designed) ===== */
+.pop{margin:0 0 44px}
+.pop-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 22px}
+.pop-col h3{margin:0 0 8px;font-size:15px;font-weight:800}
+.pop-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.pop-it{display:grid;grid-template-columns:20px 48px minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px 12px 8px 8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;color:var(--ink);text-decoration:none}
+.pop-it:hover{border-color:var(--brand)}
+.pop-k{font-size:13px;font-weight:800;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+.pop-it img,.pop-mono{display:grid;place-items:center;width:48px;height:48px;border-radius:6px;object-fit:cover;background:var(--surface-2);font-weight:800;color:var(--muted)}
+.pop-tx{display:grid;min-width:0}
+.pop-tx b{font-size:14px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pop-tx span{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pop-n{font-size:12.5px;font-weight:800;color:var(--v-heard-text);white-space:nowrap;font-variant-numeric:tabular-nums}
+.pop-note{margin:10px 0 0;font-size:12px;color:var(--muted)}
+@media (max-width:760px){.pop-cols{grid-template-columns:minmax(0,1fr)}}
+.dm-p{margin:-4px 0 10px;font-size:12.5px;line-height:1.6;color:var(--muted)}
+
 :root{--gold:#D4A017;--pop:0 12px 40px rgba(20,20,28,.16);--side:236px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gold:#E0B43B;--pop:0 12px 40px rgba(0,0,0,.55)}}
 :root[data-theme="dark"]{--gold:#E0B43B;--pop:0 12px 40px rgba(0,0,0,.55)}
@@ -914,6 +931,9 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
 [data-density="dense"] .by{display:inline;margin:0 10px 0 0;white-space:normal;overflow:visible;text-overflow:clip;max-width:none;overflow-wrap:anywhere}
 [data-density="dense"] .who{display:inline-block;-webkit-line-clamp:none;vertical-align:bottom;max-width:100%;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:960px){[data-density="dense"] .nm{--hdp:8px}[data-density="dense"] .tx{font-size:12px}}
+/* V18.4 anonymous statistics line on cards (first version) */
+.stx{margin:5px 0 0;font-size:12px;line-height:1.4;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+[data-density="dense"] .stx{display:block;margin:2px 0 0;font-size:11.5px}
 </style>
 
 </head>
@@ -950,7 +970,8 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
       <div class="pg-top"><div class="pg-hl"><p class="pg-h" id="pgH">我的聆聽進度</p><span class="pop-a"><button type="button" class="pg-how js-pop" aria-expanded="false" aria-controls="pgHelp" aria-label="如何記錄已聽"><svg aria-hidden="true"><use href="#i-info"/></svg></button>
         <div class="ipop" id="pgHelp" hidden><p class="ip-h">如何記錄？</p>
           <p>點作品右側的圓圈標記「已聽」，再點一次取消；點筆記圖示寫評分和筆記。</p>
-          <p>記錄只存在這台裝置的瀏覽器，不需要登入；清除瀏覽器資料可能會遺失，記得到<a href="/me/">我的聆聽記錄</a>匯出備份。</p>
+          <p>記錄存在這台裝置的瀏覽器，不需要登入；清除瀏覽器資料可能會遺失，記得到<a href="/me/">我的聆聽記錄</a>匯出備份。</p>
+          <p>已聽和評分會不記名地計入全站統計（只有「幾個人聽過」「平均幾分」這類總數，不含筆記）；可以在我的聆聽記錄的「資料管理」關閉。</p>
           <p class="js-reset" hidden><button type="button" class="lnk-btn js-resetb">清除這份清單的已聽記錄</button>（評分和筆記不受影響）</p></div></span></div>
         <p class="pg-n"><b class="js-n">0</b><span>/ 200 首</span><em class="js-p">0%</em><span class="pg-done js-done" hidden><svg aria-hidden="true"><use href="#i-check"/></svg>已完成</span></p></div>
       <span class="pg-bar" role="progressbar" aria-label="已聽數量" aria-valuemin="0" aria-valuemax="200" aria-valuenow="0"><i class="js-bar"></i></span>
@@ -1399,6 +1420,24 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
     S.shareList({title:TITLE.replace(/(得獎與)?入圍$/,'').trim(),path:PATH,sub:SUB[ser]||'我的聆聽進度',total:TOTAL,unit:UNIT,n:count(),rated,noted,avg:rated?Math.round(rsum/rated*10)/10:0,covers,coversLabel:label||'焦點作品'});
   }
   $('.js-share').forEach(b=>b.addEventListener('click',share));
+  /* V18.4 anonymous statistics (first version, visuals to be designed): 「N 人聽過 · ★ 4.2（M 人評分）」 on each card.
+     The server only returns totals of ≥ 3 visitors, so a lone listener never shows up. */
+  if(S.stats){
+    const keys=[...new Set(cards.map(c=>c.dataset.w).filter(Boolean))];
+    S.stats.list(PATH,keys).then(res=>{
+      if(!res)return;
+      cards.forEach(c=>{
+        const n=res.h&&res.h[c.dataset.id], r=res.r&&res.r[c.dataset.w];
+        if(!n&&!r)return;
+        const parts=[];
+        if(n)parts.push(`${n} 人聽過`);
+        if(r)parts.push(`★ ${(+r[0]).toFixed(1)}（${r[1]} 人評分）`);
+        let el=c.querySelector('.stx');
+        if(!el){el=document.createElement('p');el.className='stx';c.querySelector('.tx').appendChild(el)}
+        el.textContent=parts.join(' · ');
+      });
+    });
+  }
   paint();
 })();
 </script>
