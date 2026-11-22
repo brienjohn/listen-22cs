@@ -835,9 +835,9 @@
       var toks = para.match(/[A-Za-z0-9À-ɏ'’.&!?:,;()\-]+|\s+|./gu) || [], cur = '';
       toks.forEach(function (k) {
         var nx = cur + k;
-        if (x.measureText(nx.trim()).width > max && cur.trim()) { out.push(cur.trim()); cur = k.trimStart(); }
+        if (x.measureText(nx.trim()).width > max && cur.trim() && !/^[，。、；：！？…」』）》〉,.!?;:)\]]/.test(k)) { out.push(cur.trim()); cur = k.trimStart(); }   // closing punctuation never starts a line
         else cur = nx;
-        while (x.measureText(cur).width > max && cur.length > 1) {   // a single token wider than the line (long URL)
+        while (x.measureText(cur.replace(/[，。、；：！？…」』）》〉,.!?;:)\]]+$/, '')).width > max && cur.length > 1) {   // a single token wider than the line (long URL); trailing punctuation may hang
           var j = cur.length; while (j > 1 && x.measureText(cur.slice(0, j)).width > max) j--;
           out.push(cur.slice(0, j)); cur = cur.slice(j);
         }
@@ -892,6 +892,16 @@
     if (wm) x.drawImage(wm, bx + x.measureText('by').width + 8, y + 42, 63, 18);
     x.fillStyle = SC.muted; x.font = '700 26px ' + SF; x.textAlign = 'right'; x.fillText('listen.22cs.xyz', W - M, y + 44); x.textAlign = 'left';
   }
+  var NOTE_MAX = 180;   // share-image excerpt only; the stored note keeps its own 2000-character limit
+  function shExcerpt(t, max) {   // ≤ max chars; prefer ending at 。！？…; or a line break, else ，、, then add …
+    t = String(t || '').replace(/\n{3,}/g, '\n\n');
+    if (t.length <= max) return { t: t, cut: false };
+    var head = t.slice(0, max), best = -1, m, re = /[。！？!?…；;\n]/g;
+    while ((m = re.exec(head))) if (m.index >= max * 0.55) best = m.index;
+    if (best < 0) { re = /[，,、：:]/g; while ((m = re.exec(head))) if (m.index >= max * 0.7) best = m.index - 1; }
+    var out = (best >= 0 ? head.slice(0, best + 1) : head).replace(/[\s，,、：:；;]+$/, '');
+    return { t: out.replace(/[。.!！?？]$/, '') + '…', cut: true };
+  }
   function shTitle(x, t, maxW, from, to, lines) {   // biggest size (step 4px) that fits in `lines` lines
     var fs = from, L;
     for (; fs >= to; fs -= 4) { x.font = '900 ' + fs + 'px ' + SF; L = shWrap(x, t, maxW, 0); if (L.length <= lines) break; }
@@ -917,40 +927,36 @@
       x.fillStyle = SC.ink; tt.lines.forEach(function (l) { x.fillText(l, M, y); y += tt.fs * 1.2; });
       var titleBottom = y - tt.fs * 1.2 + tt.fs * 0.28;
       /* bottom-anchored blocks: brand · stat tiles · track · big count */
-      var tileH = 118, tileY = H - M - 64 - 46 - tileH, trackY = tileY - 46 - 22, numBase = trackY - 30, numTop = numBase - 112;
-      /* 2 · main visual: series banner panel with the cover stack on top */
-      var pY = titleBottom + 40, pH = Math.max(340, Math.min(560, numTop - 44 - pY));
-      shRR(x, M, pY, IW, pH, 28); x.save(); x.clip();
+      var tileH = 108, tileY = H - M - 64 - 40 - tileH, trackY = tileY - 42 - 20, numBase = trackY - 28, numTop = numBase - 100;
+      /* 2 · main visual: series banner (nothing drawn over it), then the covers in their own row underneath */
+      var k = covers.length, gap = 22, cs = k ? Math.floor(Math.min(200, (IW - (k - 1) * gap) / Math.max(k, 4))) : 0, rowH = k ? cs + 48 : 0;
+      var pY = titleBottom + 36, avail = numTop - 40 - pY, pH = Math.max(200, Math.min(320, avail - (k ? rowH + 26 : 0)));
+      shRR(x, M, pY, IW, pH, 26); x.save(); x.clip();
       if (bn) {
         var s2 = Math.max(IW / bn.naturalWidth, pH / bn.naturalHeight), dw = bn.naturalWidth * s2, dh = bn.naturalHeight * s2, fx = (FOCUS[slug] || 75) / 100;
         x.drawImage(bn, M + (IW - dw) * fx, pY + (pH - dh) / 2, dw, dh);
-        x.fillStyle = 'rgba(20,14,12,.16)'; x.fillRect(M, pY, IW, pH);
       } else { x.fillStyle = SC.panel; x.fillRect(M, pY, IW, pH); }
       x.restore();
-      if (covers.length) {
-        var k = covers.length, cs = Math.floor(Math.min(300, pH - 96, (IW - 64) / (1 + (k - 1) * 0.78))), step = Math.round(cs * 0.78), tw = cs + (k - 1) * step, cx0 = M + (IW - tw) / 2, cy = pY + (pH - cs) / 2 + (o.coversLabel ? 16 : 0);
-        var rots = [-0.05, 0.035, -0.03, 0.05];
-        covers.forEach(function (im, i) { shCover(x, im, cx0 + i * step, cy, cs, rots[i % 4], ''); });
-      }
-      if (o.coversLabel && covers.length) {
-        x.font = '800 24px ' + SF; var lw = x.measureText(o.coversLabel).width + 36;
-        shRR(x, M + 24, pY + 24, lw, 46, 23); x.fillStyle = 'rgba(255,255,255,.94)'; x.fill();
-        x.fillStyle = SC.ink; x.fillText(o.coversLabel, M + 42, pY + 56);
+      if (k) {
+        var ry = pY + pH + 26 + (avail - pH - 26 - rowH > 0 ? Math.min(30, (avail - pH - 26 - rowH) / 2) : 0);
+        x.fillStyle = SC.muted; x.font = '800 24px ' + SF; x.fillText(o.coversLabel || '焦點作品', M, ry + 24);
+        covers.forEach(function (im, i) { shCover(x, im, M + 8 + i * (cs + gap), ry + 44, cs - 16, 0, ''); });
       }
       /* 3 · progress: count / total, percentage, track */
-      x.fillStyle = SC.ink; x.font = '900 150px ' + SF; var ns = String(n); x.fillText(ns, M - 4, numBase);
+      x.fillStyle = SC.ink; x.font = '900 132px ' + SF; var ns = String(n); x.fillText(ns, M - 4, numBase);
       var nw = x.measureText(ns).width;
-      x.fillStyle = SC.muted; x.font = '700 44px ' + SF; x.fillText('/ ' + T + ' ' + (o.unit || ''), M + nw + 14, numBase);
-      x.fillStyle = SC.mintT; x.font = '900 60px ' + SF; x.textAlign = 'right'; x.fillText(done ? '已完成' : pct + '%', W - M, numBase); x.textAlign = 'left';
-      shRR(x, M, trackY, IW, 22, 11); x.fillStyle = SC.track; x.fill();
-      if (n && T) { shRR(x, M, trackY, Math.max(22, IW * Math.min(1, n / T)), 22, 11); x.fillStyle = SC.mint; x.fill(); }
-      /* 4 · stat tiles */
-      var tiles = [[o.rated, '已評分'], [o.noted, '則筆記'], [Math.max(0, T - n), '還沒聽']], tw2 = (IW - 2 * 20) / 3;
+      x.fillStyle = SC.muted; x.font = '700 42px ' + SF; x.fillText('/ ' + T + ' ' + (o.unit || ''), M + nw + 14, numBase);
+      x.fillStyle = SC.mintT; x.font = '900 58px ' + SF; x.textAlign = 'right'; x.fillText(done ? '已完成' : pct + '%', W - M, numBase); x.textAlign = 'left';
+      shRR(x, M, trackY, IW, 20, 10); x.fillStyle = SC.track; x.fill();
+      if (n && T) { shRR(x, M, trackY, Math.max(20, IW * Math.min(1, n / T)), 20, 10); x.fillStyle = SC.mint; x.fill(); }
+      /* 4 · stat tiles: 已評分 · 筆記 · 平均評分 (stars drawn, never 還沒聽) */
+      var tiles = [[String(o.rated), '已評分'], [String(o.noted), '則筆記'], [o.avg ? o.avg.toFixed(1) : '—', '平均評分']], tw2 = (IW - 2 * 20) / 3;
       tiles.forEach(function (t, i) {
         var tx = M + i * (tw2 + 20);
         shRR(x, tx, tileY, tw2, tileH, 22); x.fillStyle = '#fff'; x.fill(); x.strokeStyle = SC.line; x.lineWidth = 2; x.stroke();
-        x.fillStyle = SC.ink; x.font = '900 52px ' + SF; x.fillText(String(t[0]), tx + 28, tileY + 66);
-        x.fillStyle = SC.muted; x.font = '700 24px ' + SF; x.fillText(t[1], tx + 28, tileY + 100);
+        x.fillStyle = SC.ink; x.font = '900 50px ' + SF; x.fillText(t[0], tx + 28, tileY + 60);
+        if (i === 2 && o.avg) { x.font = '900 50px ' + SF; shStars(x, tx + 28 + x.measureText(t[0]).width + 14, tileY + 42, 1, 34); }
+        x.fillStyle = SC.muted; x.font = '700 24px ' + SF; x.fillText(t[1], tx + 28, tileY + 92);
       });
       /* 5 · brand */
       shBrand(x, W, H, M, ico, wm);
@@ -958,27 +964,23 @@
     });
   }
 
-  /* one work: cover, title, artist, filled stars, the note (as much as fits; long notes switch to a 1080×1920 canvas) */
+  /* one work (1080×1350): cover, title, artist, filled stars, a note excerpt (≤ NOTE_MAX chars, ends with … when cut) */
   function drawWork(w) {
     var W = 1080, M = 72, IW = W - M * 2, note = String(w.n || '').replace(/\r/g, '').trim();
     return shFonts((w.ti || '') + (w.ar || '') + note.slice(0, 400) + (w.fromT || '') + '我的聆聽筆記評分').then(function () {
       return Promise.all([shImg('/img/baby-coral-surprised.png'), shImg('/img/22cs-wordmark-coral.svg'), shImg(w.img)]);
     }).then(function (A) {
       var ico = A[0], wm = A[1], cov = A[2];
-      var probe = doc.createElement('canvas').getContext('2d'), CS = 400, noteTop = M + 52 + CS + 56, padX = 48, NW = IW - padX * 2;
-      /* pick the canvas height + note size: 1350 first (font 40 → 28px), then 1920 for long notes, then truncate */
-      var plan = null, sizes = [40, 36, 32, 28];
-      [1350, 1920].some(function (H) {
-        var avail = H - M - 64 - 48 - noteTop - 60 - padX * 2;   // brand + gap, label row, panel padding
-        return sizes.some(function (fs) {
-          probe.font = '500 ' + fs + 'px ' + SF; var L = shWrap(probe, note, NW, 0), lh = Math.round(fs * 1.62);
-          if (L.length * lh <= avail) { plan = { H: H, fs: fs, lh: lh, lines: L }; return true; }
-          return false;
-        });
+      var probe = doc.createElement('canvas').getContext('2d'), CS = 360, noteTop = M + 52 + CS + 52, padX = 48, NW = IW - padX * 2;
+      /* the share image shows an excerpt (the note itself keeps its 2000-character limit): ≤ NOTE_MAX chars, ending at a natural stop */
+      var ex = shExcerpt(note, NOTE_MAX), avail = 1350 - M - 64 - 44 - (noteTop + 50) - padX * 2, plan = null;
+      [42, 40, 38, 36, 34].some(function (fs) {
+        probe.font = '500 ' + fs + 'px ' + SF; var lh = Math.round(fs * 1.62), L = shWrap(probe, ex.t, NW, 0);
+        if (L.length * lh <= avail) { plan = { H: 1350, fs: fs, lh: lh, lines: L }; return true; }
+        return false;
       });
-      if (!plan) { var H2 = 1920, fs2 = 28, lh2 = Math.round(fs2 * 1.62), av2 = H2 - M - 64 - 48 - noteTop - 60 - padX * 2; probe.font = '500 ' + fs2 + 'px ' + SF; plan = { H: H2, fs: fs2, lh: lh2, lines: shWrap(probe, note, NW, Math.floor(av2 / lh2)) }; }
+      if (!plan) { probe.font = '500 34px ' + SF; var lh0 = Math.round(34 * 1.62); plan = { H: 1350, fs: 34, lh: lh0, lines: shWrap(probe, ex.t, NW, Math.floor(avail / lh0)) }; if (plan.lines.cut) ex.cut = true; }
       if (!note) plan = { H: 1350, fs: 0, lh: 0, lines: [] };
-      if (note) plan.H = Math.max(1350, Math.min(plan.H, noteTop + 52 + plan.lines.length * plan.lh + padX * 2 + 4 + 72 + 64 + M));
       var H = plan.H, cv = doc.createElement('canvas'); cv.width = W; cv.height = H; var x = cv.getContext('2d');
       x.fillStyle = SC.bg; x.fillRect(0, 0, W, H); x.textBaseline = 'alphabetic';
       /* list name (eyebrow) */
@@ -999,12 +1001,11 @@
       /* note panel */
       if (note) {
         var pY = noteTop, pH = plan.lines.length * plan.lh + padX * 2 + 4;
-        x.fillStyle = SC.coralT; x.font = '800 26px ' + SF; x.fillText('我的筆記', M, pY + 26);
+        x.fillStyle = SC.coralT; x.font = '800 26px ' + SF; x.fillText(ex.cut ? '我的筆記（節錄）' : '我的筆記', M, pY + 26);
         pY += 52; shRR(x, M, pY, IW, pH, 28); x.fillStyle = '#fff'; x.fill(); x.strokeStyle = SC.line; x.lineWidth = 2; x.stroke();
         x.fillStyle = SC.ink; x.font = '500 ' + plan.fs + 'px ' + SF;
         var ly = pY + padX + plan.fs * 0.92;
         plan.lines.forEach(function (l) { x.fillText(l, M + padX, ly); ly += plan.lh; });
-        if (plan.lines.cut) { x.fillStyle = SC.muted; x.font = '700 22px ' + SF; x.textAlign = 'right'; x.fillText('筆記共 ' + note.length + ' 字，圖片只放得下前段', W - M - padX, pY + pH - 18); x.textAlign = 'left'; }
       }
       shBrand(x, W, H, M, ico, wm);
       return cv;
@@ -1070,6 +1071,6 @@
     syncBoot();
     renderMe();
     var hr = doc.getElementById('homeResume');
-    if (hr) { var go = function () { renderResume(hr, { limit: 3 }); }; subs.push(go); go(); }
+    if (hr) { var go = function () { renderResume(hr, { limit: 4 }); }; subs.push(go); go(); }
   }
 })();

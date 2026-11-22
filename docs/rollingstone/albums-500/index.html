@@ -545,6 +545,14 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 .wk-sh svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .sh-act .pg-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
+/* ===== V18.3.4 繼續聽 rows, shared by the home page and /me: narrower banner (≈33% / 35%), wider text, lower rows ===== */
+.rs-c .rs-card{grid-template-columns:33% minmax(0,1fr) 18px;min-height:92px}
+.rs-c .rs-tx{padding:10px 0}
+@media (max-width:620px){.rs-c .rs-card{grid-template-columns:35% minmax(0,1fr) 15px;min-height:86px}.rs-c .rs-tx{padding:9px 0}}
+@media (max-width:374px){.rs-c .rs-card{grid-template-columns:35% minmax(0,1fr) 13px}}
+.resume .rs-list.rs-c{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:860px){.resume .rs-list.rs-c{grid-template-columns:minmax(0,1fr)}}
+
 :root{--gold:#D4A017;--pop:0 12px 40px rgba(20,20,28,.16);--side:236px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gold:#E0B43B;--pop:0 12px 40px rgba(0,0,0,.55)}}
 :root[data-theme="dark"]{--gold:#E0B43B;--pop:0 12px 40px rgba(0,0,0,.55)}
@@ -1359,9 +1367,9 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
     let covers=uniq, label=uniq.length?'最近聽過':'';
     if(!covers.length){const s=(window.L22||{})[PATH.split('/')[1]]||{},it=(s.items||[]).find(i=>i.url===PATH);covers=((it&&it.cv)||cards.slice(0,4).map(coverOf)).slice(0,4)}
     const W=S.load().works;let rated=0,noted=0;const seen={};
-    cards.forEach(c=>{const k=c.dataset.w,w=k&&W[k];if(!w||seen[k])return;seen[k]=1;if(w.r>0)rated++;if(w.n)noted++});
+    let rsum=0;cards.forEach(c=>{const k=c.dataset.w,w=k&&W[k];if(!w||seen[k])return;seen[k]=1;if(w.r>0){rated++;rsum+=+w.r}if(w.n)noted++});
     const ser=((window.L22||{})[PATH.split('/')[1]]||{}).type;
-    S.shareList({title:TITLE.replace(/(得獎與)?入圍$/,'').trim(),path:PATH,sub:SUB[ser]||'我的聆聽進度',total:TOTAL,unit:UNIT,n:count(),rated,noted,covers,coversLabel:label});
+    S.shareList({title:TITLE.replace(/(得獎與)?入圍$/,'').trim(),path:PATH,sub:SUB[ser]||'我的聆聽進度',total:TOTAL,unit:UNIT,n:count(),rated,noted,avg:rated?Math.round(rsum/rated*10)/10:0,covers,coversLabel:label||'焦點作品'});
   }
   $('.js-share').forEach(b=>b.addEventListener('click',share));
   paint();
