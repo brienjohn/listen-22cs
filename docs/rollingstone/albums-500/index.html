@@ -508,6 +508,43 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 @media (max-width:620px){.me-hero .me-card{width:auto}}
 @media (max-width:420px){.me-h1 h1{font-size:min(30px,7.3vw);white-space:nowrap}}
 
+/* ===== V18.3.3 share dialog (moved here from the list template: /me uses it too) ===== */
+.shdlg{width:min(480px,calc(100% - 24px));max-height:85dvh;padding:0;border:1px solid var(--line);border-radius:20px;background:var(--surface);color:var(--ink);box-shadow:0 18px 50px rgba(20,20,28,.22);overflow:auto}
+.shdlg::backdrop{background:rgba(23,21,29,.63)}
+.sh-in{display:grid;gap:16px;padding:24px}
+.sh-hd{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sh-hd h2{margin:0;font-size:17px;font-weight:800}
+.sh-x{display:grid;place-items:center;width:40px;height:40px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--muted);font-size:20px;line-height:1;cursor:pointer}
+.sh-x:hover{border-color:var(--ink);color:var(--ink)}
+.sh-pv{display:grid;place-items:center;min-height:200px;padding:12px;border-radius:14px;background:var(--surface-2)}
+.sh-img{display:block;width:100%;height:auto;max-height:52dvh;object-fit:contain;border-radius:8px}
+.sh-st{margin:0;font-size:13.5px;font-weight:650;color:var(--muted);text-align:center}
+.sh-st.err{color:var(--v-accent-text)}
+.sh-act{display:flex;flex-wrap:wrap;gap:8px}
+.sh-act .pg-btn{flex:1}
+.sh-note{margin:0;font-size:12px;color:var(--muted)}
+
+/* ===== V18.3.3 /me 繼續聽 rows: banner flush with the card's top / bottom / left edges (cover crop centred on the series' subject) ===== */
+.rs-c .rs-card{grid-template-columns:42% minmax(0,1fr) 18px;gap:0 14px;align-items:stretch;min-height:104px;padding:0 16px 0 0;overflow:hidden;border-radius:16px}
+.rs-c .rs-art{width:auto;height:auto;min-height:100%;aspect-ratio:auto;border-radius:0;box-shadow:none;background:var(--surface-2)}
+.rs-c .rs-art img{object-fit:cover}
+.rs-c .rs-tx{align-self:center;padding:12px 0}
+.rs-c .rs-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:15px;line-height:1.35}
+.rs-c .rs-n{margin:5px 0 8px;font-size:13px;font-weight:650;color:var(--muted);font-variant-numeric:tabular-nums}
+.rs-c .rs-n b{color:var(--ink);font-weight:850}
+.rs-c .rs-chev{align-self:center}
+@media (max-width:620px){
+  .rs-c .rs-card{grid-template-columns:44% minmax(0,1fr) 15px;gap:0 12px;min-height:94px;padding:0 12px 0 0;border-radius:14px}
+  .rs-c .rs-t{font-size:14px}
+  .rs-c .rs-tx{padding:10px 0}
+}
+@media (max-width:374px){.rs-c .rs-card{grid-template-columns:42% minmax(0,1fr) 13px;gap:0 10px;padding:0 10px 0 0}.rs-c .rs-t{font-size:13.5px}}
+
+/* ===== V18.3.3 /me: 分享 beside 編輯 ===== */
+.wk-sh{flex:none;min-height:30px!important;padding:0 11px!important;font-size:12.5px!important;margin-top:-3px;gap:5px!important}
+.wk-sh svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sh-act .pg-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
 :root{--gold:#D4A017;--pop:0 12px 40px rgba(20,20,28,.16);--side:236px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gold:#E0B43B;--pop:0 12px 40px rgba(0,0,0,.55)}}
 :root[data-theme="dark"]{--gold:#E0B43B;--pop:0 12px 40px rgba(0,0,0,.55)}
@@ -625,6 +662,8 @@ main{min-width:0;padding-bottom:24px}
 .nm{position:relative}
 .tro{position:absolute;z-index:2;top:1px;left:1px;width:24px;height:24px;transform:rotate(-10deg);fill:var(--gold);stroke:var(--surface);stroke-width:1.4px;paint-order:stroke;stroke-linejoin:round;pointer-events:none}
 [data-density="dense"] .tro{top:-1px;left:1px;width:19px;height:19px}
+/* V18.3.3 phones: room between the sticky category header and the first row, so the red winner frame / 隨機聽 ring is never under the header */
+@media (max-width:960px){.ch{margin-bottom:12px}}
 @media (max-width:960px){.tro{top:0;left:0;width:21px;height:21px}[data-density="dense"] .tro{top:-1px;left:1px;width:18px;height:18px}}
 .who{margin:4px 0 0;font-size:12.5px;color:var(--accent);font-weight:600;line-height:1.4;overflow-wrap:anywhere}
 [data-density="dense"] .who{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;margin-top:1px}
@@ -665,7 +704,7 @@ main{min-width:0;padding-bottom:24px}
   .mbar .dens button{padding:7px 9px}
   .mbar .dens button span{display:none}
   .mbar .totop{width:42px;height:42px}
-  .field,.cat{scroll-margin-top:124px}
+  .field,.cat{scroll-margin-top:130px}
   .fh p{order:3;flex:1 1 100%}
   .fh span{margin-left:auto}
   .field{padding-top:32px}
@@ -724,24 +763,9 @@ main{min-width:0;padding-bottom:24px}
 [data-hide-heard] .nm.heard{display:none}
 [data-hide-heard] .cat:not(:has(.nm:not(.heard))){display:none}
 .nm.pick{animation:pick 5s ease}
-@keyframes pick{0%{box-shadow:0 0 0 0 var(--brand),var(--shadow-hi)}8%{box-shadow:0 0 0 7px var(--brand),var(--shadow-hi)}16%{box-shadow:0 0 0 3px var(--brand),var(--shadow-hi)}24%{box-shadow:0 0 0 7px var(--brand),var(--shadow-hi)}32%,85%{box-shadow:0 0 0 3px var(--brand),var(--shadow-hi)}100%{box-shadow:var(--shadow)}}
+@keyframes pick{0%{box-shadow:0 0 0 0 var(--brand),var(--shadow-hi)}8%{box-shadow:0 0 0 5px var(--brand),var(--shadow-hi)}16%{box-shadow:0 0 0 3px var(--brand),var(--shadow-hi)}24%{box-shadow:0 0 0 5px var(--brand),var(--shadow-hi)}32%,85%{box-shadow:0 0 0 3px var(--brand),var(--shadow-hi)}100%{box-shadow:var(--shadow)}}
 
 
-/* share dialog (same language as .rvdlg) */
-.shdlg{width:min(480px,calc(100% - 24px));max-height:85dvh;padding:0;border:1px solid var(--line);border-radius:20px;background:var(--surface);color:var(--ink);box-shadow:0 18px 50px rgba(20,20,28,.22);overflow:auto}
-.shdlg::backdrop{background:rgba(23,21,29,.63)}
-.sh-in{display:grid;gap:16px;padding:24px}
-.sh-hd{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.sh-hd h2{margin:0;font-size:17px;font-weight:800}
-.sh-x{display:grid;place-items:center;width:40px;height:40px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--muted);font-size:20px;line-height:1;cursor:pointer}
-.sh-x:hover{border-color:var(--ink);color:var(--ink)}
-.sh-pv{display:grid;place-items:center;min-height:200px;padding:12px;border-radius:14px;background:var(--surface-2)}
-.sh-img{display:block;width:100%;height:auto;max-height:52dvh;object-fit:contain;border-radius:8px}
-.sh-st{margin:0;font-size:13.5px;font-weight:650;color:var(--muted);text-align:center}
-.sh-st.err{color:var(--v-accent-text)}
-.sh-act{display:flex;flex-wrap:wrap;gap:8px}
-.sh-act .pg-btn{flex:1}
-.sh-note{margin:0;font-size:12px;color:var(--muted)}
 
 @media (max-width:960px){
   .hero .in{padding-top:22px}
@@ -956,14 +980,6 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
   <div class="dir-win"><ol class="dir-list"><li><button type="button" data-f="f1" data-i="0"><span>01</span>第 500–476 名</button></li><li><button type="button" data-f="f2" data-i="1"><span>02</span>第 475–451 名</button></li><li><button type="button" data-f="f3" data-i="2"><span>03</span>第 450–426 名</button></li><li><button type="button" data-f="f4" data-i="3"><span>04</span>第 425–401 名</button></li><li><button type="button" data-f="f5" data-i="4"><span>05</span>第 400–376 名</button></li><li><button type="button" data-f="f6" data-i="5"><span>06</span>第 375–351 名</button></li><li><button type="button" data-f="f7" data-i="6"><span>07</span>第 350–326 名</button></li><li><button type="button" data-f="f8" data-i="7"><span>08</span>第 325–301 名</button></li><li><button type="button" data-f="f9" data-i="8"><span>09</span>第 300–276 名</button></li><li><button type="button" data-f="f10" data-i="9"><span>10</span>第 275–251 名</button></li><li><button type="button" data-f="f11" data-i="10"><span>11</span>第 250–226 名</button></li><li><button type="button" data-f="f12" data-i="11"><span>12</span>第 225–201 名</button></li><li><button type="button" data-f="f13" data-i="12"><span>13</span>第 200–176 名</button></li><li><button type="button" data-f="f14" data-i="13"><span>14</span>第 175–151 名</button></li><li><button type="button" data-f="f15" data-i="14"><span>15</span>第 150–126 名</button></li><li><button type="button" data-f="f16" data-i="15"><span>16</span>第 125–101 名</button></li><li><button type="button" data-f="f17" data-i="16"><span>17</span>第 100–76 名</button></li><li><button type="button" data-f="f18" data-i="17"><span>18</span>第 75–51 名</button></li><li><button type="button" data-f="f19" data-i="18"><span>19</span>第 50–26 名</button></li><li><button type="button" data-f="f20" data-i="19"><span>20</span>第 25–1 名</button></li></ol></div>
 </div>
 
-<dialog class="shdlg" id="shDlg" aria-labelledby="shH">
-  <div class="sh-in">
-    <div class="sh-hd"><h2 id="shH">分享我的聆聽進度</h2><button type="button" class="sh-x js-shx" aria-label="關閉">×</button></div>
-    <div class="sh-pv"><p class="sh-st" id="shSt" role="status">正在產生圖片…</p><img class="sh-img" id="shImg" alt="聆聽進度分享圖" hidden></div>
-    <div class="sh-act"><button type="button" class="pg-btn pri" id="shGo" hidden><svg aria-hidden="true"><use href="#i-share"/></svg>分享</button><a class="pg-btn" id="shDl" download hidden><svg aria-hidden="true"><use href="#i-dl"/></svg>下載圖片</a><button type="button" class="pg-btn" id="shRetry" hidden>重試</button></div>
-    <p class="sh-note">圖片在你的瀏覽器裡產生，只包含清單名稱和整體進度，不含評分或筆記。</p>
-  </div>
-</dialog>
 
 <footer>
   <div class="in">
@@ -1332,92 +1348,21 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
     S.clearList(PATH);
   }));
 
-  /* share card (V17): 1080×1350 PNG drawn in the browser — list name + overall progress only (no ratings, notes or covers you heard).
-     Uses only same-origin assets (logo, wordmark, series banner) so the canvas never taints; any asset that fails is simply skipped. */
-  const F='"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif';
-  const img=src=>new Promise(r=>{const i=new Image();i.onload=()=>{(i.decode?i.decode():Promise.resolve()).then(()=>r(i),()=>r(i))};i.onerror=()=>r(null);i.src=src});
-  function rr(x,X,Y,w,h,r){x.beginPath();if(x.roundRect)x.roundRect(X,Y,w,h,r);else x.rect(X,Y,w,h)}
-  function wrap(x,t,max,lim){
-    const toks=t.match(/[A-Za-z0-9À-ɏ'’.&!?:,-]+|\s+|./gu)||[];const out=[];let cur='';
-    for(const k of toks){const nx=cur+k;if(x.measureText(nx.trim()).width>max&&cur.trim()){out.push(cur.trim());cur=k.trimStart()}else cur=nx}
-    if(cur.trim())out.push(cur.trim());
-    if(lim&&out.length>lim){out.length=lim;let l=out[lim-1];while(l&&x.measureText(l+'…').width>max)l=l.slice(0,-1);out[lim-1]=l+'…'}
-    return out;
+  /* share card (V18.3.3): drawn by the shared module in /js/my.js (L22S.shareList) — title, big cover stack on the series banner,
+     progress, rated / noted / left counts, brand row. Covers = the 4 most recently heard here (else the list's highlight covers). */
+  const SUB={award:'入圍名單聆聽進度',fest:'演出名單聆聽進度',chart:'榜單聆聽進度'};
+  function share(){
+    const h=mine(), byId={};cards.forEach(c=>{byId[c.dataset.id]=c});
+    const recent=Object.keys(h).filter(id=>byId[id]).sort((a,b)=>h[b]-h[a]).map(id=>coverOf(byId[id])).filter(Boolean);
+    const uniq=[...new Set(recent)].slice(0,4);
+    let covers=uniq, label=uniq.length?'最近聽過':'';
+    if(!covers.length){const s=(window.L22||{})[PATH.split('/')[1]]||{},it=(s.items||[]).find(i=>i.url===PATH);covers=((it&&it.cv)||cards.slice(0,4).map(coverOf)).slice(0,4)}
+    const W=S.load().works;let rated=0,noted=0;const seen={};
+    cards.forEach(c=>{const k=c.dataset.w,w=k&&W[k];if(!w||seen[k])return;seen[k]=1;if(w.r>0)rated++;if(w.n)noted++});
+    const ser=((window.L22||{})[PATH.split('/')[1]]||{}).type;
+    S.shareList({title:TITLE.replace(/(得獎與)?入圍$/,'').trim(),path:PATH,sub:SUB[ser]||'我的聆聽進度',total:TOTAL,unit:UNIT,n:count(),rated,noted,covers,coversLabel:label});
   }
-  async function makeCard(){
-    const W=1080,H=1350,M=72,IW=W-M*2,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
-    const INK='#28282D',MUTED='#69636B',CORAL='#FF7A7A',CORAL_T='#A93643',MINT='#287E60',MINT_T='#216B52',TRACK='#EFE4DA';
-    try{await document.fonts.ready;await Promise.all(['900 76px','800 32px','700 48px','900 200px'].map(f=>document.fonts.load(`${f} "Noto Sans TC"`,TITLE+'我的聆聽進度已完成0123456789%')))}catch(e){}
-    const slug=PATH.split('/')[1]||'';
-    const [ico,wm,bn]=await Promise.all([img('/img/baby-coral-surprised.png'),img('/img/22cs-wordmark-coral.svg'),slug?img(`/img/banners/${slug}-1200.jpg`):Promise.resolve(null)]);
-    const n=count(), pct=TOTAL?Math.round(n/TOTAL*100):0, done=TOTAL>0&&n>=TOTAL;
-    /* paper + a few geometric accents */
-    x.fillStyle='#FFF8EF';x.fillRect(0,0,W,H);
-    x.fillStyle='#FFE6E2';x.beginPath();x.arc(W,0,300,0,Math.PI*2);x.fill();
-    x.strokeStyle=CORAL;x.lineWidth=8;x.lineCap='round';x.beginPath();x.arc(W,0,360,Math.PI*0.55,Math.PI*0.95);x.stroke();
-    x.fillStyle='#CFEBDD';x.beginPath();x.arc(W-150,520,22,0,Math.PI*2);x.fill();
-    x.save();x.translate(W-250,410);x.rotate(-0.3);x.fillStyle='#FFD766';x.fillRect(-14,-14,28,28);x.restore();
-    x.textBaseline='alphabetic';
-    /* brand row: original baby logo + 聆聽清單 by 22CS wordmark */
-    let bx=M;
-    if(ico){const h=96,w=Math.round(ico.naturalWidth/ico.naturalHeight*h)||92;x.drawImage(ico,M,M,w,h);bx=M+w+22}
-    x.fillStyle=INK;x.font=`900 42px ${F}`;x.fillText('聆聽清單',bx,M+50);
-    x.fillStyle=MUTED;x.font=`700 24px ${F}`;x.fillText('by',bx,M+88);
-    if(wm)x.drawImage(wm,bx+x.measureText('by').width+10,M+68,84,24);
-    /* label + list title (≤3 lines, font shrinks from 76px to 44px before truncating) */
-    x.fillStyle=CORAL_T;x.font=`800 32px ${F}`;x.fillText('我的聆聽進度',M,290);
-    let fs=76,lines;
-    for(;fs>=44;fs-=4){x.font=`900 ${fs}px ${F}`;lines=wrap(x,TITLE,IW,0);if(lines.length<=3)break}
-    if(fs<44){fs=44;x.font=`900 44px ${F}`}
-    lines=wrap(x,TITLE,IW,3);
-    x.fillStyle=INK;let y=290+fs*1.35;for(const l of lines){x.fillText(l,M,y);y+=fs*1.25}
-    /* progress: count first, percentage second, 24px mint track */
-    const ny=Math.max(y+190,780);
-    x.fillStyle=INK;x.font=`900 200px ${F}`;const ns=String(n);x.fillText(ns,M-6,ny);
-    const nw=x.measureText(ns).width;
-    x.fillStyle=MUTED;x.font=`700 48px ${F}`;x.fillText(`/ ${TOTAL} ${UNIT}`,M+nw+16,ny);
-    x.fillStyle=MINT_T;x.font=`900 56px ${F}`;x.textAlign='right';x.fillText(done?'已完成 ✓':pct+'%',W-M,ny);x.textAlign='left';
-    const by=ny+48;rr(x,M,by,IW,24,12);x.fillStyle=TRACK;x.fill();
-    if(n&&TOTAL){rr(x,M,by,Math.max(24,IW*Math.min(1,n/TOTAL)),24,12);x.fillStyle=MINT;x.fill()}
-    if(!n){x.fillStyle=MUTED;x.font=`700 34px ${F}`;x.fillText(`從第一${UNIT}開始聽吧`,M,by+84)}
-    /* series banner strip (original artwork, cropped) + address */
-    const sy=H-72-60-170;
-    if(bn){x.save();rr(x,M,sy,IW,170,20);x.clip();const s2=Math.max(IW/bn.naturalWidth,170/bn.naturalHeight),dw=bn.naturalWidth*s2,dh=bn.naturalHeight*s2;x.drawImage(bn,M+(IW-dw)/2,sy+(170-dh)/2,dw,dh);x.restore()}
-    else{x.fillStyle='#E9DDD5';x.fillRect(M,sy+168,IW,2)}
-    x.fillStyle=MUTED;x.font=`700 30px ${F}`;x.fillText('listen.22cs.xyz',M,H-72);
-    x.fillStyle=CORAL;x.beginPath();x.arc(W-M-12,H-72-11,12,0,Math.PI*2);x.fill();
-    return cv;
-  }
-  const dlg=document.getElementById('shDlg'), shImg=document.getElementById('shImg'), shDl=document.getElementById('shDl'), shGo=document.getElementById('shGo'), shSt=document.getElementById('shSt'), shRetry=document.getElementById('shRetry');
-  let lastUrl='', busy=false;
-  async function render(){
-    if(busy)return;busy=true;
-    shImg.hidden=true;shDl.hidden=true;shGo.hidden=true;shRetry.hidden=true;
-    shSt.hidden=false;shSt.classList.remove('err');shSt.textContent='正在產生圖片…';
-    try{
-      const cv=await makeCard();
-      const blob=await new Promise(r=>cv.toBlob(r,'image/png'));
-      if(!blob||blob.size<2000)throw new Error('empty');
-      if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);
-      const name='22cs-listening-'+(PATH.replace(/^\/|\/$/g,'').replace(/\//g,'-')||'list')+'.png';
-      shImg.src=lastUrl;shDl.href=lastUrl;shDl.download=name;
-      const file=new File([blob],name,{type:'image/png'});
-      const text=`我在「${TITLE}」已聽 ${count()} / ${TOTAL} ${UNIT}`;
-      const can=!!(navigator.canShare&&navigator.canShare({files:[file]}));
-      shGo.hidden=!can;
-      shGo.onclick=()=>navigator.share({files:[file],title:TITLE,text:text+' '+location.origin+PATH}).catch(()=>{});
-      shSt.hidden=true;shImg.hidden=false;shDl.hidden=false;
-    }catch(e){
-      shSt.textContent='圖片產生失敗，請再試一次。';shSt.classList.add('err');shRetry.hidden=false;
-    }finally{busy=false}
-  }
-  function share(){if(!dlg||!dlg.showModal)return;dlg.showModal();render()}
   $('.js-share').forEach(b=>b.addEventListener('click',share));
-  if(dlg){
-    shRetry.addEventListener('click',render);
-    dlg.querySelector('.js-shx').addEventListener('click',()=>dlg.close());
-    dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
-  }
   paint();
 })();
 </script>

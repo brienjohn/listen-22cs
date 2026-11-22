@@ -321,11 +321,13 @@
       + '<span class="rs-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></span>'
       + '<span class="rs-n">' + (x.done ? '已完成 · ' : '已聽 ') + x.n + ' / ' + x.t + ' ' + esc(x.u) + '<em>' + pct + '%</em></span></span>' + CHEV + '</a></li>';
   }
+  /* V18.3.3 /me rows: banner fills the left of the card edge to edge (top / bottom / left), cropped around each series' subject */
+  var FOCUS = { emerge: 88, fireball: 78, gima: 70, gma: 80, grammy: 85, mama: 68, megaport: 72, mercury: 66, pitchfork: 78, rollingstone: 74, vagabond: 76 };
   function resumeCompact(x) {
     var pf = x.t ? Math.min(100, Math.round(x.n / x.t * 1000) / 10) : 0, slug = x.p.split('/')[1] || '';
-    return '<li><a class="rs-card" href="' + esc(x.p) + '">'
-      + '<span class="rs-art"><img src="/img/banners/' + esc(slug) + '-800.jpg" alt="" loading="lazy" width="800" height="200" onerror="this.remove()"></span>'
-      + '<span class="rs-tx"><b class="rs-t">' + esc(x.title) + '</b><span class="rs-n">已聽 <b>' + x.n + ' / ' + x.t + '</b></span>'
+    return '<li><a class="rs-card" href="' + esc(x.p) + '" aria-label="' + esc(x.title + '，已聽 ' + x.n + ' / ' + x.t) + '">'
+      + '<span class="rs-art"><img src="/img/banners/' + esc(slug) + '-800.jpg" alt="" loading="lazy" width="800" height="200" style="object-position:' + (FOCUS[slug] || 75) + '% 50%" onerror="this.remove()"></span>'
+      + '<span class="rs-tx"><b class="rs-t">' + esc(x.title) + '</b><span class="rs-n"><b>' + x.n + '</b> / ' + x.t + '</span>'
       + '<span class="rs-bar" aria-hidden="true"><i style="width:' + pf + '%"></i></span></span>' + CHEV + '</a></li>';
   }
   function renderResume(sec, opt) {
@@ -367,7 +369,8 @@
         var art = w.img ? '<img src="' + esc(w.img) + '" alt="" loading="lazy" width="64" height="64">' : '<span class="wk-mono">' + esc(String(w.ti || '').trim().slice(0, 2)) + '</span>';
         var st = w.r ? '<span class="wk-r">' + starsHTML(w.r) + '</span>' : '';  // the note itself is shown in full below; no separate 筆記 badge
         return '<li class="wk" data-w="' + esc(w.wk) + '"><span class="wk-art">' + art + '</span><div class="wk-tx">'
-          + '<div class="wk-hd"><h3>' + esc(w.ti) + '</h3><button type="button" class="pg-btn wk-ed" aria-label="編輯「' + esc(w.ti) + '」的評分與筆記">編輯</button></div>'
+          + '<div class="wk-hd"><h3>' + esc(w.ti) + '</h3><button type="button" class="pg-btn wk-ed" aria-label="編輯「' + esc(w.ti) + '」的評分與筆記">編輯</button>'
+          + '<button type="button" class="pg-btn wk-sh" aria-label="分享「' + esc(w.ti) + '」的評分與筆記圖片">' + SH_IC + '分享</button></div>'
           + (w.ar ? '<p class="wk-by">' + esc(w.ar) + '</p>' : '')
           + (st ? '<p class="wk-st">' + st + '</p>' : '')
           + (w.n ? '<p class="wk-n">' + esc(w.n) + '</p>' : '')
@@ -387,6 +390,8 @@
     q.addEventListener('input', wks); sort.addEventListener('change', wks);
     me.querySelector('.wk-clear').addEventListener('click', function () { q.value = ''; F = 'all'; segs.forEach(function (o) { o.setAttribute('aria-pressed', String(o.dataset.f === 'all')); }); wks(); });
     list.addEventListener('click', function (e) {
+      var sb = e.target.closest('.wk-sh');
+      if (sb) { var sw = work(sb.closest('.wk').dataset.w); if (sw) shareWork(sw); return; }
       var b = e.target.closest('.wk-ed'); if (!b) return;
       var k = b.closest('.wk').dataset.w, w = work(k); if (!w) return;
       openReview({ wk: k, ti: w.ti, ar: w.ar, k: w.k, img: w.img, from: w.from, fromT: w.fromT });
@@ -810,9 +815,254 @@
     var f = sdlg.querySelector('#syIn:not([disabled])') || sdlg.querySelector('[data-copy]') || sdlg.querySelector('[data-w]'); if (f) f.focus();
   }
 
+  /* ---------- share images (V18.3.3): 1080×1350 PNG drawn in the browser from same-origin assets only (never taints the canvas).
+     shareList(o) = one list's progress (list page), shareWork(w) = one work's rating + note (/me). Assets that fail to load are skipped. ---------- */
+  var SH_IC = '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 15V3.5M7.5 8 12 3.5 16.5 8"/><path d="M5 11.5v7A2 2 0 0 0 7 20.5h10a2 2 0 0 0 2-2v-7"/></svg>';
+  var DL_IC = '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/></svg>';
+  var SF = '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif';
+  var SC = { bg: '#FFF8EF', ink: '#28282D', muted: '#69636B', coral: '#FF7A7A', coralT: '#A93643', mint: '#287E60', mintT: '#216B52', track: '#EFE4DA', gold: '#B07A00', line: '#EADFD6', panel: '#F3E8DE' };
+  function shImg(src) {
+    return new Promise(function (r) {
+      if (!src) { r(null); return; }
+      try { if (new URL(src, location.href).origin !== location.origin) { r(null); return; } } catch (e) { r(null); return; }
+      var i = new Image(); i.onload = function () { (i.decode ? i.decode() : Promise.resolve()).then(function () { r(i); }, function () { r(i); }); }; i.onerror = function () { r(null); }; i.src = src;
+    });
+  }
+  function shRR(x, X, Y, w, h, r) { x.beginPath(); if (x.roundRect) x.roundRect(X, Y, w, h, r); else x.rect(X, Y, w, h); }
+  function shWrap(x, t, max, lim) {   // CJK breaks anywhere, Latin words stay whole; '\n' starts a new line
+    var out = [];
+    String(t || '').split(/\n/).forEach(function (para) {
+      var toks = para.match(/[A-Za-z0-9À-ɏ'’.&!?:,;()\-]+|\s+|./gu) || [], cur = '';
+      toks.forEach(function (k) {
+        var nx = cur + k;
+        if (x.measureText(nx.trim()).width > max && cur.trim()) { out.push(cur.trim()); cur = k.trimStart(); }
+        else cur = nx;
+        while (x.measureText(cur).width > max && cur.length > 1) {   // a single token wider than the line (long URL)
+          var j = cur.length; while (j > 1 && x.measureText(cur.slice(0, j)).width > max) j--;
+          out.push(cur.slice(0, j)); cur = cur.slice(j);
+        }
+      });
+      out.push(cur.trim());
+    });
+    while (out.length > 1 && out[out.length - 1] === '') out.pop();
+    var cut = false;
+    if (lim && out.length > lim) {
+      cut = true; out.length = lim; var l = out[lim - 1];
+      while (l && x.measureText(l + '…').width > max) l = l.slice(0, -1);
+      out[lim - 1] = l + '…';
+    }
+    out.cut = cut; return out;
+  }
+  function shFonts(sample) {
+    try {
+      return Promise.race([
+        (doc.fonts && doc.fonts.ready ? doc.fonts.ready : Promise.resolve()).then(function () {
+          return Promise.all(['900 72px', '800 32px', '700 30px', '500 34px'].map(function (f) { return doc.fonts.load(f + ' "Noto Sans TC"', sample); }));
+        }),
+        new Promise(function (r) { setTimeout(r, 2500); })
+      ]).catch(function () {});
+    } catch (e) { return Promise.resolve(); }
+  }
+  function shStar(x, cx, cy, R) {
+    x.beginPath();
+    for (var i = 0; i < 10; i++) { var a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? R * 0.45 : R; x.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a)); }
+    x.closePath();
+  }
+  function shStars(x, X, cy, r, size) {   // filled stars only (site rule): ★ per whole point, a half star for .5
+    x.fillStyle = SC.gold; var full = Math.floor(r), half = r - full >= 0.5, gap = size * 0.18, cx = X + size / 2;
+    for (var i = 0; i < full; i++) { shStar(x, cx, cy, size / 2); x.fill(); cx += size + gap; }
+    if (half) { x.save(); x.beginPath(); x.rect(cx - size / 2, cy - size, size / 2, size * 2); x.clip(); shStar(x, cx, cy, size / 2); x.fill(); x.restore(); cx += size + gap; }
+    return cx - size / 2 - gap;
+  }
+  function shCover(x, im, X, Y, s, rot, label) {   // square cover with a white frame + soft shadow
+    x.save(); x.translate(X + s / 2, Y + s / 2); x.rotate(rot || 0);
+    x.shadowColor = 'rgba(40,24,20,.28)'; x.shadowBlur = 34; x.shadowOffsetY = 14;
+    shRR(x, -s / 2 - 8, -s / 2 - 8, s + 16, s + 16, 18); x.fillStyle = '#fff'; x.fill();
+    x.shadowColor = 'transparent';
+    shRR(x, -s / 2, -s / 2, s, s, 12); x.save(); x.clip();
+    if (im) x.drawImage(im, -s / 2, -s / 2, s, s);
+    else { x.fillStyle = SC.panel; x.fillRect(-s / 2, -s / 2, s, s); x.fillStyle = SC.muted; x.font = '900 ' + Math.round(s * 0.3) + 'px ' + SF; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(String(label || '').trim().slice(0, 2), 0, 0); x.textAlign = 'left'; x.textBaseline = 'alphabetic'; }
+    x.restore(); x.restore();
+  }
+  function shBrand(x, W, H, M, ico, wm) {   // bottom brand row: approved baby logo + 聆聽清單 by 22CS · address
+    var h = 64, y = H - M - h, bx = M;
+    if (ico) { var w = Math.round(ico.naturalWidth / ico.naturalHeight * h) || 62; x.drawImage(ico, M, y, w, h); bx = M + w + 16; }
+    x.textBaseline = 'alphabetic'; x.fillStyle = SC.ink; x.font = '900 30px ' + SF; x.fillText('聆聽清單', bx, y + 30);
+    x.fillStyle = SC.muted; x.font = '700 20px ' + SF; x.fillText('by', bx, y + 58);
+    if (wm) x.drawImage(wm, bx + x.measureText('by').width + 8, y + 42, 63, 18);
+    x.fillStyle = SC.muted; x.font = '700 26px ' + SF; x.textAlign = 'right'; x.fillText('listen.22cs.xyz', W - M, y + 44); x.textAlign = 'left';
+  }
+  function shTitle(x, t, maxW, from, to, lines) {   // biggest size (step 4px) that fits in `lines` lines
+    var fs = from, L;
+    for (; fs >= to; fs -= 4) { x.font = '900 ' + fs + 'px ' + SF; L = shWrap(x, t, maxW, 0); if (L.length <= lines) break; }
+    if (fs < to) fs = to;
+    x.font = '900 ' + fs + 'px ' + SF; L = shWrap(x, t, maxW, lines);
+    return { fs: fs, lines: L };
+  }
+
+  /* list progress card. o = {title, path, sub, total, unit, n, rated, noted, covers:[src], coversLabel} */
+  function drawList(o) {
+    var W = 1080, H = 1350, M = 72, IW = W - M * 2, cv = doc.createElement('canvas'); cv.width = W; cv.height = H; var x = cv.getContext('2d');
+    var slug = (o.path || '').split('/')[1] || '';
+    return shFonts(o.title + o.sub + '已聽評分筆記還沒聽最近聽過已完成0123456789%／').then(function () {
+      return Promise.all([shImg('/img/baby-coral-surprised.png'), shImg('/img/22cs-wordmark-coral.svg'), slug ? shImg('/img/banners/' + slug + '-1200.jpg') : null]
+        .concat((o.covers || []).slice(0, 4).map(shImg)));
+    }).then(function (A) {
+      var ico = A[0], wm = A[1], bn = A[2], covers = A.slice(3);
+      var n = o.n, T = o.total, pct = T ? Math.round(n / T * 100) : 0, done = T > 0 && n >= T;
+      x.fillStyle = SC.bg; x.fillRect(0, 0, W, H); x.textBaseline = 'alphabetic';
+      /* 1 · title block */
+      x.fillStyle = SC.coralT; x.font = '800 30px ' + SF; x.fillText(o.sub, M, M + 30);
+      var tt = shTitle(x, o.title, IW, 76, 48, 2), y = M + 30 + 22 + tt.fs * 0.95;
+      x.fillStyle = SC.ink; tt.lines.forEach(function (l) { x.fillText(l, M, y); y += tt.fs * 1.2; });
+      var titleBottom = y - tt.fs * 1.2 + tt.fs * 0.28;
+      /* bottom-anchored blocks: brand · stat tiles · track · big count */
+      var tileH = 118, tileY = H - M - 64 - 46 - tileH, trackY = tileY - 46 - 22, numBase = trackY - 30, numTop = numBase - 112;
+      /* 2 · main visual: series banner panel with the cover stack on top */
+      var pY = titleBottom + 40, pH = Math.max(340, Math.min(560, numTop - 44 - pY));
+      shRR(x, M, pY, IW, pH, 28); x.save(); x.clip();
+      if (bn) {
+        var s2 = Math.max(IW / bn.naturalWidth, pH / bn.naturalHeight), dw = bn.naturalWidth * s2, dh = bn.naturalHeight * s2, fx = (FOCUS[slug] || 75) / 100;
+        x.drawImage(bn, M + (IW - dw) * fx, pY + (pH - dh) / 2, dw, dh);
+        x.fillStyle = 'rgba(20,14,12,.16)'; x.fillRect(M, pY, IW, pH);
+      } else { x.fillStyle = SC.panel; x.fillRect(M, pY, IW, pH); }
+      x.restore();
+      if (covers.length) {
+        var k = covers.length, cs = Math.floor(Math.min(300, pH - 96, (IW - 64) / (1 + (k - 1) * 0.78))), step = Math.round(cs * 0.78), tw = cs + (k - 1) * step, cx0 = M + (IW - tw) / 2, cy = pY + (pH - cs) / 2 + (o.coversLabel ? 16 : 0);
+        var rots = [-0.05, 0.035, -0.03, 0.05];
+        covers.forEach(function (im, i) { shCover(x, im, cx0 + i * step, cy, cs, rots[i % 4], ''); });
+      }
+      if (o.coversLabel && covers.length) {
+        x.font = '800 24px ' + SF; var lw = x.measureText(o.coversLabel).width + 36;
+        shRR(x, M + 24, pY + 24, lw, 46, 23); x.fillStyle = 'rgba(255,255,255,.94)'; x.fill();
+        x.fillStyle = SC.ink; x.fillText(o.coversLabel, M + 42, pY + 56);
+      }
+      /* 3 · progress: count / total, percentage, track */
+      x.fillStyle = SC.ink; x.font = '900 150px ' + SF; var ns = String(n); x.fillText(ns, M - 4, numBase);
+      var nw = x.measureText(ns).width;
+      x.fillStyle = SC.muted; x.font = '700 44px ' + SF; x.fillText('/ ' + T + ' ' + (o.unit || ''), M + nw + 14, numBase);
+      x.fillStyle = SC.mintT; x.font = '900 60px ' + SF; x.textAlign = 'right'; x.fillText(done ? '已完成' : pct + '%', W - M, numBase); x.textAlign = 'left';
+      shRR(x, M, trackY, IW, 22, 11); x.fillStyle = SC.track; x.fill();
+      if (n && T) { shRR(x, M, trackY, Math.max(22, IW * Math.min(1, n / T)), 22, 11); x.fillStyle = SC.mint; x.fill(); }
+      /* 4 · stat tiles */
+      var tiles = [[o.rated, '已評分'], [o.noted, '則筆記'], [Math.max(0, T - n), '還沒聽']], tw2 = (IW - 2 * 20) / 3;
+      tiles.forEach(function (t, i) {
+        var tx = M + i * (tw2 + 20);
+        shRR(x, tx, tileY, tw2, tileH, 22); x.fillStyle = '#fff'; x.fill(); x.strokeStyle = SC.line; x.lineWidth = 2; x.stroke();
+        x.fillStyle = SC.ink; x.font = '900 52px ' + SF; x.fillText(String(t[0]), tx + 28, tileY + 66);
+        x.fillStyle = SC.muted; x.font = '700 24px ' + SF; x.fillText(t[1], tx + 28, tileY + 100);
+      });
+      /* 5 · brand */
+      shBrand(x, W, H, M, ico, wm);
+      return cv;
+    });
+  }
+
+  /* one work: cover, title, artist, filled stars, the note (as much as fits; long notes switch to a 1080×1920 canvas) */
+  function drawWork(w) {
+    var W = 1080, M = 72, IW = W - M * 2, note = String(w.n || '').replace(/\r/g, '').trim();
+    return shFonts((w.ti || '') + (w.ar || '') + note.slice(0, 400) + (w.fromT || '') + '我的聆聽筆記評分').then(function () {
+      return Promise.all([shImg('/img/baby-coral-surprised.png'), shImg('/img/22cs-wordmark-coral.svg'), shImg(w.img)]);
+    }).then(function (A) {
+      var ico = A[0], wm = A[1], cov = A[2];
+      var probe = doc.createElement('canvas').getContext('2d'), CS = 400, noteTop = M + 52 + CS + 56, padX = 48, NW = IW - padX * 2;
+      /* pick the canvas height + note size: 1350 first (font 40 → 28px), then 1920 for long notes, then truncate */
+      var plan = null, sizes = [40, 36, 32, 28];
+      [1350, 1920].some(function (H) {
+        var avail = H - M - 64 - 48 - noteTop - 60 - padX * 2;   // brand + gap, label row, panel padding
+        return sizes.some(function (fs) {
+          probe.font = '500 ' + fs + 'px ' + SF; var L = shWrap(probe, note, NW, 0), lh = Math.round(fs * 1.62);
+          if (L.length * lh <= avail) { plan = { H: H, fs: fs, lh: lh, lines: L }; return true; }
+          return false;
+        });
+      });
+      if (!plan) { var H2 = 1920, fs2 = 28, lh2 = Math.round(fs2 * 1.62), av2 = H2 - M - 64 - 48 - noteTop - 60 - padX * 2; probe.font = '500 ' + fs2 + 'px ' + SF; plan = { H: H2, fs: fs2, lh: lh2, lines: shWrap(probe, note, NW, Math.floor(av2 / lh2)) }; }
+      if (!note) plan = { H: 1350, fs: 0, lh: 0, lines: [] };
+      if (note) plan.H = Math.max(1350, Math.min(plan.H, noteTop + 52 + plan.lines.length * plan.lh + padX * 2 + 4 + 72 + 64 + M));
+      var H = plan.H, cv = doc.createElement('canvas'); cv.width = W; cv.height = H; var x = cv.getContext('2d');
+      x.fillStyle = SC.bg; x.fillRect(0, 0, W, H); x.textBaseline = 'alphabetic';
+      /* list name (eyebrow) */
+      x.fillStyle = SC.coralT; x.font = '800 30px ' + SF; if (!note) x.textAlign = 'center';
+      x.fillText(shWrap(x, w.fromT ? '來自「' + w.fromT + '」' : '我的聆聽筆記', IW, 1)[0], note ? M : W / 2, M + 30); x.textAlign = 'left';
+      /* cover + title / artist / stars */
+      var big = !note, cs = big ? 600 : CS, cY = M + 60;
+      if (big) { shCover(x, cov, (W - cs) / 2, cY, cs, 0, w.ti); }
+      else shCover(x, cov, M, cY, cs, 0, w.ti);
+      var tx = big ? W / 2 : M + cs + 48, tw = big ? IW : IW - cs - 48, ty = big ? cY + cs + 84 : cY + 8;
+      if (big) x.textAlign = 'center';
+      var tt = shTitle(x, w.ti || '', tw, big ? 72 : 60, 40, big ? 2 : 4), y = ty + tt.fs * 0.95;
+      x.fillStyle = SC.ink; tt.lines.forEach(function (l) { x.fillText(l, tx, y); y += tt.fs * 1.2; });
+      y = y - tt.fs * 1.2 + 14;
+      if (w.ar) { x.fillStyle = SC.muted; x.font = '700 32px ' + SF; shWrap(x, w.ar, tw, 2).forEach(function (l) { y += 44; x.fillText(l, tx, y); }); }
+      x.textAlign = 'left';
+      if (w.r > 0) { var sw = 46 * Math.ceil(+w.r) + 46 * 0.18 * (Math.ceil(+w.r) - 1); shStars(x, big ? (W - sw) / 2 : tx, y + 56, +w.r, 46); }
+      /* note panel */
+      if (note) {
+        var pY = noteTop, pH = plan.lines.length * plan.lh + padX * 2 + 4;
+        x.fillStyle = SC.coralT; x.font = '800 26px ' + SF; x.fillText('我的筆記', M, pY + 26);
+        pY += 52; shRR(x, M, pY, IW, pH, 28); x.fillStyle = '#fff'; x.fill(); x.strokeStyle = SC.line; x.lineWidth = 2; x.stroke();
+        x.fillStyle = SC.ink; x.font = '500 ' + plan.fs + 'px ' + SF;
+        var ly = pY + padX + plan.fs * 0.92;
+        plan.lines.forEach(function (l) { x.fillText(l, M + padX, ly); ly += plan.lh; });
+        if (plan.lines.cut) { x.fillStyle = SC.muted; x.font = '700 22px ' + SF; x.textAlign = 'right'; x.fillText('筆記共 ' + note.length + ' 字，圖片只放得下前段', W - M - padX, pY + pH - 18); x.textAlign = 'left'; }
+      }
+      shBrand(x, W, H, M, ico, wm);
+      return cv;
+    });
+  }
+
+  /* one dialog for both kinds: preview, 分享 (Web Share with the PNG when the device supports it), 下載圖片, 重試 */
+  var shd = null, shUrl = '';
+  function shareOpen(o) {
+    if (!shd) {
+      shd = doc.createElement('dialog'); shd.className = 'shdlg'; shd.setAttribute('aria-labelledby', 'shH2');
+      shd.innerHTML = '<div class="sh-in"><div class="sh-hd"><h2 id="shH2"></h2><button type="button" class="sh-x" aria-label="關閉">×</button></div>'
+        + '<div class="sh-pv"><p class="sh-st" role="status">正在產生圖片…</p><img class="sh-img" alt="" hidden></div>'
+        + '<div class="sh-act"><button type="button" class="pg-btn pri sh-go" hidden>' + SH_IC + '分享</button><a class="pg-btn sh-dl" download hidden>' + DL_IC + '下載圖片</a><button type="button" class="pg-btn sh-re" hidden>重試</button></div>'
+        + '<p class="sh-note"></p></div>';
+      doc.body.appendChild(shd);
+      shd.querySelector('.sh-x').addEventListener('click', function () { shd.close(); });
+      shd.addEventListener('click', function (e) { if (e.target === shd) shd.close(); });
+    }
+    var st = shd.querySelector('.sh-st'), im = shd.querySelector('.sh-img'), go = shd.querySelector('.sh-go'), dl = shd.querySelector('.sh-dl'), re = shd.querySelector('.sh-re');
+    shd.querySelector('#shH2').textContent = o.heading; shd.querySelector('.sh-note').textContent = o.note; im.alt = o.alt || o.heading;
+    var busy = false;
+    function render() {
+      if (busy) return; busy = true;
+      im.hidden = dl.hidden = go.hidden = re.hidden = true; st.hidden = false; st.classList.remove('err'); st.textContent = '正在產生圖片…';
+      o.make().then(function (cv) {
+        return new Promise(function (r) { cv.toBlob(r, 'image/png'); });
+      }).then(function (blob) {
+        if (!blob || blob.size < 2000) throw new Error('empty');
+        if (shUrl) URL.revokeObjectURL(shUrl); shUrl = URL.createObjectURL(blob);
+        im.src = shUrl; dl.href = shUrl; dl.download = o.file;
+        var file = new File([blob], o.file, { type: 'image/png' }), can = !!(navigator.canShare && navigator.canShare({ files: [file] }));
+        go.hidden = !can;
+        go.onclick = function () { navigator.share({ files: [file], title: o.title, text: o.text + ' ' + o.url }).catch(function () {}); };
+        st.hidden = true; im.hidden = false; dl.hidden = false;
+      }).catch(function () { st.textContent = '圖片產生失敗，請再試一次。'; st.classList.add('err'); re.hidden = false; })
+        .then(function () { busy = false; });
+    }
+    re.onclick = render;
+    if (!shd.open) shd.showModal();
+    render();
+  }
+  function shareList(o) {
+    shareOpen({ heading: '分享我的聆聽進度', alt: '聆聽進度分享圖', note: '圖片在你的瀏覽器裡產生，包含這份清單的進度、最近聽過的封面與評分、筆記的數量，不含筆記內容。',
+      make: function () { return drawList(o); }, file: '22cs-listening-' + ((o.path || '').replace(/^\/|\/$/g, '').replace(/\//g, '-') || 'list') + '.png',
+      title: o.title, text: '我在「' + o.title + '」已聽 ' + o.n + ' / ' + o.total + ' ' + (o.unit || ''), url: location.origin + (o.path || '/') });
+  }
+  function shareWork(w) {
+    var nm = (String(w.ti || 'note').replace(/[^\w㐀-鿿\-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'note');
+    shareOpen({ heading: '分享這則評分與筆記', alt: '評分與筆記分享圖', note: '圖片在你的瀏覽器裡產生，會包含這則筆記的內容，分享前請確認。',
+      make: function () { return drawWork(w); }, file: '22cs-note-' + nm + '.png',
+      title: w.ti || '', text: '「' + (w.ti || '') + '」' + (w.ar ? '— ' + w.ar : ''), url: location.origin + (w.from || '/') });
+  }
+
+
   window.L22S = { load: load, setHeard: setHeard, clearList: clearList, lists: lists, work: work, saveWork: saveWork, works: works, isFav: isFav, setFav: setFav, favs: favs,
     exportFile: exportFile, readFile: readFile, importFile: importFile, merge: merge, wipe: wipe, available: available, openReview: openReview,
-    renderResume: renderResume, starsHTML: starsHTML, fmtR: fmtR, rel: rel, esc: esc, onChange: function (f) { subs.push(f); },
+    renderResume: renderResume, shareList: shareList, shareWork: shareWork, starsHTML: starsHTML, fmtR: fmtR, rel: rel, esc: esc, onChange: function (f) { subs.push(f); },
     sync: { info: syncInfo, now: syncNow, enable: syncEnable, peek: syncPeek, join: syncJoin, leave: syncLeave, del: syncDelete, norm: normCode, fmt: fmtCode } };
 
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', init); else init();
