@@ -467,14 +467,16 @@
     function statRow() {
       if (!stAct) return;
       var on = statOn();
-      stState.textContent = on ? '參與中' : '未參與'; stState.className = 'sy-st' + (on ? ' ok' : '');
+      stState.lastChild.textContent = on ? '參與中' : '未參與'; stState.className = 'st-state' + (on ? ' on' : '');
       stAct.innerHTML = on ? '<button type="button" class="pg-btn" data-st="off">不參與統計</button>' : '<button type="button" class="pg-btn pri" data-st="on">參與統計</button>';
     }
     if (stAct) {
       stAct.addEventListener('click', function (e) {
         var b = e.target.closest('[data-st]'); if (!b) return;
-        statSetOn(b.dataset.st === 'on'); statRow();
-        say(b.dataset.st === 'on' ? '已參與匿名統計，之後的已聽和評分會計入全站總數。' : '已停止參與匿名統計；之後的已聽和評分不會再送出。之前已計入的總數不會減少（伺服器不知道哪些是你的）。');
+        var want = b.dataset.st === 'on';
+        if (!statSetOn(want)) { statRow(); say('無法儲存這個設定（瀏覽器可能封鎖了網站資料），匿名統計維持' + (statOn() ? '參與中' : '未參與') + '。', true); return; }
+        statRow();
+        say(want ? '已參與匿名統計，之後的已聽和評分會計入全站總數。' : '已停止參與匿名統計；之後的已聽和評分不會再送出。之前已計入的總數不會減少（伺服器不知道哪些是你的）。');
       });
       statRow();
     }
@@ -1089,8 +1091,9 @@
   function stGet(k, d) { try { var v = JSON.parse(localStorage.getItem(k) || 'null'); return v == null ? d : v; } catch (e) { return d; } }
   function stSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   function statOn() { try { return localStorage.getItem(STOFF) !== '1'; } catch (e) { return false; } }
-  function statSetOn(on) {
+  function statSetOn(on) {   // returns true only when the new setting is really stored (private mode / blocked storage → false)
     try { if (on) localStorage.removeItem(STOFF); else { localStorage.setItem(STOFF, '1'); localStorage.removeItem(STQ); } } catch (e) {}
+    return statOn() === !!on;
   }
   function statPush(ev) {
     if (!statOn()) return;
@@ -1146,16 +1149,37 @@
         var col = function (rows, sel) {
           var ul = sec.querySelector(sel + ' .pop-list'), box = sec.querySelector(sel);
           var html = (rows || []).filter(function (x) { return IX[x.p] && IX[x.p][x.i]; }).slice(0, 6).map(function (x, k) {
-            var it = IX[x.p][x.i];
-            return '<li><a class="pop-it" href="' + esc(x.p) + '"><span class="pop-k">' + (k + 1) + '</span>'
-              + (it[2] ? '<img src="' + esc(it[2]) + '" alt="" loading="lazy" width="48" height="48">' : '<span class="pop-mono">' + esc(String(it[0]).slice(0, 2)) + '</span>')
-              + '<span class="pop-tx"><b>' + esc(it[0]) + '</b><span>' + esc((it[1] ? it[1] + ' · ' : '') + label(x.p)) + '</span></span>'
-              + '<span class="pop-n">' + x.n + ' 人</span></a></li>';
+            var it = IX[x.p][x.i], sub = (it[1] ? it[1] + ' · ' : '') + label(x.p);
+            return '<li><a class="pop-it" href="' + esc(x.p) + '" aria-label="第 ' + (k + 1) + ' 名：' + esc(it[0]) + '，' + esc(sub) + '，' + x.n + ' 人聽過">'
+              + '<span class="pop-k" aria-hidden="true">' + (k < 9 ? '0' : '') + (k + 1) + '</span>'
+              + (it[2] ? '<img src="' + esc(it[2]) + '" alt="" loading="lazy" width="46" height="46">' : '<span class="pop-mono" aria-hidden="true">' + esc(String(it[0]).slice(0, 2)) + '</span>')
+              + '<span class="pop-tx" aria-hidden="true"><b>' + esc(it[0]) + '</b><span>' + esc(sub) + '</span></span>'
+              + '<span class="pop-n" aria-hidden="true">' + x.n + ' <small>人</small></span></a></li>';
           }).join('');
           ul.innerHTML = html; box.hidden = !html; return !!html;
         };
         var a = col(res.week, '.pop-week'), b = col(res.all, '.pop-all');
         sec.hidden = !(a || b);
+        /* both lists → desktop shows them side by side, phones switch with 近 7 天 / 累計 tabs; one list → a single column, no tabs */
+        var both = a && b, tabs = sec.querySelector('.pop-tabs'), cols = sec.querySelector('.pop-cols');
+        cols.classList.toggle('one', !both); sec.classList.toggle('has-tabs', both); tabs.hidden = !both;
+        var pick = function (t, focus) {
+          [].forEach.call(tabs.querySelectorAll('[data-pt]'), function (bt) {
+            var on = bt.dataset.pt === t; bt.setAttribute('aria-selected', String(on)); bt.tabIndex = on ? 0 : -1; if (on && focus) bt.focus();
+          });
+          sec.querySelector('.pop-week').classList.toggle('sel', t === 'week'); sec.querySelector('.pop-all').classList.toggle('sel', t === 'all');
+        };
+        if (both && !tabs._wired) {
+          tabs._wired = true;
+          tabs.addEventListener('click', function (e) { var bt = e.target.closest('[data-pt]'); if (bt) pick(bt.dataset.pt); });
+          tabs.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End') {
+              e.preventDefault(); var cur = tabs.querySelector('[aria-selected="true"]').dataset.pt;
+              pick(e.key === 'Home' ? 'week' : e.key === 'End' ? 'all' : cur === 'week' ? 'all' : 'week', true);
+            }
+          });
+        }
+        pick(a ? 'week' : 'all');
       });
     });
   }
