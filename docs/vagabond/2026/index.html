@@ -902,6 +902,18 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
   html.dir-lock,html.dir-lock body{overflow:hidden}
 }
 @media (max-width:960px) and (max-height:560px){.dir-list button{min-height:42px;padding-top:8px;padding-bottom:8px}}
+
+/* ===== V18.3.5 compact rows (all lists, all widths): the ✓ floats in the top-right corner of the text column instead of owning a full-height column,
+   so the title wraps beside it and the artist + rank/year line gets the whole width underneath. Artist and who share one inline flow:
+   same line when they fit; otherwise the whole who (e.g. 「第 376 名 · 1998」) moves to the next line. Artist is never ellipsised (it wraps). ===== */
+[data-density="dense"] .nm{grid-template-columns:var(--cv) minmax(0,1fr);grid-template-areas:"art tx" "art act";--hdp:10px}
+[data-density="dense"] .hd{position:absolute;top:var(--hdp);right:var(--hdp);margin:0}
+[data-density="dense"] .tx{display:block;font-size:12.5px;line-height:1.4}  /* small strut: the artist / who line boxes stay as tall as their own text */
+[data-density="dense"] .tx::before{content:"";float:right;width:42px;height:36px}
+[data-density="dense"] .tx h4{display:-webkit-box;margin:0 0 3px}
+[data-density="dense"] .by{display:inline;margin:0 10px 0 0;white-space:normal;overflow:visible;text-overflow:clip;max-width:none;overflow-wrap:anywhere}
+[data-density="dense"] .who{display:inline-block;-webkit-line-clamp:none;vertical-align:bottom;max-width:100%;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:960px){[data-density="dense"] .nm{--hdp:8px}[data-density="dense"] .tx{font-size:12px}}
 </style>
 
 </head>
@@ -1128,7 +1140,15 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
   let dmode=null, dsel=-1, dopener=null, dHideT=0, dragId=null;
   const dlab=i=>idxLinks[i]?idxLinks[i].textContent.replace(/^\s*\d+/,'').trim():'';
   function setRail(i){if(!rail)return;rail.style.setProperty('--p',DN>1?i/(DN-1):0);rail.setAttribute('aria-valuenow',String(i+1));rail.setAttribute('aria-valuetext',`${i+1} / ${DN}：${dlab(i)}`)}
-  function jump(fid){const el=document.getElementById(fid);if(el&&!el.hidden){el.scrollIntoView({block:'start',behavior:'instant'});const c=el.querySelector('.cat:not([hidden])');if(c)mark(c)}}
+  /* V18.3.5: land a jump with the section header right under the sticky bars, measured live (--cht), so no card is left half-covered above it */
+  function jump(fid){const el=document.getElementById(fid);if(!el||el.hidden)return;
+    const c=el.classList.contains('cat')?el:el.querySelector('.cat:not([hidden])'), top=parseFloat(root.style.getPropertyValue('--cht'))||0;
+    const fh=el.classList.contains('field')&&el.querySelector('.fh'), h=c&&c.querySelector('.ch');
+    let y;
+    if(fh&&fh.offsetParent!==null)y=fh.getBoundingClientRect().top+window.scrollY-top-10;   /* field heading (not sticky): just under the bars */
+    else if(h)y=c.getBoundingClientRect().top+window.scrollY+parseFloat(getComputedStyle(c).paddingTop)+parseFloat(getComputedStyle(h).marginTop)-top;   /* sticky header: its natural spot = pinned spot */
+    else y=el.getBoundingClientRect().top+window.scrollY-top;
+    window.scrollTo({top:Math.max(0,Math.round(y)),behavior:'instant'});if(c)mark(c)}
   if(rail&&ov&&DN){
     rail.setAttribute('aria-valuemax',String(DN));setRail(0);
     const showRail=()=>{rail.classList.add('show');clearTimeout(dHideT);dHideT=setTimeout(()=>{if(!dmode&&document.activeElement!==rail)rail.classList.remove('show')},2200)};
