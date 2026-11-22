@@ -321,11 +321,19 @@
       + '<span class="rs-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></span>'
       + '<span class="rs-n">' + (x.done ? '已完成 · ' : '已聽 ') + x.n + ' / ' + x.t + ' ' + esc(x.u) + '<em>' + pct + '%</em></span></span>' + CHEV + '</a></li>';
   }
+  function resumeCompact(x) {
+    var pf = x.t ? Math.min(100, Math.round(x.n / x.t * 1000) / 10) : 0, slug = x.p.split('/')[1] || '';
+    return '<li><a class="rs-card" href="' + esc(x.p) + '">'
+      + '<span class="rs-art"><img src="/img/banners/' + esc(slug) + '-800.jpg" alt="" loading="lazy" width="800" height="200" onerror="this.remove()"></span>'
+      + '<span class="rs-tx"><b class="rs-t">' + esc(x.title) + '</b><span class="rs-n">已聽 <b>' + x.n + ' / ' + x.t + '</b></span>'
+      + '<span class="rs-bar" aria-hidden="true"><i style="width:' + pf + '%"></i></span></span>' + CHEV + '</a></li>';
+  }
   function renderResume(sec, opt) {
     opt = opt || {};
     var items = lists().filter(function (x) { return opt.done ? x.done : !x.done; });
     if (opt.limit) items = items.slice(0, opt.limit);
-    sec.querySelector('.rs-list').innerHTML = items.map(resumeHTML).join('');
+    var ul = sec.querySelector('.rs-list');
+    ul.innerHTML = items.map(ul.classList.contains('rs-c') ? resumeCompact : resumeHTML).join('');
     sec.hidden = !items.length && !opt.keep;
     return items.length;
   }
@@ -335,8 +343,8 @@
     var me = doc.getElementById('me'); if (!me) return;
     var q = me.querySelector('.wk-q'), sort = me.querySelector('.wk-sort'), list = me.querySelector('.wk-list'), F = 'all';
     var segs = [].slice.call(me.querySelectorAll('.seg button'));
-    var $id = function (i) { return doc.getElementById(i); }, msg = $id('meMsg');
-    function say(t, err) { msg.textContent = t; msg.classList.toggle('err', !!err); }
+    var $id = function (i) { return doc.getElementById(i); }, msg = $id('meMsg'), note = $id('meNote');
+    function say(t, err, el) { el = el || msg; el.textContent = t; el.classList.toggle('err', !!err); }
     function stats() {
       var L = lists(), W = works(), heard = L.reduce(function (s, x) { return s + x.n; }, 0);
       var any = !!(L.length || W.length);
@@ -409,16 +417,53 @@
     $id('meWipe').addEventListener('click', function () {
       if (syncInfo().on) { syncDialog('wipe'); return; }
       if (!confirm('確定清除這台裝置上的全部聆聽記錄（已聽、評分、筆記）嗎？\n清除後無法復原，建議先匯出備份。')) return;
-      wipe(); say('已清除這台裝置上的全部記錄。');
+      wipe(); say('已清除這台裝置上的全部記錄。', false, note);
     });
+    /* 資料管理 menu (V18.3.2): desktop popover anchored under the title, bottom sheet on phones; Esc / outside / × close and return focus */
+    var dmBtn = $id('dmBtn'), dmP = $id('dmPanel'), dmScrim = null;
+    function dmOpen() {
+      if (!dmP || !dmP.hidden) return;
+      if (!dmScrim) { dmScrim = doc.createElement('div'); dmScrim.className = 'dm-scrim'; dmScrim.hidden = true; doc.body.appendChild(dmScrim); dmScrim.addEventListener('click', function () { dmClose(true); }); }
+      dmP.hidden = false; dmScrim.hidden = false; dmBtn.setAttribute('aria-expanded', 'true'); doc.documentElement.classList.add('dm-on');
+      dmP.querySelector('.dm-x').focus({ preventScroll: true });
+    }
+    function dmClose(focus) {
+      if (!dmP || dmP.hidden) return;
+      popClose(false);
+      dmP.hidden = true; if (dmScrim) dmScrim.hidden = true; dmBtn.setAttribute('aria-expanded', 'false'); doc.documentElement.classList.remove('dm-on');
+      if (focus) dmBtn.focus({ preventScroll: true });
+    }
+    if (dmBtn && dmP) {
+      dmBtn.addEventListener('click', function () { if (dmP.hidden) dmOpen(); else dmClose(true); });
+      dmP.querySelector('.dm-x').addEventListener('click', function () { dmClose(true); });
+      doc.addEventListener('click', function (e) {
+        var t = e.target;   // clicks in the sync / review dialogs (modal, on top), on removed nodes, or scripted ones (export's download link) keep the menu open
+        if (dmP.hidden || !e.isTrusted || !t.isConnected || dmP.contains(t) || dmBtn.contains(t) || (t.closest && t.closest('dialog')) || t === dmScrim) return;
+        dmClose(false);
+      });
+      doc.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape' || dmP.hidden || popOpen || doc.querySelector('dialog[open]')) return;
+        e.preventDefault(); dmClose(true);
+      }, true);   // capture: runs before the (i) handler, so an open (i) bubble is closed first and the menu stays
+      dmP.addEventListener('keydown', function (e) {   // keep Tab inside the bottom sheet on phones
+        if (e.key !== 'Tab' || !matchMedia('(max-width:620px)').matches) return;
+        var f = [].filter.call(dmP.querySelectorAll('button,[href],input,label.pg-btn,select'), function (x) { return !x.disabled && x.offsetParent !== null && !(x.tagName === 'INPUT' && x.type === 'file'); });
+        if (!f.length) return;
+        if (e.shiftKey && doc.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+        else if (!e.shiftKey && doc.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+      });
+      if (location.hash === '#backup') setTimeout(dmOpen, 0);   // 「記得到我的聆聽記錄備份」 link from the review dialog
+    }
     /* 雲端同步 row */
-    var syState = $id('syState'), syAct = $id('syAct');
+    var syState = $id('syState'), syAct = $id('syAct'), dmDot = dmBtn && dmBtn.querySelector('.dm-dot'), dmSt = $id('dmSt');
     function syncRow() {
       if (!syAct) return;
       var i = syncInfo(), t = '';
       if (i.on) t = i.busy ? '同步中…' : i.err === 'offline' ? '目前離線，連線後自動同步' : i.err === 'gone' ? '雲端資料已被刪除' : i.err === 'auth' ? '同步碼無效'
         : i.err ? '暫時無法同步，稍後自動重試' : i.at ? '已同步 · ' + rel(i.at) : '準備同步…';
       syState.textContent = t; syState.className = 'sy-st' + (i.on && !i.err ? ' ok' : i.err ? ' warn' : '');
+      var bad = !!(i.on && i.err && i.err !== 'offline');   // a sync problem stays noticeable while the menu is closed
+      if (dmDot) { dmDot.hidden = !bad; dmSt.textContent = bad ? '（雲端同步：' + t + '）' : ''; dmBtn.title = bad ? '雲端同步：' + t : ''; }
       var key = i.on + '|' + (i.err === 'gone' || i.err === 'auth');
       if (syAct.dataset.k === key) return;
       syAct.dataset.k = key;

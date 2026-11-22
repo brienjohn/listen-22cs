@@ -431,6 +431,74 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 .sy-cam video{display:block;width:100%;max-width:300px;aspect-ratio:1;object-fit:cover;border-radius:14px;background:#000}
 .sy-warn .sy-row{justify-content:flex-start}
 
+/* ===== V18.3.2 /me: 資料管理 (sync + backup in one menu: popover on desktop, bottom sheet on phones) ===== */
+.me-h1{align-items:center;flex-wrap:nowrap}
+.me-h1 .pop-a{margin-top:0}
+.dm-a{position:relative;margin-left:auto;flex:none}
+.dm-btn{position:relative;display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 12px 0 14px;border:1px solid var(--line);border-radius:99px;background:var(--surface);color:var(--ink);font:inherit;font-size:13.5px;font-weight:700;white-space:nowrap;cursor:pointer;transition:border-color var(--v-ease),background-color var(--v-ease)}
+.dm-btn svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dm-ic{width:17px;height:17px}
+.dm-cv{width:15px;height:15px;color:var(--muted);transition:transform var(--v-ease)}
+.dm-btn:hover,.dm-btn[aria-expanded="true"]{border-color:var(--brand);background:var(--v-accent-wash)}
+.dm-btn[aria-expanded="true"] .dm-cv{transform:rotate(180deg)}
+.dm-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dm-dot{position:absolute;top:-2px;right:-2px;width:11px;height:11px;border-radius:50%;background:var(--v-accent-text);box-shadow:0 0 0 2px var(--bg)}
+.dm-dot[hidden]{display:none}
+.dm-panel{position:absolute;z-index:60;top:calc(100% + 10px);right:0;width:min(420px,calc(100vw - 32px));padding:8px 18px 16px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:18px;box-shadow:0 20px 55px rgba(35,27,30,.14);text-align:left}
+:root[data-theme="dark"] .dm-panel{box-shadow:0 20px 55px rgba(0,0,0,.5)}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .dm-panel{box-shadow:0 20px 55px rgba(0,0,0,.5)}}
+.dm-panel[hidden]{display:none}
+.dm-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0 2px}
+.dm-hd b{font-size:16px;font-weight:800}
+.dm-x{display:grid;place-items:center;width:40px;height:40px;margin-right:-10px;padding:0;border:0;border-radius:50%;background:none;color:var(--muted);cursor:pointer}
+.dm-x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.dm-x:hover{color:var(--ink);background:var(--surface-2)}
+.dm-sec{padding:10px 0 2px}
+.dm-sh{display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;margin:0 0 10px}
+.dm-sh b{font-size:14.5px;font-weight:800}
+.dm-si{flex:none;width:20px;height:20px;fill:none;stroke:var(--v-accent-text);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.dm-sh .sy-st{margin-left:auto}
+.dm-div{height:1px;margin:12px 0 2px;background:var(--line)}
+.dm-panel .me-imp{max-width:none;margin:12px 0 0;background:var(--bg)}
+.dm-panel .me-msg{margin:12px 0 0;font-size:13.5px;line-height:1.6}
+.dm-panel .ipop{z-index:62}
+.dm-scrim{display:none}
+.me-pmsg{margin:12px 0 0}
+@media (max-width:620px){
+  .dm-btn{min-height:40px;padding:0 10px 0 11px;font-size:13px;gap:5px}
+  .dm-ic{width:16px;height:16px}
+  .dm-panel{position:fixed;z-index:95;left:0;right:0;bottom:0;top:auto;width:auto;max-height:min(85dvh,640px);overflow-y:auto;overscroll-behavior:contain;border-radius:22px 22px 0 0;border-bottom:0;padding:10px 16px max(18px,env(safe-area-inset-bottom));box-shadow:0 -10px 50px rgba(0,0,0,.25)}
+  .dm-scrim{display:block;position:fixed;inset:0;z-index:94;background:rgba(20,16,22,.4)}
+  .dm-scrim[hidden]{display:none}
+  .dm-sh .sy-st{margin-left:0;flex-basis:100%;display:block}
+  .dm-panel .me-io{width:100%}.dm-panel .me-io .pg-btn{flex:1}
+}
+@media (max-width:374px){
+  .me-h1{gap:6px}
+  .dm-btn .dm-cv{display:none}
+  .dm-btn{padding:0 10px}
+}
+
+/* ===== V18.3.2 /me: compact 繼續聽 / 已聽完 rows — full 4:1 series banner (never cropped), title, 已聽 X / Y, thin bar, chevron ===== */
+.rs-list.rs-c{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.rs-c .rs-card{grid-template-columns:142px minmax(0,1fr) 18px;gap:12px;min-height:86px;padding:12px 13px;border-radius:15px}
+.rs-c .rs-card:hover{border-color:var(--brand)}
+.rs-art{display:block;width:100%;aspect-ratio:4/1;border-radius:6px;overflow:hidden;background:var(--surface-2);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.rs-art img{display:block;width:100%;height:100%;object-fit:contain}
+.rs-c .rs-tx{gap:0}
+.rs-c .rs-t{font-size:14px;line-height:1.35;-webkit-line-clamp:unset;display:block;overflow-wrap:anywhere}
+.rs-c .rs-n{margin:4px 0 6px;font-size:12px;font-weight:650}
+.rs-c .rs-n b{color:var(--ink);font-weight:800}
+.rs-c .rs-bar{height:4px;margin:0}
+.rs-c .rs-chev{width:18px;height:18px;justify-self:end}
+.rs-c .rs-chev svg{width:18px;height:18px}
+.rs-c .rs-card:hover .rs-chev{color:var(--v-accent-text)}
+.me-resume .rs-list.rs-c{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:860px){.rs-list.rs-c,.me-resume .rs-list.rs-c{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:620px){.rs-c .rs-card{grid-template-columns:125px minmax(0,1fr) 15px;gap:10px;min-height:75px;padding:10px;border-radius:12px}.rs-c .rs-t{font-size:13.5px}.rs-c .rs-chev,.rs-c .rs-chev svg{width:15px;height:15px}}
+@media (max-width:374px){.rs-c .rs-card{grid-template-columns:106px minmax(0,1fr) 13px;gap:8px;padding:9px}.rs-c .rs-t{font-size:13px}.rs-c .rs-n{font-size:11.5px}}
+@media (max-width:620px){.me-hero .me-card{width:auto}}
+@media (max-width:420px){.me-h1 h1{font-size:min(30px,7.3vw);white-space:nowrap}}
+
 /* home (V11) */
 :root{--lab-award:#FFD766;--lab-fest:#E8D3FF;--lab-chart:#BFEADB;--lab-ink:#24252B}
 .eyebrow{color:var(--accent);font-size:12px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin:0 0 12px}
@@ -520,7 +588,7 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 <header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><img class="ico" src="/img/baby-coral-surprised.png" alt="" width="40" height="42"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><nav class="secnav" aria-label="內容分類"><a href="/#awards">音樂獎</a><a href="/#festivals">音樂節</a><a href="/#charts">榜單</a></nav><div class="hx"><button type="button" class="xbtn" aria-expanded="false" aria-controls="xmenu">探索清單<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a class="mebtn" href="/me/" title="我的聆聽記錄"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10a1.5 1.5 0 0 1 1.5 1.5v15.5L12 16.6l-6.5 3.9V5A1.5 1.5 0 0 1 7 3.5z"/><path d="m9.2 9.6 2 2 3.6-3.8"/></svg><span>我的聆聽記錄</span></a><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></div></div><nav class="xmenu" id="xmenu" aria-label="探索清單" hidden><a href="/#awards">音樂獎<small>AWARDS</small></a><a href="/#festivals">音樂節<small>FESTIVALS</small></a><a href="/#charts">榜單<small>CHARTS &amp; LISTS</small></a><a href="/me/">我的聆聽記錄<small>MY LISTENING</small></a></nav></div></header>
 <header class="hero"><div class="in"><p class="eyebrow">404</p><h1>找不到這個頁面</h1><p class="lede"><a href="/" style="color:var(--accent)">回到聆聽清單首頁</a></p></div></header>
 <footer><div class="in"><div class="mk-site"><a href="https://www.22cs.xyz/" target="_blank" rel="noopener" aria-label="22 世紀衛星"><img src="/img/22cs-wordmark-coral.svg" alt="22 世紀衛星" width="96" height="26"></a><p>聆聽清單是 22 世紀衛星的資料專題。</p><a class="cta" href="https://www.22cs.xyz/" target="_blank" rel="noopener">回到 22 世紀衛星主站 →</a></div></div></footer>
-<script src="/js/my.js?v=2513e137"></script>
+<script src="/js/my.js?v=7d62ce1c"></script>
 <script src="/js/nav.js?v=51cebd3b" defer></script>
 <script>(function(){var r=document.documentElement,mq=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
 function eff(){return r.dataset.theme||(mq&&mq.matches?'dark':'light')}
