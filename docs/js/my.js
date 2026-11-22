@@ -2,10 +2,15 @@
    build_hub.py copies this file to docs/js/my.js; list pages, the home page and /me/ load it synchronously before their own scripts.
 
    localStorage "l22-progress" (v1):
-     lists: { "<list path>": { t: total, title, u: unit, c: [recent cover paths ≤5], at: last change ms, h: { "<item id>": ms } } }
+     lists: { "<list path>": { t: total, title, u: unit, c: [recent cover paths ≤5], at: last change ms, h: { "<item id>": ms },
+                               x: { "<item id>": ms un-ticked }, cl: ms the whole list was cleared } }
      works: { "<work key>": { r: 0–5 step .5 (0 = no rating), n: note ≤2000 chars, t: updated ms, c: created ms,
                               ti: title, ar: artist, k: kind, img: cover path, from: list path, fromT: list title } }
+     wx:    { "<work key>": ms the rating + note were deleted }
      favs:  { "<work key>": { t: favourited ms, ti, ar, k, img, from, fromT } }   (V18 收藏; optional — older backups simply have none)
+   Removals are kept as timestamps (x / cl / wx) so that merging — a backup import today, cloud sync later — can never bring back
+   something that was un-ticked or deleted after it was recorded: per item the newest event wins, a removal wins a tie.
+   All three are optional, so older backups (without them) still import and older pages simply ignore them.
    Work key = build.py wkey(): "<kind letter>:<normalised artist>|<normalised title>" so a rating follows the work across lists.
    Import merges per item by newest timestamp, so a later sync code / account can reuse the same merge. */
 (function () {
@@ -19,6 +24,7 @@
       if (d && d.v === 1 && d.lists && typeof d.lists === 'object') {
         if (!d.works || typeof d.works !== 'object') d.works = {};
         if (d.favs && typeof d.favs !== 'object') delete d.favs;
+        if (d.wx && typeof d.wx !== 'object') delete d.wx;
         return d;
       }
     } catch (e) {}
@@ -40,17 +46,20 @@
 
   /* ---------- lists (已聽) ---------- */
   function setHeard(path, id, on, info) {
-    var d = load(), L = d.lists[path] || (d.lists[path] = { h: {} });
+    var d = load(), L = d.lists[path] || (d.lists[path] = { h: {} }), now = Date.now();
     if (!L.h || typeof L.h !== 'object') L.h = {};
     L.t = info.t; L.title = info.title; if (info.u) L.u = info.u;
     L.c = (L.c || []).filter(function (u) { return u !== info.img; });
-    if (on) { L.h[id] = Date.now(); if (info.img) L.c.unshift(info.img); L.c = L.c.slice(0, 5); }
-    else delete L.h[id];
-    L.at = Date.now();
-    if (!Object.keys(L.h).length) delete d.lists[path];
+    if (on) { L.h[id] = now; if (L.x) delete L.x[id]; if (info.img) L.c.unshift(info.img); L.c = L.c.slice(0, 5); }
+    else { delete L.h[id]; (L.x || (L.x = {}))[id] = now; }
+    L.at = now;
     save(d);
   }
-  function clearList(path) { var d = load(); delete d.lists[path]; save(d); }
+  function clearList(path) {  // keep the list's entry with a clear time, so an older copy can't refill it on merge
+    var d = load(), L = d.lists[path]; if (!L) return;
+    L.h = {}; delete L.x; L.c = []; L.cl = L.at = Date.now();
+    save(d);
+  }
   function lists() {
     var d = load();
     return Object.keys(d.lists).map(function (p) {
@@ -65,8 +74,9 @@
   function saveWork(wk, data, meta) {
     var d = load(), w = d.works[wk], r = Math.round((+data.r || 0) * 2) / 2, n = String(data.n || '').trim().slice(0, 2000);
     r = Math.max(0, Math.min(5, r));
-    if (!r && !n) delete d.works[wk];
+    if (!r && !n) { delete d.works[wk]; (d.wx || (d.wx = {}))[wk] = Date.now(); }
     else {
+      if (d.wx) delete d.wx[wk];
       var o = {}, k;
       for (k in (w || {})) o[k] = w[k];
       for (k in (meta || {})) if (meta[k] != null) o[k] = meta[k];
@@ -102,38 +112,64 @@
   }
   var str = function (v, n) { return typeof v === 'string' ? v.slice(0, n) : ''; };
   var pathOk = function (v) { return typeof v === 'string' && /^\/[^\s<>"']{0,300}$/.test(v); };
+  var idOk = function (id) { return /^[\w-]{1,40}$/.test(id); };
+  var tsOf = function (v) { v = +v; return v > 0 && v < 1e14 ? v : 0; };
+  /* merge an incoming copy (backup file now, cloud copy later). Per item the newest event wins; a removal wins a tie.
+     Commutative and idempotent: merging A into B gives the same result as B into A, and merging twice changes nothing. */
   function merge(inc) {
     if (!inc || inc.v !== 1 || typeof inc.lists !== 'object') throw new Error('format');
     var d = load(), nl = 0, nw = 0, nf = 0;
     Object.keys(inc.lists || {}).forEach(function (p) {
-      var I = inc.lists[p]; if (!pathOk(p) || !I || typeof I.h !== 'object') return;
+      var I = inc.lists[p]; if (!pathOk(p) || !I || typeof I !== 'object') return;
+      var Ih = I.h && typeof I.h === 'object' ? I.h : {}, Ix = I.x && typeof I.x === 'object' ? I.x : {};
       var L = d.lists[p] || (d.lists[p] = { h: {} }), add = 0;
-      Object.keys(I.h).forEach(function (id) {
-        var ts = +I.h[id]; if (!(ts > 0) || !/^[\w-]{1,40}$/.test(id)) return;
-        if (!(id in L.h) || L.h[id] < ts) { L.h[id] = ts; add++; }
+      if (!L.h || typeof L.h !== 'object') L.h = {};
+      var Lx = L.x || {}, cl = Math.max(tsOf(L.cl), tsOf(I.cl));
+      var ids = {};
+      [L.h, Lx, Ih, Ix].forEach(function (m) { Object.keys(m).forEach(function (id) { if (idOk(id)) ids[id] = 1; }); });
+      var nh = {}, nx = {};
+      Object.keys(ids).forEach(function (id) {
+        var hT = Math.max(tsOf(L.h[id]), tsOf(Ih[id])), xT = Math.max(tsOf(Lx[id]), tsOf(Ix[id]));
+        if (hT > xT && hT > cl) { nh[id] = hT; if (!(id in L.h) || tsOf(L.h[id]) < hT) add++; }
+        else if (xT > cl) nx[id] = xT;          // a removal older than the list clear is already covered by cl
       });
+      L.h = nh;
+      if (Object.keys(nx).length) L.x = nx; else delete L.x;
+      if (cl) L.cl = cl;
       if (+I.t > 0 && !L.t) L.t = +I.t;
       if (!L.title) L.title = str(I.title, 200);
       if (!L.u) L.u = str(I.u, 12);
       if (!L.c || !L.c.length) L.c = (Array.isArray(I.c) ? I.c : []).filter(pathOk).slice(0, 5);
-      L.at = Math.max(+L.at || 0, +I.at || 0);
-      if (!Object.keys(L.h).length) delete d.lists[p]; else if (add) nl++;
+      L.at = Math.max(tsOf(L.at), tsOf(I.at));
+      if (!Object.keys(L.h).length && !L.x && !L.cl) delete d.lists[p]; else if (add) nl++;
+    });
+    var wx = d.wx || {};
+    Object.keys(inc.wx && typeof inc.wx === 'object' ? inc.wx : {}).forEach(function (k) {
+      var t = tsOf(inc.wx[k]); if (k.length > 400 || !t) return;
+      if (t > tsOf(wx[k])) wx[k] = t;
     });
     Object.keys(inc.works || {}).forEach(function (k) {
       var w = inc.works[k]; if (!w || typeof w !== 'object' || k.length > 400) return;
-      var r = Math.round((+w.r || 0) * 2) / 2, n = str(w.n, 2000), t = +w.t || 0;
+      var r = Math.round((+w.r || 0) * 2) / 2, n = str(w.n, 2000), t = tsOf(w.t);
       if (!(r >= 0 && r <= 5)) r = 0;
       if (!r && !n) return;
       var cur = d.works[k];
-      if (cur && (+cur.t || 0) >= t) return;
-      d.works[k] = { r: r, n: n, t: t || Date.now(), c: +w.c || t || Date.now(), ti: str(w.ti, 300), ar: str(w.ar, 300), k: str(w.k, 12),
+      if (cur && tsOf(cur.t) >= t) return;
+      if (t && t <= tsOf(wx[k])) return;        // deleted after this version was written
+      d.works[k] = { r: r, n: n, t: t || Date.now(), c: tsOf(w.c) || t || Date.now(), ti: str(w.ti, 300), ar: str(w.ar, 300), k: str(w.k, 12),
         img: pathOk(w.img) ? w.img : '', from: pathOk(w.from) ? w.from : '', fromT: str(w.fromT, 200) };
       nw++;
     });
+    Object.keys(wx).forEach(function (k) {     // settle each work: newer rating/note wins over an older deletion and vice versa
+      var cur = d.works[k];
+      if (cur && tsOf(cur.t) > wx[k]) delete wx[k];
+      else if (cur) { delete d.works[k]; nw++; }
+    });
+    if (Object.keys(wx).length) d.wx = wx; else delete d.wx;
     Object.keys(inc.favs && typeof inc.favs === 'object' ? inc.favs : {}).forEach(function (k) {
-      var f = inc.favs[k], t = f && +f.t; if (!f || typeof f !== 'object' || k.length > 400 || !(t > 0)) return;
+      var f = inc.favs[k], t = f && tsOf(f.t); if (!f || typeof f !== 'object' || k.length > 400 || !t) return;
       if (!d.favs) d.favs = {};
-      var cur = d.favs[k]; if (cur && (+cur.t || 0) >= t) return;
+      var cur = d.favs[k]; if (cur && tsOf(cur.t) >= t) return;
       d.favs[k] = { t: t, ti: str(f.ti, 300), ar: str(f.ar, 300), k: str(f.k, 12), img: pathOk(f.img) ? f.img : '', from: pathOk(f.from) ? f.from : '', fromT: str(f.fromT, 200) };
       nf++;
     });
