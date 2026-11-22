@@ -671,7 +671,8 @@ main{min-width:0;padding-bottom:24px}
 /* condensed rows */
 [data-density="dense"] .field{padding-top:32px}
 [data-density="dense"] .cat{padding:16px 0 18px}
-[data-density="dense"] .ch{margin-bottom:0}
+[data-density="dense"] .ch{margin-bottom:9px}  /* V18.3.3: was 0 — the sticky header covered the red winner ring / 隨機聽 ring of the first row */
+@media (max-width:960px){[data-density="dense"] .ch{margin-bottom:11px}}
 [data-density="dense"] .ch h3{font-size:18px}
 [data-density="dense"] .grid{grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:8px}
 
