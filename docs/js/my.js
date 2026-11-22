@@ -40,7 +40,7 @@
   function save(d) {
     try { localStorage.setItem(KEY, JSON.stringify(d)); }
     catch (e) { alert('這台裝置的瀏覽器無法儲存記錄（可能是無痕模式或儲存空間已滿）。'); return false; }
-    persist(); emit(); return true;
+    persist(); emit(); if (!applying) scheduleSync(); return true;
   }
   window.addEventListener('storage', function (e) { if (e.key === KEY || e.key === null) emit(); });
 
@@ -139,7 +139,8 @@
       if (+I.t > 0 && !L.t) L.t = +I.t;
       if (!L.title) L.title = str(I.title, 200);
       if (!L.u) L.u = str(I.u, 12);
-      if (!L.c || !L.c.length) L.c = (Array.isArray(I.c) ? I.c : []).filter(pathOk).slice(0, 5);
+      var Ic = (Array.isArray(I.c) ? I.c : []).filter(pathOk).slice(0, 5);
+      if (!L.c || !L.c.length || (tsOf(I.at) > tsOf(L.at) && Ic.length)) L.c = Ic;
       L.at = Math.max(tsOf(L.at), tsOf(I.at));
       if (!Object.keys(L.h).length && !L.x && !L.cl) delete d.lists[p]; else if (add) nl++;
     });
@@ -366,7 +367,7 @@
       }).join('');
       var none = me.querySelector('.wk-none'), filtered = !!(v || F !== 'all');
       none.hidden = !!W.length;
-      none.querySelector('.wk-nt').textContent = all.length && filtered ? '沒有符合條件的記錄。' : '還沒有評分或筆記。在任何清單裡點作品旁的 ⋯ 就能開始。';
+      none.querySelector('.wk-nt').textContent = all.length && filtered ? '沒有符合條件的記錄。' : '還沒有評分或筆記。在任何清單裡點作品旁的筆記圖示就能開始。';
       none.querySelector('.wk-clear').hidden = !(all.length && filtered);
     }
     function all() {
@@ -406,9 +407,45 @@
     });
     $id('meImpNo').addEventListener('click', function () { pending = null; imp.hidden = true; say('已取消匯入，現有記錄沒有任何變動。'); });
     $id('meWipe').addEventListener('click', function () {
+      if (syncInfo().on) { syncDialog('wipe'); return; }
       if (!confirm('確定清除這台裝置上的全部聆聽記錄（已聽、評分、筆記）嗎？\n清除後無法復原，建議先匯出備份。')) return;
       wipe(); say('已清除這台裝置上的全部記錄。');
     });
+    /* 雲端同步 row */
+    var syState = $id('syState'), syAct = $id('syAct');
+    function syncRow() {
+      if (!syAct) return;
+      var i = syncInfo(), t = '';
+      if (i.on) t = i.busy ? '同步中…' : i.err === 'offline' ? '目前離線，連線後自動同步' : i.err === 'gone' ? '雲端資料已被刪除' : i.err === 'auth' ? '同步碼無效'
+        : i.err ? '暫時無法同步，稍後自動重試' : i.at ? '已同步 · ' + rel(i.at) : '準備同步…';
+      syState.textContent = t; syState.className = 'sy-st' + (i.on && !i.err ? ' ok' : i.err ? ' warn' : '');
+      var key = i.on + '|' + (i.err === 'gone' || i.err === 'auth');
+      if (syAct.dataset.k === key) return;
+      syAct.dataset.k = key;
+      syAct.innerHTML = !i.on ? '<button type="button" class="pg-btn pri" data-sy="enable">開啟雲端同步</button><button type="button" class="pg-btn" data-sy="join">輸入同步碼</button>'
+        : (i.err === 'gone' || i.err === 'auth') ? '<button type="button" class="pg-btn" data-sy="leave">停止這台裝置同步</button>'
+        : '<button type="button" class="pg-btn" data-sy="now">立即同步</button><button type="button" class="pg-btn" data-sy="show">同步碼與 QR code</button>';
+    }
+    if (syAct) {
+      syAct.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-sy]'); if (!b) return;
+        var a = b.dataset.sy;
+        if (a === 'now') syncNow();
+        else if (a === 'show') syncDialog('show');
+        else if (a === 'join') syncDialog('join');
+        else if (a === 'leave') { syncLeave(); say('已停止這台裝置的雲端同步，本機記錄保留。'); }
+        else if (a === 'enable') {
+          b.disabled = true; b.textContent = '開啟中…';
+          syncEnable().then(function () { syncDialog('show', true); }).catch(function (err) {
+            say(err && err.message === 'rate' ? '今天開啟同步的次數太多，請明天再試。' : '無法連上同步服務，請稍後再試。現有記錄沒有任何變動。', true);
+          }).then(function () { b.disabled = false; b.textContent = '開啟雲端同步'; syAct.dataset.k = ''; syncRow(); });
+        }
+      });
+      subs.push(syncRow); syncRow(); setInterval(syncRow, 30000);
+      /* QR / link: /me/#sync=CODE — read once, then wiped from the address bar and history */
+      var hm = location.hash.match(/^#sync=([0-9A-Za-z\-]{16,24})$/);
+      if (hm) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} syncDialog('join', false, hm[1]); }
+    }
     subs.push(all); all();
   }
 
@@ -437,12 +474,258 @@
   });
   doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && popOpen) { popClose(true); } });
 
+  /* ---------- cloud sync (encrypted sync code) ----------
+     A random 16-character code (Crockford base32, 80 bits) is the only secret. HKDF(code) gives
+       id   (128 bit) — finds the vault on the server
+       auth (256 bit) — read/write token; the server keeps only its SHA-256
+       key  (AES-256-GCM) — encrypts the records in this browser; never sent anywhere
+     The code lives in localStorage "l22-sync" next to the records it protects. Sync = GET → decrypt → merge → PUT when this
+     device has something the cloud copy lacks; a 409 (another device wrote first) just repeats the round. */
+  var SYNC = 'l22-sync', applying = false, syncTimer = 0, syncRun = null, syncAgain = false, syncBusy = false, lastVis = 0, keyCache = {};
+  var API = (function () {
+    var dflt = 'https://listen-sync.brienjohn.workers.dev';
+    try { if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return localStorage.getItem('l22-sync-api') || dflt; } catch (e) {}
+    return dflt;
+  })();
+  var ALPH = '0123456789ABCDEFGHJKMNPQRSTVWXYZ', TE = new TextEncoder();
+  function sst() { try { return JSON.parse(localStorage.getItem(SYNC) || 'null') || {}; } catch (e) { return {}; } }
+  function setSst(o) {
+    var s = sst(), k; for (k in o) s[k] = o[k];
+    try { if (s.code) localStorage.setItem(SYNC, JSON.stringify(s)); else localStorage.removeItem(SYNC); } catch (e) {}
+    emit();
+  }
+  function newCode() { var b = crypto.getRandomValues(new Uint8Array(16)), c = ''; for (var i = 0; i < 16; i++) c += ALPH[b[i] & 31]; return c; }
+  function normCode(v) {
+    v = String(v || '').toUpperCase().replace(/[\s\-_.]/g, '').replace(/O/g, '0').replace(/[IL]/g, '1');
+    return /^[0-9A-HJKMNP-TV-Z]{16}$/.test(v) ? v : '';
+  }
+  function fmtCode(c) { return (c || '').match(/.{1,4}/g).join('-'); }
+  var hex = function (buf) { return Array.prototype.map.call(new Uint8Array(buf), function (x) { return ('0' + x.toString(16)).slice(-2); }).join(''); };
+  function syncKeys(code) {
+    if (keyCache[code]) return keyCache[code];
+    var salt = TE.encode('listen.22cs.xyz/sync/v1');
+    keyCache[code] = crypto.subtle.importKey('raw', TE.encode(code), 'HKDF', false, ['deriveBits', 'deriveKey']).then(function (base) {
+      var p = function (info) { return { name: 'HKDF', hash: 'SHA-256', salt: salt, info: TE.encode(info) }; };
+      return Promise.all([crypto.subtle.deriveBits(p('id'), base, 128), crypto.subtle.deriveBits(p('auth'), base, 256),
+        crypto.subtle.deriveKey(p('enc'), base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt'])])
+        .then(function (r) { return { id: hex(r[0]), auth: hex(r[1]), key: r[2] }; });
+    });
+    return keyCache[code];
+  }
+  var b64 = function (u8) { var s = ''; for (var i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); };
+  var unb64 = function (s) { var b = atob(s), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; };
+  function pipe(u8, Stream) { return new Response(new Blob([u8]).stream().pipeThrough(new Stream('gzip'))).arrayBuffer().then(function (b) { return new Uint8Array(b); }); }
+  function seal(obj, key) {  // → base64 of [1, gzip?, iv(12), ciphertext]
+    var raw = TE.encode(JSON.stringify(obj)), gz = typeof CompressionStream === 'function';
+    return (gz ? pipe(raw, CompressionStream) : Promise.resolve(raw)).then(function (body) {
+      var iv = crypto.getRandomValues(new Uint8Array(12));
+      return crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, body).then(function (ct) {
+        var out = new Uint8Array(14 + ct.byteLength); out[0] = 1; out[1] = gz ? 1 : 0; out.set(iv, 2); out.set(new Uint8Array(ct), 14);
+        return b64(out);
+      });
+    });
+  }
+  function unseal(s, key) {
+    var u = unb64(s); if (u[0] !== 1) return Promise.reject(new Error('version'));
+    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: u.subarray(2, 14) }, key, u.subarray(14)).then(function (pt) {
+      pt = new Uint8Array(pt);
+      if (!u[1]) return pt;
+      if (typeof DecompressionStream !== 'function') throw new Error('gzip');
+      return pipe(pt, DecompressionStream);
+    }).then(function (b) { return JSON.parse(new TextDecoder().decode(b)); });
+  }
+  function payload() { var d = load(); return { v: 1, lists: d.lists, works: d.works, wx: d.wx || {}, favs: d.favs || {} }; }
+  function stable(v) {
+    if (Array.isArray(v)) return '[' + v.map(stable).join(',') + ']';
+    if (v && typeof v === 'object') return '{' + Object.keys(v).sort().map(function (k) { return JSON.stringify(k) + ':' + stable(v[k]); }).join(',') + '}';
+    return JSON.stringify(v);
+  }
+  function api(method, id, auth, body) {
+    return fetch(API + '/v1/vault' + (id ? '/' + id : ''), { method: method, cache: 'no-store', credentials: 'omit',
+      headers: Object.assign(auth ? { Authorization: 'Bearer ' + auth } : {}, body ? { 'Content-Type': 'application/json' } : {}),
+      body: body ? JSON.stringify(body) : undefined });
+  }
+  function scheduleSync(ms) {
+    if (!sst().code) return;
+    clearTimeout(syncTimer); syncTimer = setTimeout(syncNow, ms == null ? 3000 : ms);
+  }
+  function syncNow() {
+    if (!sst().code) return Promise.resolve(false);
+    if (syncRun) { syncAgain = true; return syncRun; }
+    clearTimeout(syncTimer);
+    var go = function () { return syncOnce(); };
+    syncBusy = true; emit();
+    syncRun = (navigator.locks && navigator.locks.request ? navigator.locks.request('l22-sync', go) : go())
+      .catch(function () { setSst({ err: navigator.onLine === false ? 'offline' : 'net' }); scheduleSync(60000); return false; })
+      .then(function (r) { syncRun = null; syncBusy = false; emit(); if (syncAgain) { syncAgain = false; scheduleSync(500); } return r; });
+    return syncRun;
+  }
+  function syncOnce() {
+    var s = sst(); if (!s.code) return Promise.resolve(false);
+    if (navigator.onLine === false) { setSst({ err: 'offline' }); return Promise.resolve(false); }
+    return syncKeys(s.code).then(function (k) {
+      var round = function (n) {
+        return api('GET', k.id, k.auth).then(function (r) {
+          if (r.status === 404) { setSst({ err: 'gone' }); return false; }
+          if (r.status === 403) { setSst({ err: 'auth' }); return false; }
+          if (!r.ok) throw new Error('http ' + r.status);
+          return r.json().then(function (j) {
+            return unseal(j.blob, k.key).then(function (remote) {
+              applying = true; try { merge(remote); } finally { applying = false; }
+              var local = payload();
+              if (stable(local) === stable({ v: 1, lists: remote.lists || {}, works: remote.works || {}, wx: remote.wx || {}, favs: remote.favs || {} })) {
+                setSst({ rev: j.rev, at: Date.now(), err: '' }); return true;
+              }
+              return seal(local, k.key).then(function (blob) { return api('PUT', k.id, k.auth, { rev: j.rev, blob: blob }); }).then(function (p) {
+                if (p.status === 409 && n < 4) return round(n + 1);
+                if (!p.ok) throw new Error('http ' + p.status);
+                return p.json().then(function (q) { setSst({ rev: q.rev, at: Date.now(), err: '' }); return true; });
+              });
+            });
+          });
+        });
+      };
+      return round(0);
+    });
+  }
+  /* turn sync on for this device's records: new code + encrypted first copy */
+  function syncEnable() {
+    var code = newCode();
+    return syncKeys(code).then(function (k) {
+      return seal(payload(), k.key).then(function (blob) { return api('POST', null, null, { id: k.id, auth: k.auth, blob: blob }); }).then(function (r) {
+        if (r.status === 409) return syncEnable();              // astronomically unlikely id collision
+        if (r.status === 429) throw new Error('rate');
+        if (!r.ok) throw new Error('http ' + r.status);
+        setSst({ code: code, rev: 1, at: Date.now(), err: '' });
+        return code;
+      });
+    });
+  }
+  /* look at the cloud copy for a code (nothing is merged yet) */
+  function syncPeek(code) {
+    code = normCode(code); if (!code) return Promise.reject(new Error('format'));
+    return syncKeys(code).then(function (k) {
+      return api('GET', k.id, k.auth).then(function (r) {
+        if (r.status === 404 || r.status === 403) throw new Error('notfound');
+        if (!r.ok) throw new Error('http ' + r.status);
+        return r.json().then(function (j) { return unseal(j.blob, k.key); }).then(function (rem) {
+          var nl = 0, nh = 0, nw = 0;
+          Object.keys(rem.lists || {}).forEach(function (p) { var c = Object.keys((rem.lists[p] || {}).h || {}).length; if (c) { nl++; nh += c; } });
+          Object.keys(rem.works || {}).forEach(function () { nw++; });
+          return { code: code, lists: nl, heard: nh, works: nw };
+        });
+      });
+    });
+  }
+  function syncJoin(code) { code = normCode(code); if (!code) return Promise.reject(new Error('format')); setSst({ code: code, rev: 0, at: 0, err: '' }); return syncNow(); }
+  function syncLeave() { clearTimeout(syncTimer); try { localStorage.removeItem(SYNC); } catch (e) {} emit(); }
+  function syncDelete() {
+    var s = sst(); if (!s.code) return Promise.resolve();
+    return syncKeys(s.code).then(function (k) { return api('DELETE', k.id, k.auth); }).then(function (r) {
+      if (!r.ok && r.status !== 404) throw new Error('http ' + r.status);
+      syncLeave();
+    });
+  }
+  function syncInfo() { var s = sst(); return { on: !!s.code, code: s.code ? fmtCode(s.code) : '', at: s.at || 0, err: s.err || '', busy: syncBusy }; }
+  function syncBoot() {
+    if (!sst().code) return;
+    syncNow();
+    doc.addEventListener('visibilitychange', function () { if (doc.visibilityState === 'visible' && Date.now() - lastVis > 20000) { lastVis = Date.now(); syncNow(); } });
+    window.addEventListener('online', function () { syncNow(); });
+    window.addEventListener('pagehide', function () { if (syncTimer) { clearTimeout(syncTimer); syncNow(); } });
+  }
+
+  /* ---------- 同步 dialog: show code + QR / enter code / wipe choice (same frame as the review dialog) ---------- */
+  var sdlg = null, qrLoad = null;
+  function loadQR() {
+    if (window.qrcode) return Promise.resolve(window.qrcode);
+    return qrLoad || (qrLoad = new Promise(function (ok, bad) { var sc = doc.createElement('script'); sc.src = '/js/qr.js'; sc.onload = function () { ok(window.qrcode); }; sc.onerror = bad; doc.head.appendChild(sc); }));
+  }
+  function syncDialog(mode, fresh, preset) {
+    if (!sdlg) {
+      sdlg = doc.createElement('dialog'); sdlg.className = 'rvdlg sydlg'; sdlg.setAttribute('aria-labelledby', 'syT');
+      doc.body.appendChild(sdlg);
+      sdlg.addEventListener('click', function (e) { if (e.target === sdlg) sdlg.close(); });
+    }
+    var i = syncInfo(), h = '<div class="rv-in"><div class="sy-hd"><h2 id="syT"></h2><button type="button" class="rv-x" data-x aria-label="關閉">×</button></div>';
+    if (mode === 'show') {
+      var link = location.origin + '/me/#sync=' + i.code.replace(/-/g, '');
+      h += '<p class="sy-code" aria-label="同步碼">' + esc(i.code) + '</p>'
+        + '<div class="sy-row"><button type="button" class="pg-btn" data-copy>複製同步碼</button></div>'
+        + '<div class="sy-qr" aria-hidden="true"></div>'
+        + '<p class="sy-p">在另一台裝置打開「我的聆聽記錄」→「輸入同步碼」，或用手機相機掃描這個 QR code。</p>'
+        + '<p class="sy-warn"><b>請另外存好這組碼。</b>它就是鑰匙：拿到的人能讀到你的記錄；弄丟了沒有辦法找回。</p>'
+        + '<div class="rv-act"><button type="button" class="lnk-btn" data-del>刪除雲端資料</button><span class="rv-sp"></span><button type="button" class="pg-btn pri" data-x>完成</button></div>';
+      sdlg.innerHTML = h + '</div>';
+      sdlg.querySelector('#syT').textContent = fresh ? '雲端同步已開啟' : '同步碼';
+      loadQR().then(function (q) {
+        var qr = q(0, 'M'); qr.addData(link); qr.make();
+        sdlg.querySelector('.sy-qr').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
+      }).catch(function () {});
+      sdlg.querySelector('[data-copy]').addEventListener('click', function (e) {
+        var b = e.currentTarget;
+        (navigator.clipboard ? navigator.clipboard.writeText(i.code) : Promise.reject()).then(function () { b.textContent = '已複製'; }, function () { b.textContent = '請手動選取複製'; });
+      });
+      sdlg.querySelector('[data-del]').addEventListener('click', function () {
+        if (!confirm('確定刪除雲端上的這份同步資料嗎？\n所有使用這組同步碼的裝置都會停止同步，各裝置上的本機記錄會保留。')) return;
+        syncDelete().then(function () { sdlg.close(); }, function () { alert('目前無法連上同步服務，請稍後再試。'); });
+      });
+    } else if (mode === 'join') {
+      h += '<label class="rv-lab" for="syIn">輸入同步碼</label><input id="syIn" class="sy-in" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="XXXX-XXXX-XXXX-XXXX">'
+        + '<p class="sy-p sy-msg" role="status"></p>'
+        + '<div class="rv-act"><span class="rv-sp"></span><button type="button" class="pg-btn" data-x>取消</button><button type="button" class="pg-btn pri" data-go>下一步</button></div>';
+      sdlg.innerHTML = h + '</div>';
+      sdlg.querySelector('#syT').textContent = '在這台裝置開啟同步';
+      var inp = sdlg.querySelector('#syIn'), msg = sdlg.querySelector('.sy-msg'), go = sdlg.querySelector('[data-go]'), peeked = null;
+      if (preset) inp.value = fmtCode(normCode(preset) || String(preset).toUpperCase());
+      var next = function () {
+        if (peeked) {
+          go.disabled = true; msg.textContent = '合併中…';
+          syncJoin(peeked.code).then(function (ok) { if (ok) sdlg.close(); else { msg.textContent = '同步失敗，請稍後再試。'; go.disabled = false; } });
+          return;
+        }
+        var c = normCode(inp.value);
+        if (!c) { msg.textContent = '同步碼是 16 個英數字，請再確認一次。'; return; }
+        go.disabled = true; msg.textContent = '尋找中…';
+        syncPeek(c).then(function (r) {
+          peeked = r; go.disabled = false; go.textContent = '合併並開啟同步'; inp.disabled = true;
+          var L = lists().length, W = works().length;
+          msg.textContent = '雲端有 ' + r.lists + ' 份清單的 ' + r.heard + ' 筆已聽、' + r.works + ' 則評分與筆記；這台裝置有 ' + L + ' 份清單、' + W + ' 則評分與筆記。'
+            + '合併後兩邊會一致：沒有的會加入，同一筆以較新的為準，不會刪除任何一邊的記錄。';
+        }, function (e) {
+          go.disabled = false;
+          msg.textContent = e && e.message === 'notfound' ? '找不到這組同步碼的雲端資料（可能輸入錯誤，或已被刪除）。' : '無法連上同步服務，請稍後再試。';
+        });
+      };
+      go.addEventListener('click', next);
+      inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); next(); } });
+    } else if (mode === 'wipe') {
+      h += '<p class="sy-p">這台裝置開啟了雲端同步。要怎麼清除？兩種都無法復原，建議先匯出備份。</p>'
+        + '<div class="sy-col"><button type="button" class="pg-btn" data-w="local">只清除這台裝置（並停止這台的同步）</button>'
+        + '<button type="button" class="pg-btn danger" data-w="all">清除這台裝置，並刪除雲端資料</button>'
+        + '<button type="button" class="pg-btn" data-x>取消</button></div>';
+      sdlg.innerHTML = h + '</div>';
+      sdlg.querySelector('#syT').textContent = '清除記錄';
+      sdlg.querySelectorAll('[data-w]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var all = b.dataset.w === 'all';
+          (all ? syncDelete() : Promise.resolve(syncLeave())).then(function () { wipe(); sdlg.close(); }, function () { alert('目前無法連上同步服務，雲端資料沒有刪除；請稍後再試。'); });
+        });
+      });
+    }
+    sdlg.querySelectorAll('[data-x]').forEach(function (b) { b.addEventListener('click', function () { sdlg.close(); }); });
+    if (!sdlg.open) sdlg.showModal();
+    var f = sdlg.querySelector('#syIn:not([disabled])') || sdlg.querySelector('[data-copy]') || sdlg.querySelector('[data-w]'); if (f) f.focus();
+  }
+
   window.L22S = { load: load, setHeard: setHeard, clearList: clearList, lists: lists, work: work, saveWork: saveWork, works: works, isFav: isFav, setFav: setFav, favs: favs,
     exportFile: exportFile, readFile: readFile, importFile: importFile, merge: merge, wipe: wipe, available: available, openReview: openReview,
-    renderResume: renderResume, starsHTML: starsHTML, fmtR: fmtR, rel: rel, esc: esc, onChange: function (f) { subs.push(f); } };
+    renderResume: renderResume, starsHTML: starsHTML, fmtR: fmtR, rel: rel, esc: esc, onChange: function (f) { subs.push(f); },
+    sync: { info: syncInfo, now: syncNow, enable: syncEnable, peek: syncPeek, join: syncJoin, leave: syncLeave, del: syncDelete, norm: normCode, fmt: fmtCode } };
 
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', init); else init();
   function init() {
+    syncBoot();
     renderMe();
     var hr = doc.getElementById('homeResume');
     if (hr) { var go = function () { renderResume(hr, { limit: 3 }); }; subs.push(go); go(); }

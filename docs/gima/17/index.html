@@ -46,6 +46,7 @@ a{color:inherit}
 button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+[hidden]{display:none!important}
 
 /* the one layout container: 1200px content box, 24px gutters (16px on phones) */
 .in{width:100%;max-width:calc(var(--maxw) + var(--padL) + var(--padR));margin:0 auto;padding-left:var(--padL);padding-right:var(--padR)}
@@ -414,6 +415,27 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 .sortpill select:hover{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 8%,var(--surface))}
 .sortpill select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media (max-width:620px){.sortpill select{height:44px;font-size:16px}}
+
+/* ===== cloud sync (/me): status line + dialog (same frame as .rvdlg) ===== */
+.sy-st{margin-left:8px;font-size:12.5px;font-weight:650;color:var(--muted)}
+.sy-st.ok{color:var(--v-heard-text)}
+.sy-st.warn{color:var(--v-accent-text)}
+.sy-hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sy-hd h2{margin:0;font-size:18px;font-weight:800}
+.sy-code{margin:0;padding:14px 12px;border-radius:12px;background:var(--surface-2);font:800 clamp(20px,6vw,26px)/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.06em;text-align:center;color:var(--ink);user-select:all;-webkit-user-select:all;overflow-wrap:anywhere}
+.sy-row{display:flex;justify-content:center}
+.sy-qr{display:grid;place-items:center}
+.sy-qr svg{width:200px;height:200px;padding:6px;border-radius:12px;background:#fff}
+.sy-qr:empty{display:none}
+.sy-p{margin:0;font-size:13.5px;line-height:1.65;color:var(--muted)}
+.sy-msg:empty{display:none}
+.sy-warn{margin:0;padding:12px 14px;border-radius:12px;background:var(--v-accent-wash);color:var(--ink);font-size:13.5px;line-height:1.65}
+.sy-warn b{color:var(--v-accent-text)}
+.sy-in{display:block;width:100%;height:48px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:700 18px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase}
+.sy-in:focus{outline:2px solid var(--brand);outline-offset:0;border-color:var(--brand)}
+.sy-in:disabled{opacity:.7}
+.sy-col{display:grid;gap:8px}
+@media (max-width:620px){.sy-st{display:block;margin:4px 0 0}}
 
 :root{--gold:#D4A017;--pop:0 12px 40px rgba(20,20,28,.16);--side:236px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gold:#E0B43B;--pop:0 12px 40px rgba(0,0,0,.55)}}

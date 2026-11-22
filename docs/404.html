@@ -37,6 +37,7 @@ a{color:inherit}
 button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+[hidden]{display:none!important}
 
 /* the one layout container: 1200px content box, 24px gutters (16px on phones) */
 .in{width:100%;max-width:calc(var(--maxw) + var(--padL) + var(--padR));margin:0 auto;padding-left:var(--padL);padding-right:var(--padR)}
@@ -406,6 +407,27 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 .sortpill select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media (max-width:620px){.sortpill select{height:44px;font-size:16px}}
 
+/* ===== cloud sync (/me): status line + dialog (same frame as .rvdlg) ===== */
+.sy-st{margin-left:8px;font-size:12.5px;font-weight:650;color:var(--muted)}
+.sy-st.ok{color:var(--v-heard-text)}
+.sy-st.warn{color:var(--v-accent-text)}
+.sy-hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sy-hd h2{margin:0;font-size:18px;font-weight:800}
+.sy-code{margin:0;padding:14px 12px;border-radius:12px;background:var(--surface-2);font:800 clamp(20px,6vw,26px)/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.06em;text-align:center;color:var(--ink);user-select:all;-webkit-user-select:all;overflow-wrap:anywhere}
+.sy-row{display:flex;justify-content:center}
+.sy-qr{display:grid;place-items:center}
+.sy-qr svg{width:200px;height:200px;padding:6px;border-radius:12px;background:#fff}
+.sy-qr:empty{display:none}
+.sy-p{margin:0;font-size:13.5px;line-height:1.65;color:var(--muted)}
+.sy-msg:empty{display:none}
+.sy-warn{margin:0;padding:12px 14px;border-radius:12px;background:var(--v-accent-wash);color:var(--ink);font-size:13.5px;line-height:1.65}
+.sy-warn b{color:var(--v-accent-text)}
+.sy-in{display:block;width:100%;height:48px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:700 18px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase}
+.sy-in:focus{outline:2px solid var(--brand);outline-offset:0;border-color:var(--brand)}
+.sy-in:disabled{opacity:.7}
+.sy-col{display:grid;gap:8px}
+@media (max-width:620px){.sy-st{display:block;margin:4px 0 0}}
+
 /* home (V11) */
 :root{--lab-award:#FFD766;--lab-fest:#E8D3FF;--lab-chart:#BFEADB;--lab-ink:#24252B}
 .eyebrow{color:var(--accent);font-size:12px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin:0 0 12px}
@@ -495,7 +517,7 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 <header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><img class="ico" src="/img/baby-coral-surprised.png" alt="" width="40" height="42"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><nav class="secnav" aria-label="內容分類"><a href="/#awards">音樂獎</a><a href="/#festivals">音樂節</a><a href="/#charts">榜單</a></nav><div class="hx"><button type="button" class="xbtn" aria-expanded="false" aria-controls="xmenu">探索清單<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a class="mebtn" href="/me/" title="我的聆聽記錄"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10a1.5 1.5 0 0 1 1.5 1.5v15.5L12 16.6l-6.5 3.9V5A1.5 1.5 0 0 1 7 3.5z"/><path d="m9.2 9.6 2 2 3.6-3.8"/></svg><span>我的聆聽記錄</span></a><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></div></div><nav class="xmenu" id="xmenu" aria-label="探索清單" hidden><a href="/#awards">音樂獎<small>AWARDS</small></a><a href="/#festivals">音樂節<small>FESTIVALS</small></a><a href="/#charts">榜單<small>CHARTS &amp; LISTS</small></a><a href="/me/">我的聆聽記錄<small>MY LISTENING</small></a></nav></div></header>
 <header class="hero"><div class="in"><p class="eyebrow">404</p><h1>找不到這個頁面</h1><p class="lede"><a href="/" style="color:var(--accent)">回到聆聽清單首頁</a></p></div></header>
 <footer><div class="in"><div class="mk-site"><a href="https://www.22cs.xyz/" target="_blank" rel="noopener" aria-label="22 世紀衛星"><img src="/img/22cs-wordmark-coral.svg" alt="22 世紀衛星" width="96" height="26"></a><p>聆聽清單是 22 世紀衛星的資料專題。</p><a class="cta" href="https://www.22cs.xyz/" target="_blank" rel="noopener">回到 22 世紀衛星主站 →</a></div></div></footer>
-<script src="/js/my.js?v=3de44894"></script>
+<script src="/js/my.js?v=9cb6f3e6"></script>
 <script src="/js/nav.js?v=d8743580" defer></script>
 <script>(function(){var r=document.documentElement,mq=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
 function eff(){return r.dataset.theme||(mq&&mq.matches?'dark':'light')}
