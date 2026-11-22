@@ -294,7 +294,6 @@
   }
 
   /* ---------- /me/ page (V18: stats + backup in one card, records search right after it, 清除 kept apart) ---------- */
-  var NOTE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8.5L19 8v12.5H6z"/><path d="M14 3.5V8.5h5M9 12.5h6.5M9 16h4.5"/></svg>';
   function renderMe() {
     var me = doc.getElementById('me'); if (!me) return;
     var q = me.querySelector('.wk-q'), sort = me.querySelector('.wk-sort'), list = me.querySelector('.wk-list'), F = 'all';
@@ -321,7 +320,7 @@
       W.sort(function (a, b) { return s === 'hi' ? (b.r - a.r) || (b.t - a.t) : s === 'lo' ? ((a.r || 9) - (b.r || 9)) || (b.t - a.t) : b.t - a.t; });
       list.innerHTML = W.map(function (w) {
         var art = w.img ? '<img src="' + esc(w.img) + '" alt="" loading="lazy" width="64" height="64">' : '<span class="wk-mono">' + esc(String(w.ti || '').trim().slice(0, 2)) + '</span>';
-        var st = (w.r ? '<span class="wk-r">' + starsHTML(w.r) + '</span>' : '') + (w.n ? '<span class="wk-nb">' + NOTE + '筆記</span>' : '');
+        var st = w.r ? '<span class="wk-r">' + starsHTML(w.r) + '</span>' : '';  // the note itself is shown in full below; no separate 筆記 badge
         return '<li class="wk" data-w="' + esc(w.wk) + '"><span class="wk-art">' + art + '</span><div class="wk-tx">'
           + '<div class="wk-hd"><h3>' + esc(w.ti) + '</h3><button type="button" class="pg-btn wk-ed" aria-label="編輯「' + esc(w.ti) + '」的評分與筆記">編輯</button></div>'
           + (w.ar ? '<p class="wk-by">' + esc(w.ar) + '</p>' : '')

@@ -292,8 +292,6 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 .resume .sh{justify-content:space-between}
 .resume .sh h2{display:inline-flex;align-items:center;gap:8px}
 .resume .sh h2 svg{width:22px;height:22px;fill:none;stroke:var(--brand);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.resume .more{font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;white-space:nowrap;transition:color var(--v-ease)}
-.resume .more:hover{color:var(--v-accent-text)}
 @media (max-width:1099px){.rs-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:620px){.rs-list{grid-template-columns:minmax(0,1fr)}}
 
@@ -383,8 +381,6 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 .h1row .pop-a{margin-top:.45em}
 
 /* ===== V18.2 /me/: notice line + (i), one card (stats → divider → backup), records list; desktop content capped at 880px ===== */
-.me-note{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin:10px 0 0;font-size:13.5px;color:var(--muted)}
-.me-note .lnk-btn{font-size:13.5px;color:var(--v-accent-text);font-weight:700}
 .me-card{width:fit-content;max-width:100%;margin-top:18px;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:18px}
 .me-card .me-stats div{background:var(--bg)}
 .me-card .me-none,.me-card .me-err{margin:0}
@@ -670,7 +666,6 @@ main{min-width:0;padding-bottom:24px}
 .eyerow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;margin:0 0 10px}
 .eyerow .eyebrow{margin:0}
 .pg-hl{display:flex;align-items:center;gap:4px;min-width:0}
-.pg-tip{margin-left:auto;font-size:12px;color:var(--muted)}
 
 /* ===== V18.3 card: cover / title · artist / [platform ⌄] [評分與筆記] ★★ / ✓ — credits stay in the data but are not rendered ===== */
 .nm{container:card/inline-size}
@@ -724,9 +719,6 @@ a.pf-go:hover{background:var(--surface-2)}
 
 /* (i) beside the first title line: just the icon, no outlined circle */
 .hero h1 .pop-a{vertical-align:middle;margin:-.1em 0 0 .18em}
-@media (max-width:960px){
-  .pg-tip{display:none}
-}
 @media (max-width:620px){
   .nm{column-gap:4px}
   .act{gap:4px}
@@ -827,7 +819,6 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
       <div class="pg-act">
         <button type="button" class="pg-btn wash js-rand" aria-label="隨機聽：從還沒聽過的作品挑一組" title="從還沒聽過的作品挑一組"><svg aria-hidden="true"><use href="#i-shuffle"/></svg>隨機聽</button>
         <button type="button" class="pg-btn js-share"><svg aria-hidden="true"><use href="#i-share"/></svg>分享進度</button>
-        <span class="pg-tip">只從還沒聽過的作品挑</span>
       </div>
     </section>
   </div>
