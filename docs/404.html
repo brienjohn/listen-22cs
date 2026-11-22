@@ -427,6 +427,9 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 .sy-in:disabled{opacity:.7}
 .sy-col{display:grid;gap:8px}
 @media (max-width:620px){.sy-st{display:block;margin:4px 0 0}}
+.sy-cam{display:grid;gap:8px;justify-items:center}
+.sy-cam video{display:block;width:100%;max-width:300px;aspect-ratio:1;object-fit:cover;border-radius:14px;background:#000}
+.sy-warn .sy-row{justify-content:flex-start}
 
 /* home (V11) */
 :root{--lab-award:#FFD766;--lab-fest:#E8D3FF;--lab-chart:#BFEADB;--lab-ink:#24252B}
@@ -517,7 +520,7 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 <header class="top"><div class="in"><div class="bar"><a class="brandmark" href="/" aria-label="聆聽清單 by 22CS（回到首頁）"><img class="ico" src="/img/baby-coral-surprised.png" alt="" width="40" height="42"><span class="bm-t"><b>聆聽清單</b><span class="bm-by">by <img src="/img/22cs-wordmark-coral.svg" alt="22CS" width="42" height="12"></span></span></a><nav class="secnav" aria-label="內容分類"><a href="/#awards">音樂獎</a><a href="/#festivals">音樂節</a><a href="/#charts">榜單</a></nav><div class="hx"><button type="button" class="xbtn" aria-expanded="false" aria-controls="xmenu">探索清單<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9.5 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a class="mebtn" href="/me/" title="我的聆聽記錄"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10a1.5 1.5 0 0 1 1.5 1.5v15.5L12 16.6l-6.5 3.9V5A1.5 1.5 0 0 1 7 3.5z"/><path d="m9.2 9.6 2 2 3.6-3.8"/></svg><span>我的聆聽記錄</span></a><button type="button" class="themebtn" aria-label="切換為深色主題" title="切換為深色主題"><svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="sun" aria-hidden="true"><use href="#i-sun"/></svg></button></div></div><nav class="xmenu" id="xmenu" aria-label="探索清單" hidden><a href="/#awards">音樂獎<small>AWARDS</small></a><a href="/#festivals">音樂節<small>FESTIVALS</small></a><a href="/#charts">榜單<small>CHARTS &amp; LISTS</small></a><a href="/me/">我的聆聽記錄<small>MY LISTENING</small></a></nav></div></header>
 <header class="hero"><div class="in"><p class="eyebrow">404</p><h1>找不到這個頁面</h1><p class="lede"><a href="/" style="color:var(--accent)">回到聆聽清單首頁</a></p></div></header>
 <footer><div class="in"><div class="mk-site"><a href="https://www.22cs.xyz/" target="_blank" rel="noopener" aria-label="22 世紀衛星"><img src="/img/22cs-wordmark-coral.svg" alt="22 世紀衛星" width="96" height="26"></a><p>聆聽清單是 22 世紀衛星的資料專題。</p><a class="cta" href="https://www.22cs.xyz/" target="_blank" rel="noopener">回到 22 世紀衛星主站 →</a></div></div></footer>
-<script src="/js/my.js?v=9cb6f3e6"></script>
+<script src="/js/my.js?v=2513e137"></script>
 <script src="/js/nav.js?v=d8743580" defer></script>
 <script>(function(){var r=document.documentElement,mq=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
 function eff(){return r.dataset.theme||(mq&&mq.matches?'dark':'light')}

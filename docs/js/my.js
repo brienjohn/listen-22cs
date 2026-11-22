@@ -636,7 +636,9 @@
   }
 
   /* ---------- 同步 dialog: show code + QR / enter code / wipe choice (same frame as the review dialog) ---------- */
-  var sdlg = null, qrLoad = null;
+  var sdlg = null, qrLoad = null, jsqrLoad = null;
+  function loadScript(src, name) { return new Promise(function (ok, bad) { var sc = doc.createElement('script'); sc.src = src; sc.onload = function () { ok(window[name]); }; sc.onerror = bad; doc.head.appendChild(sc); }); }
+  function loadJsQR() { return window.jsQR ? Promise.resolve(window.jsQR) : (jsqrLoad || (jsqrLoad = loadScript('/js/jsqr.js', 'jsQR'))); }
   function loadQR() {
     if (window.qrcode) return Promise.resolve(window.qrcode);
     return qrLoad || (qrLoad = new Promise(function (ok, bad) { var sc = doc.createElement('script'); sc.src = '/js/qr.js'; sc.onload = function () { ok(window.qrcode); }; sc.onerror = bad; doc.head.appendChild(sc); }));
@@ -646,6 +648,7 @@
       sdlg = doc.createElement('dialog'); sdlg.className = 'rvdlg sydlg'; sdlg.setAttribute('aria-labelledby', 'syT');
       doc.body.appendChild(sdlg);
       sdlg.addEventListener('click', function (e) { if (e.target === sdlg) sdlg.close(); });
+      sdlg.addEventListener('close', function () { if (sdlg._stop) sdlg._stop(); });
     }
     var i = syncInfo(), h = '<div class="rv-in"><div class="sy-hd"><h2 id="syT"></h2><button type="button" class="rv-x" data-x aria-label="關閉">×</button></div>';
     if (mode === 'show') {
@@ -653,7 +656,7 @@
       h += '<p class="sy-code" aria-label="同步碼">' + esc(i.code) + '</p>'
         + '<div class="sy-row"><button type="button" class="pg-btn" data-copy>複製同步碼</button></div>'
         + '<div class="sy-qr" aria-hidden="true"></div>'
-        + '<p class="sy-p">在另一台裝置打開「我的聆聽記錄」→「輸入同步碼」，或用手機相機掃描這個 QR code。</p>'
+        + '<p class="sy-p">在另一台裝置用<b>平常使用的瀏覽器</b>打開「我的聆聽記錄」→「輸入同步碼」→「用相機掃描」，對準這個 QR code。直接用手機相機或 LINE 掃描，可能會開在另一個獨立的視窗，記錄不會出現在平常的瀏覽器。</p>'
         + '<p class="sy-warn"><b>請另外存好這組碼。</b>它就是鑰匙：拿到的人能讀到你的記錄；弄丟了沒有辦法找回。</p>'
         + '<div class="rv-act"><button type="button" class="lnk-btn" data-del>刪除雲端資料</button><span class="rv-sp"></span><button type="button" class="pg-btn pri" data-x>完成</button></div>';
       sdlg.innerHTML = h + '</div>';
@@ -671,7 +674,12 @@
         syncDelete().then(function () { sdlg.close(); }, function () { alert('目前無法連上同步服務，請稍後再試。'); });
       });
     } else if (mode === 'join') {
-      h += '<label class="rv-lab" for="syIn">輸入同步碼</label><input id="syIn" class="sy-in" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="XXXX-XXXX-XXXX-XXXX">'
+      var canScan = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+      h += (preset ? '<div class="sy-warn"><b>這個頁面是從 QR code 開啟的。</b>如果它不是你平常使用的瀏覽器（例如相機的掃描視窗或 LINE），同步只會存在這個視窗裡。'
+            + '建議複製下面的同步碼，到平常使用的瀏覽器打開 listen.22cs.xyz/me/，在「輸入同步碼」貼上。<div class="sy-row" style="margin-top:8px"><button type="button" class="pg-btn" data-copyin>複製同步碼</button></div></div>' : '')
+        + '<label class="rv-lab" for="syIn">輸入同步碼</label><input id="syIn" class="sy-in" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="XXXX-XXXX-XXXX-XXXX">'
+        + (canScan && !preset ? '<div class="sy-row"><button type="button" class="pg-btn" data-scan>用相機掃描 QR code</button></div>' : '')
+        + '<div class="sy-cam" hidden><video playsinline muted></video><p class="sy-p">把另一台裝置上的 QR code 放進畫面中</p><button type="button" class="lnk-btn" data-stop>停止掃描</button></div>'
         + '<p class="sy-p sy-msg" role="status"></p>'
         + '<div class="rv-act"><span class="rv-sp"></span><button type="button" class="pg-btn" data-x>取消</button><button type="button" class="pg-btn pri" data-go>下一步</button></div>';
       sdlg.innerHTML = h + '</div>';
@@ -699,6 +707,45 @@
       };
       go.addEventListener('click', next);
       inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); next(); } });
+      var ci = sdlg.querySelector('[data-copyin]');
+      if (ci) ci.addEventListener('click', function () {
+        var c = normCode(inp.value); if (!c) return;
+        (navigator.clipboard ? navigator.clipboard.writeText(fmtCode(c)) : Promise.reject()).then(function () { ci.textContent = '已複製'; }, function () { ci.textContent = '請手動選取複製'; });
+      });
+      /* in-page scanner: reads the QR inside THIS browser, so the code lands where the visitor normally browses */
+      var cam = sdlg.querySelector('.sy-cam'), video = cam.querySelector('video'), stream = null, raf = 0, scanBtn = sdlg.querySelector('[data-scan]');
+      var stopScan = function () { if (raf) cancelAnimationFrame(raf); raf = 0; if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; } video.srcObject = null; cam.hidden = true; if (scanBtn) scanBtn.hidden = false; };
+      sdlg._stop = stopScan;
+      cam.querySelector('[data-stop]').addEventListener('click', stopScan);
+      if (scanBtn) scanBtn.addEventListener('click', function () {
+        msg.textContent = '開啟相機中…'; scanBtn.hidden = true;
+        loadJsQR().then(function (jsQR) {
+          return navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false }).then(function (st) {
+            stream = st; video.srcObject = st; return video.play();
+          }).then(function () {
+            cam.hidden = false; msg.textContent = '';
+            var cv = doc.createElement('canvas'), cx = cv.getContext('2d', { willReadFrequently: true });
+            var tick = function () {
+              if (!stream) return;
+              if (video.readyState >= 2 && video.videoWidth) {
+                var sc = Math.min(1, 640 / Math.max(video.videoWidth, video.videoHeight));
+                cv.width = Math.round(video.videoWidth * sc); cv.height = Math.round(video.videoHeight * sc);
+                cx.drawImage(video, 0, 0, cv.width, cv.height);
+                var r = jsQR(cx.getImageData(0, 0, cv.width, cv.height).data, cv.width, cv.height, { inversionAttempts: 'dontInvert' });
+                if (r && r.data) {
+                  var m = r.data.match(/#sync=([0-9A-Za-z\-]{16,24})/), c = normCode(m ? m[1] : r.data);
+                  if (c) { stopScan(); inp.value = fmtCode(c); next(); return; }
+                }
+              }
+              raf = requestAnimationFrame(tick);
+            };
+            tick();
+          });
+        }).catch(function (e) {
+          stopScan();
+          msg.textContent = e && e.name === 'NotAllowedError' ? '沒有取得相機權限。可以在瀏覽器設定裡允許使用相機，或直接輸入同步碼。' : '無法開啟相機，請直接輸入同步碼。';
+        });
+      });
     } else if (mode === 'wipe') {
       h += '<p class="sy-p">這台裝置開啟了雲端同步。要怎麼清除？兩種都無法復原，建議先匯出備份。</p>'
         + '<div class="sy-col"><button type="button" class="pg-btn" data-w="local">只清除這台裝置（並停止這台的同步）</button>'

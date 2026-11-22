@@ -436,6 +436,9 @@ html.sxi-lock,html.sxi-lock body{overflow:hidden}
 .sy-in:disabled{opacity:.7}
 .sy-col{display:grid;gap:8px}
 @media (max-width:620px){.sy-st{display:block;margin:4px 0 0}}
+.sy-cam{display:grid;gap:8px;justify-items:center}
+.sy-cam video{display:block;width:100%;max-width:300px;aspect-ratio:1;object-fit:cover;border-radius:14px;background:#000}
+.sy-warn .sy-row{justify-content:flex-start}
 
 :root{--gold:#D4A017;--pop:0 12px 40px rgba(20,20,28,.16);--side:236px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gold:#E0B43B;--pop:0 12px 40px rgba(0,0,0,.55)}}
