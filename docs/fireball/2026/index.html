@@ -1223,6 +1223,8 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
     const b=c.querySelector('.hd');if(b)b.addEventListener('click',()=>setHeard(c,!(c.dataset.id in mine())));
     const r=c.querySelector('.more');if(r)r.addEventListener('click',()=>S.openReview(Object.assign(info(c),{onSave:has=>{if(has&&!(c.dataset.id in mine()))setHeard(c,true)}})));
   });
+  /* a data fix can change a work's key (e.g. an artist filled in later): move a rating/note saved under the old key, once */
+  (function(){const W=S.load().works;cards.forEach(c=>{const o=c.dataset.wo,w=o&&W[o];if(w&&!W[c.dataset.w]){S.saveWork(c.dataset.w,{r:w.r,n:w.n},Object.assign(info(c),{c:w.c}));S.saveWork(o,{r:0,n:''})}})})();
   S.onChange(paint);
 
   /* hide listened */
