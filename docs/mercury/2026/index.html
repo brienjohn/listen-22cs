@@ -1007,6 +1007,7 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
   <symbol id="i-dice" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r=".9" fill="currentColor"/><circle cx="15.5" cy="15.5" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="15.5" cy="8.5" r=".9" fill="currentColor"/><circle cx="8.5" cy="15.5" r=".9" fill="currentColor"/></symbol>
   <symbol id="i-dd" viewBox="0 0 24 24"><path d="m6.5 9.5 5.5 5.5 5.5-5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="18.5" cy="12" r="1.9"/></symbol>
+  <symbol id="i-kk" viewBox="0 0 24 24"><rect width="24" height="24" rx="5.6" fill="#09cef6"/><path d="M8 6.5v11M8 12.2l6.2-5.7M10.4 10.1l5.4 7.4" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-ytm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ff0033"/><circle cx="12" cy="12" r="6.4" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M10.2 9.2v5.6l4.8-2.8z" fill="#fff"/></symbol>
   <symbol id="i-edit" viewBox="0 0 24 24"><path d="M11.5 4.5H6A1.5 1.5 0 0 0 4.5 6v12A1.5 1.5 0 0 0 6 19.5h12a1.5 1.5 0 0 0 1.5-1.5v-5.5"/><path d="M17.6 3.6a1.9 1.9 0 0 1 2.8 2.8l-7.3 7.3-3.6.9.9-3.6z"/></symbol>
   <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16.5 4.5h3v3M19.5 4.5 13.6 10.4M4.5 19.5l5.9-5.9M16.5 19.5h3v-3M19.5 19.5l-15-15"/></symbol>
@@ -1293,12 +1294,13 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
 </script>
 <script>
 /* V18 preferred streaming platform. Cards carry their real links as data-sp / data-am / data-ytm (music.youtube.com) / data-ytv
-   (any other YouTube link = video). The visitor's default lives in localStorage "l22-platform" (sp | am | ytm; none = automatic:
+   (any other YouTube link = video) / data-kk (KKBOX). The visitor's default lives in localStorage "l22-platform" (sp | am | ytm | kk; none = automatic:
    the first available in the site's usual order). A missing preferred platform never falls through silently: the button says 「改用 …」. */
 (function(){
-  const KEY='l22-platform', ORDER=['sp','am','ytm','ytv'];
-  const PN={sp:['Spotify','i-sp'],am:['Apple Music','i-am'],ytm:['YouTube Music','i-ytm'],ytv:['YouTube 影片','i-yt']};  /* ytv = video, only a last-resort primary when a work has nothing else */
+  const KEY='l22-platform', ORDER=['sp','am','ytm','kk','ytv'];
+  const PN={sp:['Spotify','i-sp'],am:['Apple Music','i-am'],ytm:['YouTube Music','i-ytm'],kk:['KKBOX','i-kk'],ytv:['YouTube 影片','i-yt']};  /* ytv = video, only a last-resort primary when a work has nothing else */
   const pfs=[...document.querySelectorAll('.pf')];if(!pfs.length)return;
+  const HASKK=pfs.some(p=>p.dataset.kk);
   let pref='';try{pref=localStorage.getItem(KEY)||''}catch(e){}
   if(!PN[pref]||pref==='ytv')pref='';
   const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1330,13 +1332,14 @@ a.pfm-i:hover,a.pfm-i:focus-visible,button.pfm-i:hover,button.pfm-i:focus-visibl
   function open(btn){
     const pf=btn.closest('.pf'), t=titleOf(pf);
     let h='<p class="pfm-h">這次用其他平台開啟</p>';
-    ['sp','am','ytm'].forEach(k=>{const u=pf.dataset[k];
+    /* KKBOX rows only on lists that already have KKBOX links (they are being added list by list) */
+    ['sp','am','ytm'].concat(HASKK?['kk']:[]).forEach(k=>{const u=pf.dataset[k];
       h+=u?`<a class="pfm-i" role="menuitem" href="${esc(u)}" target="_blank" rel="noopener" aria-label="用 ${PN[k][0]} 開啟：${esc(t)}">${ico(k)}${PN[k][0]}<small>↗</small></a>`
           :`<span class="pfm-i off" role="menuitem" aria-disabled="true">${ico(k)}${PN[k][0]}<small>沒有連結</small></span>`});
     /* a real video (MV / live) only — never a YouTube Music catalogue link; no row at all when there is none */
     if(pf.dataset.ytv)h+=`<a class="pfm-i" role="menuitem" href="${esc(pf.dataset.ytv)}" target="_blank" rel="noopener" aria-label="觀看影片（YouTube）：${esc(t)}">${ico('ytv')}觀看影片 · YouTube<small>↗</small></a>`;
     h+='<hr><p class="pfm-h">我的預設平台（所有清單）</p>';
-    [['','自動（依可用平台）'],['sp','Spotify'],['am','Apple Music'],['ytm','YouTube Music']].forEach(([k,n])=>{
+    [['','自動（依可用平台）'],['sp','Spotify'],['am','Apple Music'],['ytm','YouTube Music'],['kk','KKBOX']].forEach(([k,n])=>{
       h+=`<button type="button" class="pfm-i" role="menuitemradio" aria-checked="${pref===k}" data-set="${k}">${k?ico(k):'<svg aria-hidden="true"></svg>'}${n}<span class="ck" aria-hidden="true">${pref===k?'✓':''}</span></button>`});
     h+='<p class="pfm-n">預設平台存在這台裝置；作品缺少該平台時會顯示「改用」。</p>';
     menu.innerHTML=h;menu.hidden=false;owner=btn;btn.setAttribute('aria-expanded','true');
